@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="v4l4j">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/v4l4j.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
