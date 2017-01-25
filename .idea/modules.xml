@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/SDP.iml" filepath="$PROJECT_DIR$/.idea/SDP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SDP.iml" filepath="$PROJECT_DIR$/SDP.iml" />
     </modules>
   </component>
 </project>
