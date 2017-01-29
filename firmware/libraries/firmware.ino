@@ -20,17 +20,12 @@
 #define KICKERS 4
 #define SPEAKER 5
 
-#define OPADDR 0x5A
-
-
 #define KICKERDELAY 10
 
 boolean requestStopKick = 0;
 boolean kickerStatus = 0;
 
 int zeroPosition;
-
-
 
 #define ROTARY_SLAVE_ADDRESS 5
 #define ROTARY_COUNT 6
@@ -42,26 +37,6 @@ int positions[ROTARY_COUNT] = {0};
 int run = 0;
 
 SerialCommand sCmd;
-
-void muxTest(){
-  int motor = atoi(sCmd.next());
-  int dir  = atoi(sCmd.next());
-  int pow  = atoi(sCmd.next());
-  Wire.beginTransmission(OPADDR);
-  Wire.write(motor);
-  Wire.write(dir);
-  Serial.println(Wire.endTransmission());
-  Wire.beginTransmission(OPADDR);
-  Wire.write(motor+1);
-  Wire.write(pow);
-  Serial.println(Wire.endTransmission());
-  delay(2000);
-  Wire.beginTransmission(OPADDR);
-  Wire.write(motor);
-  Wire.write(0);
-  Serial.println(Wire.endTransmission());
-}
-
 
 void loop(){
   sCmd.readSerial();
@@ -82,31 +57,6 @@ void spinmotor(){
 }
 
 void motorControl(int motor, int power){
-//  if(power == 0){
-//      Wire.beginTransmission(OPADDR);
-//      Wire.write(motor);
-//      Wire.write(0);
-//      Wire.endTransmission();
-//  } else if(power > 0){
-//      Wire.beginTransmission(OPADDR);
-//      Wire.write(motor);
-//      Wire.write(1);
-//      Wire.endTransmission();
-//      Wire.beginTransmission(OPADDR);
-//      Wire.write(motor + 1);
-//      Wire.write(power);
-//      Wire.endTransmission();
-//  } else {
-//      Wire.beginTransmission(OPADDR);
-//      Wire.write(motor);
-//      Wire.write(2);
-//      Wire.endTransmission();
-//      Wire.beginTransmission(OPADDR);
-//      Wire.write(motor + 1);
-//      Wire.write(-power);
-//      Wire.endTransmission();
-//  }
-
   if (power == 0){
     motorStop(motor);
   } else if (power > 0){
@@ -115,7 +65,6 @@ void motorControl(int motor, int power){
     motorBackward(motor, -power);
   }
 }
-
 
 void rationalMotors(){
   int front = atoi(sCmd.next());
@@ -155,31 +104,18 @@ void completeHalt(){
   motorControl(RIGHT, 0);
 }
 
-void testtt(){
-  motorForward(1, 100);
-  delay(3000);
-  motorStop(1);
-}
-
 void setup(){
   Wire.begin();
   sCmd.addCommand("f", dontMove); 
   sCmd.addCommand("h", completeHalt); 
   sCmd.addCommand("motor", spinmotor); 
-  sCmd.addCommand("r", testtt); 
+  sCmd.addCommand("r", rationalMotors);
   sCmd.addCommand("ping", pingMethod); 
   sCmd.addCommand("kick", kicker); 
 
   SDPsetup();
   helloWorld();
-  testtt();
 }
-
-void testaaa(){
-  while (!Serial.find("k"));
-  testtt(); 
-}
-
 
 void printMotorPositions() {
   Serial.print("Motor positions: ");
