@@ -21,7 +21,7 @@
 #define SPEAKER 5
 
 #define OPADDR 0x5A
-#define REGADDR 0x04
+
 
 #define KICKERDELAY 10
 
@@ -82,29 +82,37 @@ void spinmotor(){
 }
 
 void motorControl(int motor, int power){
-  if(power == 0){
-      Wire.beginTransmission(OPADDR);
-      Wire.write(motor);
-      Wire.write(0);
-      Wire.endTransmission();
-  } else if(power > 0){
-      Wire.beginTransmission(OPADDR);
-      Wire.write(motor);
-      Wire.write(1);
-      Wire.endTransmission();
-      Wire.beginTransmission(OPADDR);
-      Wire.write(motor + 1);
-      Wire.write(power);
-      Wire.endTransmission();
+//  if(power == 0){
+//      Wire.beginTransmission(OPADDR);
+//      Wire.write(motor);
+//      Wire.write(0);
+//      Wire.endTransmission();
+//  } else if(power > 0){
+//      Wire.beginTransmission(OPADDR);
+//      Wire.write(motor);
+//      Wire.write(1);
+//      Wire.endTransmission();
+//      Wire.beginTransmission(OPADDR);
+//      Wire.write(motor + 1);
+//      Wire.write(power);
+//      Wire.endTransmission();
+//  } else {
+//      Wire.beginTransmission(OPADDR);
+//      Wire.write(motor);
+//      Wire.write(2);
+//      Wire.endTransmission();
+//      Wire.beginTransmission(OPADDR);
+//      Wire.write(motor + 1);
+//      Wire.write(-power);
+//      Wire.endTransmission();
+//  }
+
+  if (power == 0){
+    motorStop(motor);
+  } else if (power > 0){
+    motorForward(motor, power);
   } else {
-      Wire.beginTransmission(OPADDR);
-      Wire.write(motor);
-      Wire.write(2);
-      Wire.endTransmission();
-      Wire.beginTransmission(OPADDR);
-      Wire.write(motor + 1);
-      Wire.write(-power);
-      Wire.endTransmission();
+    motorBackward(motor, -power);
   }
 }
 
@@ -148,10 +156,9 @@ void completeHalt(){
 }
 
 void testtt(){
-  motorForward(FRONT, 100);
-  motorForward(LEFT, 100);
-  motorForward(RIGHT, 100);
-  motorForward(BACK, 100);
+  motorForward(1, 100);
+  delay(3000);
+  motorStop(1);
 }
 
 void setup(){
@@ -162,10 +169,10 @@ void setup(){
   sCmd.addCommand("r", testtt); 
   sCmd.addCommand("ping", pingMethod); 
   sCmd.addCommand("kick", kicker); 
-  sCmd.addCommand("mux", muxTest); 
+
   SDPsetup();
   helloWorld();
-  testaaa();
+  testtt();
 }
 
 void testaaa(){
