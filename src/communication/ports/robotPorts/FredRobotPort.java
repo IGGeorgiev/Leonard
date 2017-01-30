@@ -1,13 +1,13 @@
 package communication.ports.robotPorts;
 
 import communication.ports.interfaces.FourWheelHolonomicRobotPort;
-import communication.ports.interfaces.PropellerEquipedRobotPort;
+import communication.ports.interfaces.GrabberEquipedRobotPort;
 import communication.ports.interfaces.RobotPort;
 
 /**
  * Created by Simon Rovder
  */
-public class FredRobotPort extends RobotPort implements PropellerEquipedRobotPort, FourWheelHolonomicRobotPort {
+public class FredRobotPort extends RobotPort implements GrabberEquipedRobotPort, FourWheelHolonomicRobotPort {
 
     public FredRobotPort(){
         super("pang");
@@ -19,7 +19,7 @@ public class FredRobotPort extends RobotPort implements PropellerEquipedRobotPor
     }
 
     @Override
-    public void propeller(int spin) {
+    public void grabber(int spin) {
         this.sdpPort.commandSender("kick", spin);
     }
 

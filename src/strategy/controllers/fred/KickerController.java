@@ -1,6 +1,6 @@
 package strategy.controllers.fred;
 
-import communication.ports.interfaces.PropellerEquipedRobotPort;
+import communication.ports.interfaces.GrabberEquipedRobotPort;
 import strategy.Strategy;
 import strategy.controllers.ControllerBase;
 import strategy.robots.RobotBase;
@@ -11,41 +11,41 @@ import vision.tools.VectorGeometry;
 /**
  * Created by Simon Rovder
  */
-public class PropellerController extends ControllerBase {
-    private int propellerTracker;
+public class KickerController extends ControllerBase {
+    private int grabberTracker;
 
-    public PropellerController(RobotBase robot) {
+    public KickerController(RobotBase robot) {
         super(robot);
-        this.propellerTracker = 0;
+        this.grabberTracker = 0;
     }
 
     @Override
     public void setActive(boolean active) {
         super.setActive(active);
-        this.propellerTracker = 0;
+        this.grabberTracker = 0;
     }
 
     private void propell(int dir){
-        PropellerEquipedRobotPort port = (PropellerEquipedRobotPort) this.robot.port;
+        GrabberEquipedRobotPort port = (GrabberEquipedRobotPort) this.robot.port;
         if(dir < 0){
-            if(this.propellerTracker < -4) return;
-            this.propellerTracker--;
+            if(this.grabberTracker < -4) return;
+            this.grabberTracker--;
         }
         if(dir > 0){
-            if(this.propellerTracker > 4) return;
-            this.propellerTracker++;
+            if(this.grabberTracker > 4) return;
+            this.grabberTracker++;
         }
         if (dir == 0){
-            if(this.propellerTracker == 0) return;
-            if(this.propellerTracker > 0) this.propellerTracker--;
-            else this.propellerTracker++;
+            if(this.grabberTracker == 0) return;
+            if(this.grabberTracker > 0) this.grabberTracker--;
+            else this.grabberTracker++;
         }
-        port.propeller(-dir);
+        port.grabber(-dir);
     }
 
     @Override
     public void perform(){
-        assert (this.robot.port instanceof PropellerEquipedRobotPort);
+        assert (this.robot.port instanceof GrabberEquipedRobotPort);
 
         Robot us = Strategy.world.getRobot(this.robot.robotType);
         if(us != null){

@@ -1,6 +1,6 @@
 package strategy;
 
-import communication.ports.interfaces.PropellerEquipedRobotPort;
+import communication.ports.interfaces.GrabberEquipedRobotPort;
 import strategy.actions.Behave;
 import strategy.actions.other.DefendGoal;
 import strategy.actions.other.GoToSafeLocation;
@@ -140,9 +140,9 @@ public class GUI extends JFrame implements KeyListener{
             this.robot.MOTION_CONTROLLER.clearObstacles();
             if(this.robot instanceof Fred){
                 ((Fred)this.robot).PROPELLER_CONTROLLER.setActive(false);
-                ((FredRobotPort)this.robot.port).propeller(0);
-                ((FredRobotPort)this.robot.port).propeller(0);
-                ((FredRobotPort)this.robot.port).propeller(0);
+                ((FredRobotPort)this.robot.port).grabber(0);
+                ((FredRobotPort)this.robot.port).grabber(0);
+                ((FredRobotPort)this.robot.port).grabber(0);
             }
             this.robot.port.sdpPort.commandSender("f");
             this.robot.port.sdpPort.commandSender("f");
@@ -220,9 +220,9 @@ public class GUI extends JFrame implements KeyListener{
                     this.robot.MOTION_CONTROLLER.setMode(MotionController.MotionMode.OFF);
                     if(this.robot instanceof Fred){
                         ((Fred)this.robot).PROPELLER_CONTROLLER.setActive(false);
-                        ((PropellerEquipedRobotPort) this.robot.port).propeller(0);
-                        ((PropellerEquipedRobotPort) this.robot.port).propeller(0);
-                        ((PropellerEquipedRobotPort) this.robot.port).propeller(0);
+                        ((GrabberEquipedRobotPort) this.robot.port).grabber(0);
+                        ((GrabberEquipedRobotPort) this.robot.port).grabber(0);
+                        ((GrabberEquipedRobotPort) this.robot.port).grabber(0);
                     }
                     this.robot.ACTION_CONTROLLER.setAction(new Waiting(this.robot));
                     break;

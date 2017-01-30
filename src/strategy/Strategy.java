@@ -88,9 +88,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
             this.action = this.readLine();
             if(this.action.equals("exit")){
                 fred.PROPELLER_CONTROLLER.setActive(false);
-                port.propeller(0);
-                port.propeller(0);
-                port.propeller(0);
+                port.grabber(0);
+                port.grabber(0);
+                port.grabber(0);
                 break;
             }
             switch(this.action){
@@ -125,9 +125,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     port.halt();
                     port.halt();
                     fred.PROPELLER_CONTROLLER.setActive(false);
-                    port.propeller(0);
-                    port.propeller(0);
-                    port.propeller(0);
+                    port.grabber(0);
+                    port.grabber(0);
+                    port.grabber(0);
                     break;
                 case "reset":
                     fred.ACTION_CONTROLLER.setAction(new Goto(fred, new ConstantPoint(0,0)));
@@ -162,9 +162,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     break;
                 case "rot":
                     fred.PROPELLER_CONTROLLER.setActive(false);
-                    ((FredRobotPort) fred.port).propeller(0);
-                    ((FredRobotPort) fred.port).propeller(0);
-                    ((FredRobotPort) fred.port).propeller(0);
+                    ((FredRobotPort) fred.port).grabber(0);
+                    ((FredRobotPort) fred.port).grabber(0);
+                    ((FredRobotPort) fred.port).grabber(0);
                     fred.ACTION_CONTROLLER.setActive(false);
                     fred.MOTION_CONTROLLER.setDestination(new Rotate());
                     fred.MOTION_CONTROLLER.setHeading(new BallPoint());
@@ -173,9 +173,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     boolean act = fred.PROPELLER_CONTROLLER.isActive();
                     fred.PROPELLER_CONTROLLER.setActive(!act);
                     if(!act){
-                        ((FredRobotPort) fred.port).propeller(0);
-                        ((FredRobotPort) fred.port).propeller(0);
-                        ((FredRobotPort) fred.port).propeller(0);
+                        ((FredRobotPort) fred.port).grabber(0);
+                        ((FredRobotPort) fred.port).grabber(0);
+                        ((FredRobotPort) fred.port).grabber(0);
                     }
                     System.out.println(fred.PROPELLER_CONTROLLER.isActive());
                     break;

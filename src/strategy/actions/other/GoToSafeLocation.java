@@ -29,9 +29,9 @@ public class GoToSafeLocation extends ActionBase {
         if(newState == 0){
             if(this.robot instanceof Fred) {
                 ((Fred)this.robot).PROPELLER_CONTROLLER.setActive(false);
-                ((FredRobotPort)this.robot.port).propeller(0);
-                ((FredRobotPort)this.robot.port).propeller(0);
-                ((FredRobotPort)this.robot.port).propeller(0);
+                ((FredRobotPort)this.robot.port).grabber(0);
+                ((FredRobotPort)this.robot.port).grabber(0);
+                ((FredRobotPort)this.robot.port).grabber(0);
             }
 
 

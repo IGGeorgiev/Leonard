@@ -1,7 +1,6 @@
 package strategy.actions.other;
 
 import communication.ports.interfaces.FourWheelHolonomicRobotPort;
-import communication.ports.interfaces.PropellerEquipedRobotPort;
 import strategy.actions.ActionException;
 import strategy.actions.ActionBase;
 import strategy.robots.Fred;

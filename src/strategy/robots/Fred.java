@@ -1,6 +1,6 @@
 package strategy.robots;
 
-import strategy.controllers.fred.PropellerController;
+import strategy.controllers.fred.KickerController;
 import strategy.drives.FourWheelHolonomicDrive;
 import communication.ports.robotPorts.FredRobotPort;
 import vision.RobotType;
@@ -10,7 +10,7 @@ import vision.RobotType;
  */
 public class Fred extends RobotBase {
 
-    public final PropellerController PROPELLER_CONTROLLER = new PropellerController(this);
+    public final KickerController PROPELLER_CONTROLLER = new KickerController(this);
 
     public Fred(RobotType robotType){
         super(robotType, new FredRobotPort(), new FourWheelHolonomicDrive());
