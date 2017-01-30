@@ -97,6 +97,7 @@ public class VideoCapture extends JLabel implements CaptureCallback {
     public void nextFrame(VideoFrame frame) {
         // This method is called when a new frame is ready.
         // Don't forget to recycle it when done dealing with the frame.
+
         currentImage = frame.getBufferedImage();
 
         // Send to all frame listeners
@@ -110,5 +111,4 @@ public class VideoCapture extends JLabel implements CaptureCallback {
         // recycle the frame
         frame.recycle();
     }
-
 }
