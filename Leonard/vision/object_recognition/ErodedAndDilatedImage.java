@@ -30,18 +30,19 @@ public class ErodedAndDilatedImage extends JLabel implements FrameReceivedListen
     public void onFrameReceived(BufferedImage image) {
         Mat binaryImage = imageToMat(image);
 
+        Mat dilatedImage = new Mat();
+        Mat dilationElement = Imgproc.getStructuringElement(Imgproc.MORPH_DILATE,
+                new Size(DILATION_SIZE, DILATION_SIZE));
+        Imgproc.dilate(binaryImage, dilatedImage, dilationElement);
+
 
         Mat erodedImage = new Mat();
         Mat erosionElement = Imgproc.getStructuringElement(Imgproc.MORPH_ERODE,
                 new Size(EROSION_SIZE, EROSION_SIZE));
-        Imgproc.erode(binaryImage, erodedImage, erosionElement);
+        Imgproc.erode(dilatedImage, erodedImage, erosionElement);
 
 
-        Mat dilatedImage = new Mat();
-        Mat dilationElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT,
-                new Size(DILATION_SIZE, DILATION_SIZE));
-        Imgproc.dilate(erodedImage, dilatedImage, dilationElement);
-        BufferedImage erodedAndDilated = matToBinaryImage(dilatedImage);
+        BufferedImage erodedAndDilated = matToBinaryImage(erodedImage);
 
         if (erodedAndDilated != null) {
             // Draw

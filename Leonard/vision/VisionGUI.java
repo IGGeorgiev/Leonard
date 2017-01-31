@@ -134,8 +134,8 @@ public class VisionGUI extends WindowAdapter {
         optionsPane.add(new TitledSlider("Threshold G:", gthresholdSlider));
         optionsPane.add(new TitledSlider("Threshold B:", bthresholdSlider));
         optionsPane.add(new TitledSlider("GaussianBlur: ", gaussianBlurSlider));
-        optionsPane.add(new TitledSlider("Erosion: ", erosionSlider));
         optionsPane.add(new TitledSlider("Dilation: ", dilationSlider));
+        optionsPane.add(new TitledSlider("Erosion: ", erosionSlider));
 
 //        loadValues();
     }
