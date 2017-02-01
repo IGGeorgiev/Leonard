@@ -131,7 +131,7 @@ public class MotionController extends ControllerBase {
         double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
         // Can throw null without check because null check takes SourceGroup into consideration.
         if(destination.distance(us.location) < 30){
-            factor = 0.7;
+            factor = 1.0;
         }
         if(this.destination != null && us.location.distance(destination) < tolerance){
             this.robot.port.stop();
@@ -140,7 +140,6 @@ public class MotionController extends ControllerBase {
 
 
 //        strategy.navigationInterface.draw();
-
         this.robot.drive.move(this.robot.port, us.location, force, rotation, factor);
 
     }

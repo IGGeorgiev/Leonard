@@ -5,11 +5,14 @@ import strategy.actions.other.*;
 import strategy.actions.offense.OffensiveKick;
 import strategy.actions.offense.ShuntKick;
 import communication.ports.robotPorts.FredRobotPort;
+import strategy.points.DynamicPoint;
 import strategy.points.basicPoints.*;
 import strategy.robots.Fred;
 import communication.PortListener;
 import strategy.robots.RobotBase;
 import vision.*;
+import vision.Robot;
+import vision.tools.VectorGeometry;
 
 import javax.swing.*;
 import java.awt.*;
@@ -183,6 +186,13 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     fred.MOTION_CONTROLLER.setHeading(new EnemyGoal());
                     fred.MOTION_CONTROLLER.setDestination(new EnemyGoal());
                     break;
+                case "leonard":
+                    Robot www = Strategy.world.getRobot(RobotType.FRIEND_2);
+                    Ball  bbb = Strategy.world.getBall();
+                    System.out.println("Leonard.x = "+www.location.x);
+                    System.out.println("Leonard.y = "+www.location.y);
+                    System.out.println("Ball.x = "+bbb.location.x);
+                    System.out.println("Ball.y = "+bbb.location.y);
             }
         }
 

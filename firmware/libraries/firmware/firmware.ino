@@ -12,10 +12,10 @@
 //define LEFT 3
 
 //Kickers in front
-#define FRONT 0
-#define RIGHT 1
-#define BACK 2
-#define LEFT 3
+#define FRONT 3
+#define RIGHT 0
+#define BACK 1
+#define LEFT 2
 
 #define KICKERS 4
 #define SPEAKER 5
@@ -71,10 +71,10 @@ void rationalMotors(){
   int back  = atoi(sCmd.next());
   int left  = atoi(sCmd.next());
   int right = atoi(sCmd.next());
-  motorControl(FRONT, -front);
-  motorControl(BACK, -back);
+  motorControl(FRONT, front);
+  motorControl(BACK, back);
   motorControl(LEFT, left);
-  motorControl(RIGHT, -right);
+  motorControl(RIGHT, right);
 }
 
 void pingMethod(){
