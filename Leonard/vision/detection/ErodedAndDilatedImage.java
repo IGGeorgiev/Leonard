@@ -1,4 +1,4 @@
-package vision.object_recognition;
+package vision.detection;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -31,7 +31,7 @@ public class ErodedAndDilatedImage extends JLabel implements FrameReceivedListen
         Mat binaryImage = imageToMat(image);
 
         Mat dilatedImage = new Mat();
-        Mat dilationElement = Imgproc.getStructuringElement(Imgproc.MORPH_DILATE,
+        Mat dilationElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT,
                 new Size(DILATION_SIZE, DILATION_SIZE));
         Imgproc.dilate(binaryImage, dilatedImage, dilationElement);
 

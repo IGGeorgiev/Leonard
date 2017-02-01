@@ -1,4 +1,4 @@
-package vision.object_recognition;
+package vision.detection;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

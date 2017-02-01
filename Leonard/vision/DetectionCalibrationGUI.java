@@ -3,19 +3,17 @@ package vision;
 import org.opencv.core.Core;
 import vision.calibration.CalibrateEmptyPitchButton;
 import vision.capture.VideoCapture;
-import vision.object_recognition.BinaryImage;
-import vision.object_recognition.ErodedAndDilatedImage;
+import vision.detection.BinaryImage;
+import vision.detection.ErodedAndDilatedImage;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 
+import static vision.DetectionPropertiesManager.loadValues;
+import static vision.DetectionPropertiesManager.saveValues;
 import static vision.capture.VideoCapture.height;
 import static vision.capture.VideoCapture.width;
 
@@ -23,7 +21,7 @@ import static vision.capture.VideoCapture.width;
  * Created by Ivan Georgiev (s1410984) on 29/01/17.
  * Graphical User Interface for the Vision System
  */
-public class VisionGUI extends WindowAdapter {
+public class DetectionCalibrationGUI extends WindowAdapter {
 
     private JFrame frame;
     private JPanel pane;
@@ -32,27 +30,34 @@ public class VisionGUI extends WindowAdapter {
     private ErodedAndDilatedImage eadLabel;
     private JPanel optionsPane;
     private JSlider thresholdSlider;
-    private JSlider rthresholdSlider;
-    private JSlider gthresholdSlider;
-    private JSlider bthresholdSlider;
-    private JSlider gaussianBlurSlider;
-    private JSlider erosionSlider;
-    private JSlider dilationSlider;
 
-    private VisionGUI() {
+    static JSlider rthresholdSlider;
+    static JSlider gthresholdSlider;
+    static JSlider bthresholdSlider;
+    static JSlider gaussianBlurSlider;
+    static JSlider erosionSlider;
+    static JSlider dilationSlider;
+
+    public enum  PitchNames {
+        STANDARD_OUTPUT, PITCH_0, PITCH_1
+    }
+
+    static JComboBox<PitchNames> pitchChooser;
+
+    private DetectionCalibrationGUI() {
         initGUI();
     }
 
     /**
      * UI class to add named sliders
      */
-    private class TitledSlider extends JPanel {
-        TitledSlider(String sliderTitle, JSlider slider) {
+    private class TitledComponent extends JPanel {
+        TitledComponent(String sliderTitle, Component component) {
             super();
             JLabel title = new JLabel();
             title.setText(sliderTitle);
             this.add(title);
-            this.add(slider);
+            this.add(component);
         }
     }
 
@@ -61,10 +66,10 @@ public class VisionGUI extends WindowAdapter {
         frame = new JFrame();
         pane = new JPanel(new GridLayout(2,2));
 
-        setupOptionsPane();
-
         vcLabel = new VideoCapture();
         vcLabel.setSize(new Dimension(width, height));
+
+        setupOptionsPane();
 
         biLabel = new BinaryImage(rthresholdSlider, gthresholdSlider, bthresholdSlider);
         biLabel.setSize(new Dimension(width / 2, height / 2));
@@ -75,7 +80,7 @@ public class VisionGUI extends WindowAdapter {
         vcLabel.addFrameReceivedListener(biLabel);
         biLabel.addFrameReceivedListener(eadLabel);
 
-        frame.setTitle("MainVideoFeed");
+        frame.setTitle("Detection Settings");
         Container c = frame.getContentPane();
         c.add(pane);
 
@@ -94,6 +99,7 @@ public class VisionGUI extends WindowAdapter {
 
     private void setupOptionsPane() {
         optionsPane = new JPanel();
+        optionsPane.setBorder(new EmptyBorder(10,10,10,10));
         optionsPane.setLayout(new BoxLayout(optionsPane, BoxLayout.Y_AXIS));
 
         thresholdSlider = new JSlider(0, 100, 0);
@@ -107,6 +113,9 @@ public class VisionGUI extends WindowAdapter {
 
         bthresholdSlider = new JSlider(0, 100, 0);
         bthresholdSlider.addChangeListener(new BinaryImage.BThresholdChangeListener());
+
+        pitchChooser = new JComboBox<>(PitchNames.values());
+        pitchChooser.addActionListener(VideoCapture.pitchChosenListener);
 
         gaussianBlurSlider = new JSlider(1, 11, 3);
         gaussianBlurSlider.setMajorTickSpacing(2);
@@ -128,33 +137,22 @@ public class VisionGUI extends WindowAdapter {
         CalibrateEmptyPitchButton createNormalizedRGBButton = new CalibrateEmptyPitchButton(vcLabel);
 
         // Add buttons and sliders
+        optionsPane.add(new TitledComponent("Threshold: ", thresholdSlider));
+        optionsPane.add(new TitledComponent("Threshold R:", rthresholdSlider));
+        optionsPane.add(new TitledComponent("Threshold G:", gthresholdSlider));
+        optionsPane.add(new TitledComponent("Threshold B:", bthresholdSlider));
+        optionsPane.add(new TitledComponent("GaussianBlur: ", gaussianBlurSlider));
+        optionsPane.add(new TitledComponent("Dilation: ", dilationSlider));
+        optionsPane.add(new TitledComponent("Erosion: ", erosionSlider));
+        optionsPane.add(new TitledComponent("Pitch Chooser: ", pitchChooser));
         optionsPane.add(createNormalizedRGBButton);
-        optionsPane.add(new TitledSlider("Threshold: ", thresholdSlider));
-        optionsPane.add(new TitledSlider("Threshold R:", rthresholdSlider));
-        optionsPane.add(new TitledSlider("Threshold G:", gthresholdSlider));
-        optionsPane.add(new TitledSlider("Threshold B:", bthresholdSlider));
-        optionsPane.add(new TitledSlider("GaussianBlur: ", gaussianBlurSlider));
-        optionsPane.add(new TitledSlider("Dilation: ", dilationSlider));
-        optionsPane.add(new TitledSlider("Erosion: ", erosionSlider));
 
-//        loadValues();
+        loadValues();
     }
-
-//    private void loadValues() {
-//        File saveFile = new File("Leonard/vision/calibration/pre_saved_values/saveFile");
-//        try {
-//            if (saveFile.exists()) {
-//                Reader reader = new FileReader(saveFile);
-//                reader.read();
-//            }
-//        } catch (IOException io) {
-//            System.out.println("No Save File found!");
-//        }
-//    }
 
 
     public void windowClosing(WindowEvent e) {
-
+        saveValues();
         vcLabel.cleanupCapture();
         frame.dispose();
         System.out.println("exiting!!!");
@@ -166,11 +164,6 @@ public class VisionGUI extends WindowAdapter {
 
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new VisionGUI();
-            }
-        });
+        SwingUtilities.invokeLater(DetectionCalibrationGUI::new);
     }
 }
