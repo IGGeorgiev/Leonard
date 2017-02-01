@@ -165,4 +165,5 @@ crashlytics-build.properties
 fabric.properties
 
 # Application Properties
-Leonard/calibration/pre_saved_values
+/Leonard/vision/calibration/pre_saved_values/*
+!/Leonard/vision/calibration/pre_saved_values/.gitkeep
