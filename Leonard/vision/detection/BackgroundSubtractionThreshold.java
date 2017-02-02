@@ -4,7 +4,6 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
-import vision.ImageManipulator;
 import vision.ImageManipulatorWithOptions;
 import vision.TitledComponent;
 
@@ -38,7 +37,7 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
     private JSlider greenSlider   = new JSlider(0,255,0);
     private JSlider blueSlider    = new JSlider(0,255,0);
 
-    private JPanel sliders = new JPanel();
+    private JPanel sliders = new JPanel(new GridLayout(4,1));
 
     @Override
     protected Component getModificationGUI() {
@@ -56,12 +55,18 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
     @Override
     protected void loadModificationSettings(Properties prop) {
         // Assume if last saved is null all are null
-        if (prop.getProperty(B_THRESH_PROP) != null) {
-            allThresholds.setValue(Integer.valueOf(prop.getProperty(ALL_THRESH_PROP)));
-            redSlider.setValue(Integer.valueOf(prop.getProperty(R_THRESH_PROP)));
-            greenSlider.setValue(Integer.valueOf(prop.getProperty(G_THRESH_PROP)));
-            blueSlider.setValue(Integer.valueOf(prop.getProperty(B_THRESH_PROP)));
-        }
+        allThresholds.setValue(Integer.valueOf(
+                prop.getProperty(ALL_THRESH_PROP, String.valueOf(allThresholds.getValue()))
+        ));
+        redSlider.setValue(Integer.valueOf(
+                prop.getProperty(R_THRESH_PROP, String.valueOf(redSlider.getValue()))
+        ));
+        greenSlider.setValue(Integer.valueOf(
+                prop.getProperty(G_THRESH_PROP, String.valueOf(greenSlider.getValue()))
+        ));
+        blueSlider.setValue(Integer.valueOf(
+                prop.getProperty(B_THRESH_PROP, String.valueOf(blueSlider.getValue()))
+        ));
     }
 
     public BackgroundSubtractionThreshold() {

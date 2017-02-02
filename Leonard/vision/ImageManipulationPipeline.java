@@ -2,10 +2,7 @@ package vision;
 
 import vision.capture.FrameReceivedListener;
 import vision.capture.VideoCapture;
-import vision.detection.BackgroundSubtractionThreshold;
-import vision.detection.GaussianBlurImage;
-import vision.detection.NormalizeImage;
-import vision.detection.UndistortImage;
+import vision.detection.*;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -16,7 +13,7 @@ import java.util.LinkedList;
  */
 public class ImageManipulationPipeline implements FrameReceivedListener {
 
-    private static ImageManipulationPipeline instance = new ImageManipulationPipeline();
+    private static final ImageManipulationPipeline instance = new ImageManipulationPipeline();
 
     static ImageManipulationPipeline getInstance() { return instance; }
 
@@ -29,11 +26,13 @@ public class ImageManipulationPipeline implements FrameReceivedListener {
         pipeline.getLast().setNext(this);
     }
 
-    private VideoCapture                   videoCapture   = new VideoCapture();
+    VideoCapture                           videoCapture   = new VideoCapture();
     private UndistortImage                 undistortImage = new UndistortImage();
-    private NormalizeImage                 normalizeImage = new NormalizeImage();
+    NormalizeImage                         normalizeImage = new NormalizeImage();
     private BackgroundSubtractionThreshold threshold      = new BackgroundSubtractionThreshold();
     private GaussianBlurImage              gaussianBlur   = new GaussianBlurImage();
+    private DilateImage                    dilateImage    = new DilateImage();
+    private ErodeImage                     erodeImage     = new ErodeImage();
 
     /**
      * This list is what determines what order (and which manipulations are applied to the input
@@ -45,6 +44,8 @@ public class ImageManipulationPipeline implements FrameReceivedListener {
         add(normalizeImage);
         add(threshold);
         add(gaussianBlur);
+        add(dilateImage);
+        add(erodeImage);
     }};
 
     @Override
