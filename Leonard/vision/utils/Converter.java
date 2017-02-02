@@ -32,6 +32,13 @@ public class Converter {
         return mat;
     }
 
+    public static Mat binaryImageToMat(BufferedImage img) {
+        Mat mat = new Mat(new Size(img.getWidth(), img.getHeight()), CvType.CV_8U);
+        byte[] pixels = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
+        mat.put(0, 0, pixels);
+        return mat;
+    }
+
 
     public static BufferedImage matToBinaryImage(Mat mat) {
 

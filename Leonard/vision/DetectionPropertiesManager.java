@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
-
-import static vision.DetectionCalibrationGUI.*;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 01/02/17.
@@ -15,7 +14,8 @@ import static vision.DetectionCalibrationGUI.*;
 class DetectionPropertiesManager {
 
     static void loadValues() {
-        File saveFile = new File("Leonard/vision/calibration/pre_saved_values/calibrationOptions.properties");
+        File saveFile =
+                new File("Leonard/vision/calibration/pre_saved_values/calibrationOptions.properties");
         Properties prop = new Properties();
         FileInputStream fis = null;
         try {
@@ -23,20 +23,11 @@ class DetectionPropertiesManager {
                 fis = new FileInputStream(saveFile);
                 prop.load(fis);
 
-                int threshR = Integer.valueOf(prop.getProperty("threshold_R"));
-                int threshG = Integer.valueOf(prop.getProperty("threshold_G"));
-                int threshB = Integer.valueOf(prop.getProperty("threshold_B"));
-                int gaussBlur = Integer.valueOf(prop.getProperty("gaussianBlur"));
-                int dilation = Integer.valueOf(prop.getProperty("dilation"));
-                int erosion = Integer.valueOf(prop.getProperty("erosion"));
-
-                RThresholdSlider.setValue(threshR);
-                BThresholdSlider.setValue(threshG);
-                GThresholdSlider.setValue(threshB);
-                gaussianBlurSlider.setValue(gaussBlur);
-                dilationSlider.setValue(dilation);
-                erosionSlider.setValue(erosion);
-
+                List<ImageManipulator> pipeline = ImageManipulationPipeline.getInstance().pipeline;
+                for (ImageManipulator i : pipeline) {
+                    if (i instanceof ImageManipulatorWithOptions)
+                        ((ImageManipulatorWithOptions) i).loadModificationSettings(prop);
+                }
             }
         } catch (IOException io) {
             System.out.println("No Save File found!");
@@ -53,7 +44,8 @@ class DetectionPropertiesManager {
     }
 
     static void saveValues() {
-        File saveFile = new File("Leonard/vision/calibration/pre_saved_values/calibrationOptions.properties");
+        File saveFile =
+                new File("Leonard/vision/calibration/pre_saved_values/calibrationOptions.properties");
         Properties prop = new Properties();
         FileOutputStream fos = null;
 
@@ -63,19 +55,11 @@ class DetectionPropertiesManager {
 
             fos = new FileOutputStream(saveFile);
 
-            int threshR = RThresholdSlider.getValue();
-            int threshG = BThresholdSlider.getValue();
-            int threshB = GThresholdSlider.getValue();
-            int gaussBlur = gaussianBlurSlider.getValue();
-            int dilation = dilationSlider.getValue();
-            int erosion = erosionSlider.getValue();
-
-            prop.setProperty("threshold_R", String.valueOf(threshR));
-            prop.setProperty("threshold_G", String.valueOf(threshG));
-            prop.setProperty("threshold_B", String.valueOf(threshB));
-            prop.setProperty("gaussianBlur", String.valueOf(gaussBlur));
-            prop.setProperty("dilation", String.valueOf(dilation));
-            prop.setProperty("erosion", String.valueOf(erosion));
+            List<ImageManipulator> pipeline = ImageManipulationPipeline.getInstance().pipeline;
+            for (ImageManipulator i : pipeline) {
+                if (i instanceof ImageManipulatorWithOptions)
+                    ((ImageManipulatorWithOptions) i).saveModificationSettings(prop);
+            }
 
             prop.store(fos, "Detection Data Save File");
 
