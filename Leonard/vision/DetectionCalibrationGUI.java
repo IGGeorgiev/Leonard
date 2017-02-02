@@ -3,8 +3,7 @@ package vision;
 import org.opencv.core.Core;
 import vision.calibration.CalibrateEmptyPitchButton;
 import vision.capture.VideoCapture;
-import vision.detection.GaussianBlurImage;
-import vision.detection.UndistortImage;
+import vision.detection.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,15 +28,17 @@ public class DetectionCalibrationGUI extends WindowAdapter {
     private JPanel pane;
     private JPanel optionsPane;
 
-    private LinkedList<ImageManipulator> pipeline = ImageManipulationPipeline.getInstance().pipeline;
+    private ImageManipulationPipeline controller = ImageManipulationPipeline.getInstance();
+    private LinkedList<ImageManipulator> pipeline = controller.pipeline;
 
     // Note - entry point to the pipeline is always the video feed
-    private VideoCapture videoFeed = (VideoCapture) pipeline.getFirst();
+    private VideoCapture videoFeed = controller.videoCapture;
 
     private DetectionCalibrationGUI() {
         frame = new JFrame();
         pane = new JPanel(new GridLayout(2,2));
-        optionsPane = new JPanel(new GridLayout(10,1));
+        optionsPane = new JPanel();
+        optionsPane.setLayout(new BoxLayout(optionsPane, BoxLayout.Y_AXIS));
         optionsPane.setBorder(new EmptyBorder(20,20,20,20));
 
         chooseDisplays();
@@ -58,9 +59,17 @@ public class DetectionCalibrationGUI extends WindowAdapter {
 
         // Choose what to display here
         for (ImageManipulator i : pipeline) {
+//            if (i instanceof VideoCapture)
+//                displayQueue.add(i.getDisplay());
             if (i instanceof UndistortImage)
                 displayQueue.add(i.getDisplay());
+//            if (i instanceof NormalizeImage)
+//                displayQueue.add(i.getDisplay());
+//            if (i instanceof BackgroundSubtractionThreshold)
+//                displayQueue.add(i.getDisplay());
             if (i instanceof GaussianBlurImage)
+                displayQueue.add(i.getDisplay());
+            if (i instanceof ErodeImage)
                 displayQueue.add(i.getDisplay());
             if (i instanceof ImageManipulatorWithOptions)
                 optionsPanelDisplay.add(((ImageManipulatorWithOptions) i).getModificationGUI());
@@ -74,7 +83,7 @@ public class DetectionCalibrationGUI extends WindowAdapter {
             pane.add(c);
         for (Component c : optionsPanelDisplay)
             optionsPane.add(c);
-        optionsPane.add(new CalibrateEmptyPitchButton(videoFeed));
+        optionsPane.add(new CalibrateEmptyPitchButton(controller.normalizeImage));
     }
 
 
@@ -82,7 +91,6 @@ public class DetectionCalibrationGUI extends WindowAdapter {
         saveValues();
 
         videoFeed.cleanupCapture();
-
         frame.dispose();
         System.out.println("Good Bye!");
     }

@@ -7,6 +7,8 @@ import vision.ImageManipulatorWithOptions;
 import vision.TitledComponent;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Properties;
@@ -18,7 +20,7 @@ import static vision.utils.Converter.matToBinaryImage;
  * Created by Ivan Georgiev (s1410984) on 02/02/17.
  * Class to Apply Gaussian Blur to Image
  */
-public class GaussianBlurImage extends ImageManipulatorWithOptions {
+public class GaussianBlurImage extends ImageManipulatorWithOptions implements ChangeListener {
 
     private static final String GAUSSIAN_BLUR_PROP = "GaussianBlur";
 
@@ -26,6 +28,10 @@ public class GaussianBlurImage extends ImageManipulatorWithOptions {
 
     private JSlider gaussianBlur = new JSlider(0, 11, 1);
     private TitledComponent gui = new TitledComponent("Gaussian Blur: ", gaussianBlur);
+
+    public GaussianBlurImage() {
+        gaussianBlur.addChangeListener(this);
+    }
 
     @Override
     protected BufferedImage run(BufferedImage input) {
@@ -55,7 +61,17 @@ public class GaussianBlurImage extends ImageManipulatorWithOptions {
 
     @Override
     protected void loadModificationSettings(Properties prop) {
-        if (prop.getProperty(GAUSSIAN_BLUR_PROP) != null)
-            GAUSSIAN_BLUR_SIZE = Integer.valueOf(prop.getProperty(GAUSSIAN_BLUR_PROP));
+        GAUSSIAN_BLUR_SIZE =
+                Integer.valueOf(
+                        prop.getProperty(GAUSSIAN_BLUR_PROP, String.valueOf(GAUSSIAN_BLUR_SIZE))
+                );
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        JSlider slider = (JSlider) e.getSource();
+        int value = slider.getValue();
+        if (value % 2 == 1 || value == 0)
+            GAUSSIAN_BLUR_SIZE = value;
     }
 }

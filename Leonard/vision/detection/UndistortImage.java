@@ -54,11 +54,11 @@ public class UndistortImage extends ImageManipulatorWithOptions implements Actio
 
     @Override
     protected void loadModificationSettings(Properties prop) {
-        String name = prop.getProperty(PITCH_NAME_PROPERTY);
-        if (name != null) {
-            PitchName data = PitchName.valueOf(name);
-            pitchChooser.setPrototypeDisplayValue(data);
-        }
+        pitchChooser.setPrototypeDisplayValue(
+                PitchName.valueOf(
+                    prop.getProperty(PITCH_NAME_PROPERTY, pitchChosen.name())
+                )
+        );
     }
 
     @Override

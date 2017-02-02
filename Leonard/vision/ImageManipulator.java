@@ -1,11 +1,10 @@
 package vision;
 
 import vision.capture.FrameReceivedListener;
+import vision.capture.VideoCapture;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Properties;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 01/02/17.
@@ -14,7 +13,7 @@ import java.util.Properties;
 public abstract class ImageManipulator implements FrameReceivedListener {
 
     private FrameReceivedListener nextManipulator = null;
-    private JLabel manipulatorDisplay;
+    private JLabel manipulatorDisplay = new JLabel();
     private boolean isDisplayed = false;
     private BufferedImage manipulatedImage = null;
 
@@ -26,8 +25,6 @@ public abstract class ImageManipulator implements FrameReceivedListener {
     }
 
     public JLabel getDisplay() {
-        if (manipulatorDisplay == null)
-            manipulatorDisplay = new JLabel();
         isDisplayed = true;
         return manipulatorDisplay;
     }
@@ -50,7 +47,7 @@ public abstract class ImageManipulator implements FrameReceivedListener {
         if (isDisplayed)
             manipulatorDisplay.getGraphics().drawImage(manipulatedImage, 0, 0, null);
         if (nextManipulator != null)
-            new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage));
+            new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage)).run();
     }
 
     protected abstract BufferedImage run(BufferedImage input);
