@@ -1,4 +1,4 @@
-package vision.capture;
+package vision.detection;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
