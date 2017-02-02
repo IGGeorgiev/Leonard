@@ -30,9 +30,9 @@ class DetectionPropertiesManager {
                 int dilation = Integer.valueOf(prop.getProperty("dilation"));
                 int erosion = Integer.valueOf(prop.getProperty("erosion"));
 
-                rthresholdSlider.setValue(threshR);
-                gthresholdSlider.setValue(threshG);
-                bthresholdSlider.setValue(threshB);
+                RThresholdSlider.setValue(threshR);
+                BThresholdSlider.setValue(threshG);
+                GThresholdSlider.setValue(threshB);
                 gaussianBlurSlider.setValue(gaussBlur);
                 dilationSlider.setValue(dilation);
                 erosionSlider.setValue(erosion);
@@ -63,9 +63,9 @@ class DetectionPropertiesManager {
 
             fos = new FileOutputStream(saveFile);
 
-            int threshR = rthresholdSlider.getValue();
-            int threshG = gthresholdSlider.getValue();
-            int threshB = bthresholdSlider.getValue();
+            int threshR = RThresholdSlider.getValue();
+            int threshG = BThresholdSlider.getValue();
+            int threshB = GThresholdSlider.getValue();
             int gaussBlur = gaussianBlurSlider.getValue();
             int dilation = dilationSlider.getValue();
             int erosion = erosionSlider.getValue();

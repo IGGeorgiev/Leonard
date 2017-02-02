@@ -35,7 +35,7 @@ public class BinaryImage extends JLabel implements FrameReceivedListener {
 
     private List<FrameReceivedListener> frameReceivedListeners = new ArrayList<>();
 
-    public BinaryImage(JSlider r, JSlider g, JSlider b) {
+    public BinaryImage(JSlider r, JSlider b, JSlider g) {
         super();
         BinaryImage.r = r;
         BinaryImage.g = g;

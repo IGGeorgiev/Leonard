@@ -31,9 +31,9 @@ public class DetectionCalibrationGUI extends WindowAdapter {
     private JPanel optionsPane;
     private JSlider thresholdSlider;
 
-    static JSlider rthresholdSlider;
-    static JSlider gthresholdSlider;
-    static JSlider bthresholdSlider;
+    static JSlider RThresholdSlider;
+    static JSlider BThresholdSlider;
+    static JSlider GThresholdSlider;
     static JSlider gaussianBlurSlider;
     static JSlider erosionSlider;
     static JSlider dilationSlider;
@@ -71,7 +71,7 @@ public class DetectionCalibrationGUI extends WindowAdapter {
 
         setupOptionsPane();
 
-        biLabel = new BinaryImage(rthresholdSlider, gthresholdSlider, bthresholdSlider);
+        biLabel = new BinaryImage(RThresholdSlider, BThresholdSlider, GThresholdSlider);
         biLabel.setSize(new Dimension(width / 2, height / 2));
 
         eadLabel = new ErodedAndDilatedImage();
@@ -105,17 +105,17 @@ public class DetectionCalibrationGUI extends WindowAdapter {
         thresholdSlider = new JSlider(0, 100, 0);
         thresholdSlider.addChangeListener(new BinaryImage.ThresholdChangeListener());
 
-        rthresholdSlider = new JSlider(0, 100, 0);
-        rthresholdSlider.addChangeListener(new BinaryImage.RThresholdChangeListener());
+        RThresholdSlider = new JSlider(0, 100, 0);
+        RThresholdSlider.addChangeListener(new BinaryImage.RThresholdChangeListener());
 
-        gthresholdSlider = new JSlider(0, 100, 0);
-        gthresholdSlider.addChangeListener(new BinaryImage.GThresholdChangeListener());
+        BThresholdSlider = new JSlider(0, 100, 0);
+        BThresholdSlider.addChangeListener(new BinaryImage.GThresholdChangeListener());
 
-        bthresholdSlider = new JSlider(0, 100, 0);
-        bthresholdSlider.addChangeListener(new BinaryImage.BThresholdChangeListener());
+        GThresholdSlider = new JSlider(0, 100, 0);
+        GThresholdSlider.addChangeListener(new BinaryImage.BThresholdChangeListener());
 
         pitchChooser = new JComboBox<>(PitchNames.values());
-        pitchChooser.addActionListener(VideoCapture.pitchChosenListener);
+        pitchChooser.addActionListener(vcLabel.pitchChosenListener);
 
         gaussianBlurSlider = new JSlider(1, 11, 3);
         gaussianBlurSlider.setMajorTickSpacing(2);
@@ -138,9 +138,9 @@ public class DetectionCalibrationGUI extends WindowAdapter {
 
         // Add buttons and sliders
         optionsPane.add(new TitledComponent("Threshold: ", thresholdSlider));
-        optionsPane.add(new TitledComponent("Threshold R:", rthresholdSlider));
-        optionsPane.add(new TitledComponent("Threshold G:", gthresholdSlider));
-        optionsPane.add(new TitledComponent("Threshold B:", bthresholdSlider));
+        optionsPane.add(new TitledComponent("Threshold R:", RThresholdSlider));
+        optionsPane.add(new TitledComponent("Threshold B:", BThresholdSlider));
+        optionsPane.add(new TitledComponent("Threshold G:", GThresholdSlider));
         optionsPane.add(new TitledComponent("GaussianBlur: ", gaussianBlurSlider));
         optionsPane.add(new TitledComponent("Dilation: ", dilationSlider));
         optionsPane.add(new TitledComponent("Erosion: ", erosionSlider));
