@@ -1,5 +1,6 @@
 package vision.calibration;
 
+import org.opencv.imgcodecs.Imgcodecs;
 import vision.capture.VideoCapture;
 
 import javax.imageio.ImageIO;
@@ -10,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static vision.utils.Converter.imageToMat;
 import static vision.utils.Normalizer.normalizeRGB;
 
 /**
@@ -30,13 +32,8 @@ public class CalibrateEmptyPitchButton extends JButton implements ActionListener
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        BufferedImage img = normalizeRGB(videoFeed.getCurrentImage());
-        File file = new File("Leonard/vision/calibration/pre_saved_values/empty_pitch_norm.jpg");
-        try {
-            file.createNewFile();
-            ImageIO.write(img, "jpg", file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        BufferedImage img = normalizeRGB(videoFeed.catchFrame());
+        Imgcodecs.imwrite("Leonard/vision/calibration/pre_saved_values/empty_pitch_norm.png",
+                imageToMat(img));
     }
 }

@@ -3,7 +3,9 @@ package vision;
 import vision.capture.FrameReceivedListener;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Properties;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 01/02/17.
@@ -38,7 +40,7 @@ public abstract class ImageManipulator implements FrameReceivedListener {
         return manipulatedImage;
     }
 
-    public void setNext(FrameReceivedListener listener) {
+    void setNext(FrameReceivedListener listener) {
         nextManipulator = listener;
     }
 

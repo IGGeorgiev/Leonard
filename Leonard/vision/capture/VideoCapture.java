@@ -7,8 +7,6 @@ import au.edu.jcu.v4l4j.exceptions.V4L4JException;
 import vision.ImageManipulator;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 28/01/17.
@@ -26,9 +24,6 @@ public class VideoCapture extends ImageManipulator implements CaptureCallback {
     private BufferedImage manipulatedImage;
 
 
-    private List<FrameReceivedListener> frameListeners = new ArrayList<>();
-
-
     public VideoCapture() {
         initFrameGrabber();
 
@@ -36,15 +31,10 @@ public class VideoCapture extends ImageManipulator implements CaptureCallback {
         try {
             if (frameGrabber != null)
                 frameGrabber.startCapture();
-        }
-        catch (V4L4JException e) {
+        } catch (V4L4JException e) {
             System.err.println("Error starting the capture");
             e.printStackTrace();
         }
-    }
-
-    public void addFrameReceivedListener(FrameReceivedListener frl) {
-        frameListeners.add(frl);
     }
 
 
@@ -106,4 +96,5 @@ public class VideoCapture extends ImageManipulator implements CaptureCallback {
     protected BufferedImage run(BufferedImage input) {
         return manipulatedImage;
     }
+
 }
