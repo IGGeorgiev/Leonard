@@ -4,18 +4,14 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
-import vision.ImageManipulatorWithOptions;
-import vision.TitledComponent;
+import vision.gui.TitledComponent;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Properties;
 
-import static vision.utils.Converter.imageToMat;
-import static vision.utils.Converter.matToBinaryImage;
 import static vision.utils.Subtractor.subtract;
 
 /**
@@ -32,20 +28,20 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
 
     private int THRESHOLD_R = 0, THRESHOLD_G = 0, THRESHOLD_B = 0;
 
-    private JSlider allThresholds = new JSlider(0,255,0);
-    private JSlider redSlider     = new JSlider(0,255,0);
-    private JSlider greenSlider   = new JSlider(0,255,0);
-    private JSlider blueSlider    = new JSlider(0,255,0);
+    private JSlider allThresholds = new JSlider(0,100,0);
+    private JSlider redSlider     = new JSlider(0,100,0);
+    private JSlider greenSlider   = new JSlider(0,100,0);
+    private JSlider blueSlider    = new JSlider(0,100,0);
 
     private JPanel sliders = new JPanel(new GridLayout(4,1));
 
     @Override
-    protected Component getModificationGUI() {
+    public Component getModificationGUI() {
         return sliders;
     }
 
     @Override
-    protected void saveModificationSettings(Properties prop) {
+    public void saveModificationSettings(Properties prop) {
         prop.setProperty(ALL_THRESH_PROP, String.valueOf(allThresholds.getValue()));
         prop.setProperty(R_THRESH_PROP, String.valueOf(redSlider.getValue()));
         prop.setProperty(G_THRESH_PROP, String.valueOf(greenSlider.getValue()));
@@ -53,7 +49,7 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
     }
 
     @Override
-    protected void loadModificationSettings(Properties prop) {
+    public void loadModificationSettings(Properties prop) {
         // Assume if last saved is null all are null
         allThresholds.setValue(Integer.valueOf(
                 prop.getProperty(ALL_THRESH_PROP, String.valueOf(allThresholds.getValue()))
@@ -83,11 +79,11 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
 
 
     @Override
-    protected BufferedImage run(BufferedImage input) {
+    protected Mat run(Mat input) {
         Mat backgroundImage =
                 Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/empty_pitch_norm.png");
 
-        Mat subtractedImage = subtract(backgroundImage, imageToMat(input));
+        Mat subtractedImage = subtract(backgroundImage, input);
 
         Mat thresholdedImage = new Mat();
         Core.inRange(subtractedImage,
@@ -95,7 +91,7 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
                 new Scalar(255,255,255),
                 thresholdedImage);
 
-        return matToBinaryImage(thresholdedImage);
+        return thresholdedImage;
     }
 
     @Override

@@ -1,14 +1,12 @@
 package vision.calibration;
 
+import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
-import vision.detection.NormalizeImage;
+import vision.detection.ImageManipulator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-
-import static vision.utils.Converter.imageToMat;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 29/01/17.
@@ -16,11 +14,11 @@ import static vision.utils.Converter.imageToMat;
  */
 public class CalibrateEmptyPitchButton extends JButton implements ActionListener {
 
-    private NormalizeImage normalizer;
+    private ImageManipulator manipulator;
 
-    public CalibrateEmptyPitchButton(NormalizeImage ni) {
+    public CalibrateEmptyPitchButton(ImageManipulator ni) {
         super();
-        normalizer = ni;
+        manipulator = ni;
         this.setText("Calibrate Empty Field");
         this.addActionListener(this);
     }
@@ -28,8 +26,8 @@ public class CalibrateEmptyPitchButton extends JButton implements ActionListener
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        BufferedImage img = normalizer.catchFrame();
+        Mat img = manipulator.catchMat();
         Imgcodecs.imwrite("Leonard/vision/calibration/pre_saved_values/empty_pitch_norm.png",
-                imageToMat(img));
+                img);
     }
 }

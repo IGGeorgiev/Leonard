@@ -3,18 +3,13 @@ package vision.detection;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import vision.ImageManipulatorWithOptions;
-import vision.TitledComponent;
+import vision.gui.TitledComponent;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Properties;
-
-import static vision.utils.Converter.binaryImageToMat;
-import static vision.utils.Converter.matToBinaryImage;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 02/02/17.
@@ -22,49 +17,52 @@ import static vision.utils.Converter.matToBinaryImage;
  */
 public class GaussianBlurImage extends ImageManipulatorWithOptions implements ChangeListener {
 
-    private static final String GAUSSIAN_BLUR_PROP = "GaussianBlur";
+    private static int filterCount = 0;
+
+    private final String GAUSSIAN_BLUR_PROP = "GaussianBlur" + filterCount;
 
     private static int GAUSSIAN_BLUR_SIZE = 3;
 
     private JSlider gaussianBlur = new JSlider(0, 11, 1);
-    private TitledComponent gui = new TitledComponent("Gaussian Blur: ", gaussianBlur);
+    private TitledComponent gui = new TitledComponent("Gaussian Blur " + filterCount + " :", gaussianBlur);
 
     public GaussianBlurImage() {
+        filterCount++;
         gaussianBlur.addChangeListener(this);
     }
 
     @Override
-    protected BufferedImage run(BufferedImage input) {
+    protected Mat run(Mat inputMat) {
         if (GAUSSIAN_BLUR_SIZE != 0) {
-            Mat inputMat = binaryImageToMat(input);
 
             // Apply gaussian blur
             Mat blurredMat = new Mat();
             Imgproc.GaussianBlur(inputMat, blurredMat,
                     new Size(GAUSSIAN_BLUR_SIZE, GAUSSIAN_BLUR_SIZE), 0);
 
-            return matToBinaryImage(blurredMat);
+            return blurredMat;
         } else {
-            return input;
+            return inputMat;
         }
     }
 
     @Override
-    protected Component getModificationGUI() {
+    public Component getModificationGUI() {
         return gui;
     }
 
     @Override
-    protected void saveModificationSettings(Properties prop) {
+    public void saveModificationSettings(Properties prop) {
         prop.setProperty(GAUSSIAN_BLUR_PROP, String.valueOf(GAUSSIAN_BLUR_SIZE));
     }
 
     @Override
-    protected void loadModificationSettings(Properties prop) {
+    public void loadModificationSettings(Properties prop) {
         GAUSSIAN_BLUR_SIZE =
                 Integer.valueOf(
                         prop.getProperty(GAUSSIAN_BLUR_PROP, String.valueOf(GAUSSIAN_BLUR_SIZE))
                 );
+        gaussianBlur.setValue(GAUSSIAN_BLUR_SIZE);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package vision.capture;
 
+import org.opencv.core.Mat;
+
 import java.awt.image.BufferedImage;
 
 /**

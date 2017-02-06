@@ -67,9 +67,13 @@ public class DetectionCalibrationGUI extends WindowAdapter {
 //                displayQueue.add(i.getDisplay());
 //            if (i instanceof BackgroundSubtractionThreshold)
 //                displayQueue.add(i.getDisplay());
-            if (i instanceof GaussianBlurImage)
+//            if (i instanceof GaussianBlurImage)
+//                displayQueue.add(i.getDisplay());
+//            if (i instanceof ErodeImage)
+//                displayQueue.add(i.getDisplay());
+            if (i instanceof DilateImage)
                 displayQueue.add(i.getDisplay());
-            if (i instanceof ErodeImage)
+            if (i instanceof ApplyBinaryMask)
                 displayQueue.add(i.getDisplay());
             if (i instanceof ImageManipulatorWithOptions)
                 optionsPanelDisplay.add(((ImageManipulatorWithOptions) i).getModificationGUI());

@@ -1,4 +1,4 @@
-package vision;
+package vision.detection;
 
 import java.awt.*;
 import java.util.Properties;
@@ -8,7 +8,7 @@ import java.util.Properties;
  * Class extending ImageManipulator to add GUI elements to change Manipulator's behaviour
  */
 public abstract class ImageManipulatorWithOptions extends ImageManipulator {
-    protected abstract Component getModificationGUI();
-    protected abstract void saveModificationSettings(Properties prop);
-    protected abstract void loadModificationSettings(Properties prop);
+    public abstract Component getModificationGUI();
+    public abstract void saveModificationSettings(Properties prop);
+    public abstract void loadModificationSettings(Properties prop);
 }

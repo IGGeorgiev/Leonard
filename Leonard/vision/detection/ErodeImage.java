@@ -3,18 +3,13 @@ package vision.detection;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import vision.ImageManipulatorWithOptions;
-import vision.TitledComponent;
+import vision.gui.TitledComponent;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Properties;
-
-import static vision.utils.Converter.binaryImageToMat;
-import static vision.utils.Converter.matToBinaryImage;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 02/02/17.
@@ -35,28 +30,28 @@ public class ErodeImage extends ImageManipulatorWithOptions implements ChangeLis
 
 
     @Override
-    protected Component getModificationGUI() {
+    public Component getModificationGUI() {
         return gui;
     }
 
     @Override
-    protected void saveModificationSettings(Properties prop) {
+    public void saveModificationSettings(Properties prop) {
         prop.setProperty(EROSION_PROP, String.valueOf(EROSION_SIZE));
     }
 
     @Override
-    protected void loadModificationSettings(Properties prop) {
+    public void loadModificationSettings(Properties prop) {
         EROSION_SIZE = Integer.valueOf(prop.getProperty(EROSION_PROP, String.valueOf(EROSION_SIZE)));
+        erosionSlider.setValue(EROSION_SIZE);
     }
 
     @Override
-    protected BufferedImage run(BufferedImage input) {
-        Mat image = binaryImageToMat(input);
+    protected Mat run(Mat image) {
         Mat erodedImage = new Mat();
         Mat erosionElement = Imgproc.getStructuringElement(Imgproc.MORPH_ERODE,
                 new Size(EROSION_SIZE, EROSION_SIZE));
         Imgproc.erode(image, erodedImage, erosionElement);
-        return matToBinaryImage(erodedImage);
+        return erodedImage;
     }
 
     @Override
