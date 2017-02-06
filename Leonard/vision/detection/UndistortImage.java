@@ -2,17 +2,12 @@ package vision.detection;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
-import vision.ImageManipulatorWithOptions;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.Properties;
-
-import static vision.utils.Converter.imageToMat;
-import static vision.utils.Converter.matToImage;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 01/02/17.
@@ -43,22 +38,20 @@ public class UndistortImage extends ImageManipulatorWithOptions implements Actio
             PitchName.STANDARD_OUTPUT;
 
     @Override
-    protected Component getModificationGUI() {
+    public Component getModificationGUI() {
         return pitchChooser;
     }
 
     @Override
-    protected void saveModificationSettings(Properties prop) {
+    public void saveModificationSettings(Properties prop) {
         prop.setProperty(PITCH_NAME_PROPERTY, pitchChosen.name());
     }
 
     @Override
-    protected void loadModificationSettings(Properties prop) {
-        pitchChooser.setPrototypeDisplayValue(
-                PitchName.valueOf(
-                    prop.getProperty(PITCH_NAME_PROPERTY, pitchChosen.name())
-                )
-        );
+    public void loadModificationSettings(Properties prop) {
+        pitchChosen =
+                PitchName.valueOf(prop.getProperty(PITCH_NAME_PROPERTY, pitchChosen.name()));
+        pitchChooser.setPrototypeDisplayValue(pitchChosen);
     }
 
     @Override
@@ -82,33 +75,45 @@ public class UndistortImage extends ImageManipulatorWithOptions implements Actio
     }
 
     @Override
-    protected BufferedImage run(BufferedImage input) {
+    protected Mat run(Mat input) {
 
         Mat undistorted = new Mat();
         switch (pitchChosen) {
             case PITCH_0:
                 Imgproc.undistort(
-                        imageToMat(input),
+                        input,
                         undistorted,
                         pitch0CameraMatrix,
                         pitch0DistCoeffs,
                         pitch0NewCameraMatrix
                 );
 
-                 return matToImage(undistorted);
+                 return undistorted;
 
             case PITCH_1:
                 Imgproc.undistort(
-                        imageToMat(input),
+                        input,
                         undistorted,
                         pitch1CameraMatrix,
                         pitch1DistCoeffs,
                         pitch1NewCameraMatrix
                 );
 
-                return matToImage(undistorted);
+                return undistorted;
             default:
                 return input;
         }
     }
+
+    @Override
+    public void onFrameReceived(Mat image) {
+        manipulatedImage = run(image);
+        if (manipulatedImage != null) {
+            if (isDisplayed)
+                manipulatorDisplay.getGraphics().drawImage(catchFrame(), 0, 0, null);
+            if (nextManipulator != null)
+                new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage.clone())).run();
+        }
+    }
+
 }

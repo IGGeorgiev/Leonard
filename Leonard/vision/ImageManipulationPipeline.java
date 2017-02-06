@@ -1,17 +1,17 @@
 package vision;
 
-import vision.capture.FrameReceivedListener;
+import org.opencv.core.Mat;
+import vision.capture.MatFrameListener;
 import vision.capture.VideoCapture;
 import vision.detection.*;
 
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 01/02/17.
  * A class to orchestrate
  */
-public class ImageManipulationPipeline implements FrameReceivedListener {
+public class ImageManipulationPipeline implements MatFrameListener {
 
     private static final ImageManipulationPipeline instance = new ImageManipulationPipeline();
 
@@ -33,6 +33,15 @@ public class ImageManipulationPipeline implements FrameReceivedListener {
     private GaussianBlurImage              gaussianBlur   = new GaussianBlurImage();
     private DilateImage                    dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
+    private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(undistortImage);
+
+    // Failures
+
+    // Performance heavy
+//    private RemoveSmallBlobs               rmSmallBlobs   = new RemoveSmallBlobs();
+
+    // Multiple blurs deemed unnecessary
+//    private GaussianBlurImage              gaussianBlur2  = new GaussianBlurImage();
 
     /**
      * This list is what determines what order (and which manipulations are applied to the input
@@ -44,12 +53,13 @@ public class ImageManipulationPipeline implements FrameReceivedListener {
         add(normalizeImage);
         add(threshold);
         add(gaussianBlur);
-        add(dilateImage);
         add(erodeImage);
+        add(dilateImage);
+        add(applyBinaryMask);
     }};
 
     @Override
-    public void onFrameReceived(BufferedImage image) {
+    public void onFrameReceived(Mat image) {
         // TODO Analyse processed image
     }
 }

@@ -1,4 +1,4 @@
-package vision;
+package vision.gui;
 
 import javax.swing.*;
 import java.awt.*;

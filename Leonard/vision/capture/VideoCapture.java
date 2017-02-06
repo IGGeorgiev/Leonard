@@ -4,9 +4,12 @@ package vision.capture;
 import au.edu.jcu.v4l4j.*;
 import au.edu.jcu.v4l4j.exceptions.StateException;
 import au.edu.jcu.v4l4j.exceptions.V4L4JException;
-import vision.ImageManipulator;
+import org.opencv.core.Mat;
+import vision.detection.ImageManipulator;
 
 import java.awt.image.BufferedImage;
+
+import static vision.utils.Converter.imageToMat;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 28/01/17.
@@ -86,15 +89,15 @@ public class VideoCapture extends ImageManipulator implements CaptureCallback {
 
         manipulatedImage = frame.getBufferedImage();
 
-        this.onFrameReceived(manipulatedImage);
+        this.onFrameReceived(imageToMat(manipulatedImage));
 
         // recycle the frame
         frame.recycle();
     }
 
     @Override
-    protected BufferedImage run(BufferedImage input) {
-        return manipulatedImage;
+    protected Mat run(Mat input) {
+        return input;
     }
 
 }
