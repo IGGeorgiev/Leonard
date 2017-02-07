@@ -227,10 +227,12 @@ public class GUI extends JFrame implements KeyListener{
                     this.robot.ACTION_CONTROLLER.setAction(new Waiting(this.robot));
                     break;
                 case '0':
+                    this.robot.setControllersActive(true);
+                    this.robot.ACTION_CONTROLLER.setAction(null);
                     this.robot.MOTION_CONTROLLER.setHeading(new BallPoint());
                     this.robot.MOTION_CONTROLLER.setDestination(new BallPoint());
                     break;
-                
+
             }
         }
 
