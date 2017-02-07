@@ -28,6 +28,7 @@ public class BallPoint extends DynamicPointBase {
                 }
             }
         }
+        System.out.println("ball point x = " + x + " ball point y = " + y);
     }
 
     @Override
