@@ -1,4 +1,4 @@
-package strategy.controllers.fred;
+package strategy.controllers.leonard;
 
 import communication.ports.interfaces.GrabberEquipedRobotPort;
 import strategy.Strategy;
@@ -11,10 +11,10 @@ import vision.tools.VectorGeometry;
 /**
  * Created by Simon Rovder
  */
-public class KickerController extends ControllerBase {
+public class PropellorController extends ControllerBase {
     private int grabberTracker;
 
-    public KickerController(RobotBase robot) {
+    public PropellorController(RobotBase robot) {
         super(robot);
         this.grabberTracker = 0;
     }
