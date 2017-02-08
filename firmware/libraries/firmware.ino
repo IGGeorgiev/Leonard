@@ -81,6 +81,10 @@ void pingMethod(){
   Serial.println("pang");
 }
 
+void grabberStatus() {
+  Serial.println("hello i am the tacho counts for the NXT motor.");
+}
+
 void kicker(){
   int type = atoi(sCmd.next());
   if(type == 0){
@@ -111,7 +115,8 @@ void setup(){
   sCmd.addCommand("motor", spinmotor); 
   sCmd.addCommand("r", rationalMotors);
   sCmd.addCommand("ping", pingMethod); 
-  sCmd.addCommand("kick", kicker); 
+  sCmd.addCommand("kick", kicker);
+  sCmd.addCommand("grabberStatus", grabberStatus);
 
   SDPsetup();
   helloWorld();
