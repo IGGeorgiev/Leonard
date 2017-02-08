@@ -71,7 +71,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
         semiStrategy.vision.addVisionListener(semiStrategy);
 
 
-//        fred.PROPELLER_CONTROLLER.setActive(false);
+//        leonard.PROPELLER_CONTROLLER.setActive(false);
 
         this.action = "";
         GUI.gui.doesNothingButIsNecessarySoDontDelete();
