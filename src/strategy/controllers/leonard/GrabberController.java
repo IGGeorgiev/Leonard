@@ -7,8 +7,12 @@ import strategy.robots.RobotBase;
 
 public class GrabberController extends ControllerBase {
 
+    private int isDown;
+
     public GrabberController(RobotBase robot) {
         super(robot);
+        this.isDown = 0;
+
     }
 
     @Override
@@ -19,6 +23,8 @@ public class GrabberController extends ControllerBase {
     @Override
     public void perform() {
         assert (this.robot.port instanceof GrabberEquipedRobotPort);
-
+        if(this.isActive()){
+            robot.port.checkGrabber();
+        }
     }
 }

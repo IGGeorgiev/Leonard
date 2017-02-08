@@ -26,12 +26,15 @@ public class RobotPort implements PortListener {
 
     @Override
     public void receivedStringHandler(String string) {
-
+        String s = string;
+        System.out.println(s);
     }
 
     public void ping() {
         sdpPort.commandSender("ping");
     }
+
+    public void checkGrabber() {sdpPort.commandSender("grabberStatus");}
 
     public void stop() {
         sdpPort.commandSender("f");
