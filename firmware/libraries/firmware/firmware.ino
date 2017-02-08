@@ -83,11 +83,11 @@ void pingMethod(){
 
 void kicker(){
   int type = atoi(sCmd.next());
+  Serial.print("Hellooooo!!!");
+  Serial.println(type);
   if(type == 0){
     motorStop(KICKERS);
   } else if (type == 1){
-    Serial.print("Starting From: ");
-    Serial.println(positions[0] % 40);
     motorForward(KICKERS, 100);
     kickerStatus = 1;
   } else {

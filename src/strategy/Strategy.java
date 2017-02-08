@@ -193,6 +193,31 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     System.out.println("Leonard.y = "+www.location.y);
                     System.out.println("Ball.x = "+bbb.location.x);
                     System.out.println("Ball.y = "+bbb.location.y);
+                    break;
+                case "kk":
+                    ((FredRobotPort) fred.port).grabber(1);
+                    ActionListener taskPerformer = new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            //...Perform a task...
+                            ((FredRobotPort) fred.port).grabber(0);
+                        }
+                    };
+                    Timer tm = new Timer(300, taskPerformer);
+                    tm.setRepeats(false);
+                    tm.start();
+                    break;
+                case "gb":
+                    ((FredRobotPort) fred.port).grabber(2);
+                    ActionListener task2 = new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            //...Perform a task...
+                            ((FredRobotPort) fred.port).grabber(0);
+                        }
+                    };
+                    Timer tm2 = new Timer(300, task2);
+                    tm2.setRepeats(false);
+                    tm2.start();
+                    break;
             }
         }
 
