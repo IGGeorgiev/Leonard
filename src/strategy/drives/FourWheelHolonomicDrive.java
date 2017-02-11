@@ -7,6 +7,8 @@ import vision.tools.VectorGeometry;
 
 /**
  * Created by Simon Rovder
+ * Modified by Group 15, 2017 to suit the need where the grabber/kicker is not in the same direction
+ * as the front wheel
  */
 
 public class FourWheelHolonomicDrive implements DriveInterface{
@@ -16,6 +18,10 @@ public class FourWheelHolonomicDrive implements DriveInterface{
 
     public void move(RobotPort port, DirectedPoint location, VectorGeometry force, double rotation, double factor){
         assert(port instanceof FourWheelHolonomicRobotPort);
+
+        //********** Rotation Modification **********//
+        rotation += 0.785;
+        //********** Rotation Modification **********//
 
         VectorGeometry dir = new VectorGeometry();
         force.copyInto(dir).coordinateRotation(force.angle() - location.direction);
