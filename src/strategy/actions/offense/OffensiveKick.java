@@ -21,7 +21,7 @@ public class OffensiveKick extends ActionBase {
         this.robot.MOTION_CONTROLLER.setDestination(new BallPoint());
         if(newState == 0){
             if(this.robot instanceof Fred){
-                ((Fred)this.robot).PROPELLER_CONTROLLER.setActive(true);
+                ((Fred)this.robot).GRABBER_CONTROLLER.setActive(true);
             }
         }
         this.state = 0;

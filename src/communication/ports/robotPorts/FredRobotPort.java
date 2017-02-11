@@ -22,6 +22,4 @@ public class FredRobotPort extends RobotPort implements GrabberEquipedRobotPort,
     public void grabber(int spin) {
         this.sdpPort.commandSender("kick", spin);
     }
-
-
 }

@@ -48,7 +48,7 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
     public void tok() throws ActionException {
 
         this.robot.MOTION_CONTROLLER.clearObstacles();
-        if(this.robot instanceof Fred) ((Fred)this.robot).PROPELLER_CONTROLLER.setActive(true);
+        if(this.robot instanceof Fred) ((Fred)this.robot).GRABBER_CONTROLLER.setActive(true);
         this.lastState = this.nextState;
         switch (this.nextState){
             case DEFEND:

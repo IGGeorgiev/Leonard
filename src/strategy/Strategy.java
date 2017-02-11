@@ -28,7 +28,6 @@ import java.io.InputStreamReader;
 public class Strategy implements VisionListener, PortListener, ActionListener {
 
 
-
     private Timer timer;
     private String action;
     private Vision vision;
@@ -52,16 +51,16 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
         return "";
     }
 
-    private RobotBase [] robots;
+    private RobotBase[] robots;
 
-    public Strategy(String [] args) {
+    public Strategy(String[] args) {
 
         /*
          * SDP2017NOTE
          * Create your robots in the following line. All these robots will be instantly connected to the
          * navigation system and all its controllers will be launched every cycle.
          */
-        this.robots = new RobotBase [] {new Fred(RobotType.FRIEND_2)};
+        this.robots = new RobotBase[]{new Fred(RobotType.FRIEND_2)};
 
         Fred fred = (Fred) this.robots[0];
         FredRobotPort port = (FredRobotPort) fred.port;
@@ -80,7 +79,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
         this.timer.start();
 
 
-        while(true){
+        while (true) {
             /*
              * SDP2017NOTE
              * This is a debug loop. You can add manual control over the robots here so as to make testing easier.
@@ -89,14 +88,14 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
              */
             System.out.print(">> ");
             this.action = this.readLine();
-            if(this.action.equals("exit")){
-                fred.PROPELLER_CONTROLLER.setActive(false);
+            if (this.action.equals("exit")) {
+                fred.GRABBER_CONTROLLER.setActive(false);
                 port.grabber(0);
                 port.grabber(0);
                 port.grabber(0);
                 break;
             }
-            switch(this.action){
+            switch (this.action) {
                 case "a":
                     fred.setControllersActive(true);
                     break;
@@ -108,8 +107,8 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     System.out.print(fred.ACTION_CONTROLLER.isActive());
                     System.out.print(" Motion: ");
                     System.out.print(fred.MOTION_CONTROLLER.isActive());
-                    System.out.print(" Propeller: ");
-                    System.out.println(fred.PROPELLER_CONTROLLER.isActive());
+                    System.out.print(" Grabber: ");
+                    System.out.println(fred.GRABBER_CONTROLLER.isActive());
                     break;
                 case "?":
                     fred.ACTION_CONTROLLER.printDescription();
@@ -127,13 +126,13 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     port.halt();
                     port.halt();
                     port.halt();
-                    fred.PROPELLER_CONTROLLER.setActive(false);
+                    fred.GRABBER_CONTROLLER.setActive(false);
                     port.grabber(0);
                     port.grabber(0);
                     port.grabber(0);
                     break;
                 case "reset":
-                    fred.ACTION_CONTROLLER.setAction(new Goto(fred, new ConstantPoint(0,0)));
+                    fred.ACTION_CONTROLLER.setAction(new Goto(fred, new ConstantPoint(0, 0)));
                     break;
                 case "remote":
                     System.out.println(fred.ACTION_CONTROLLER.isActive());
@@ -164,7 +163,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     fred.MOTION_CONTROLLER.setHeading(new RobotPoint(RobotAlias.FELIX));
                     break;
                 case "rot":
-                    fred.PROPELLER_CONTROLLER.setActive(false);
+                    fred.GRABBER_CONTROLLER.setActive(false);
                     ((FredRobotPort) fred.port).grabber(0);
                     ((FredRobotPort) fred.port).grabber(0);
                     ((FredRobotPort) fred.port).grabber(0);
@@ -172,27 +171,17 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     fred.MOTION_CONTROLLER.setDestination(new Rotate());
                     fred.MOTION_CONTROLLER.setHeading(new BallPoint());
                     break;
-                case "p":
-                    boolean act = fred.PROPELLER_CONTROLLER.isActive();
-                    fred.PROPELLER_CONTROLLER.setActive(!act);
-                    if(!act){
-                        ((FredRobotPort) fred.port).grabber(0);
-                        ((FredRobotPort) fred.port).grabber(0);
-                        ((FredRobotPort) fred.port).grabber(0);
-                    }
-                    System.out.println(fred.PROPELLER_CONTROLLER.isActive());
-                    break;
                 case "test":
                     fred.MOTION_CONTROLLER.setHeading(new EnemyGoal());
                     fred.MOTION_CONTROLLER.setDestination(new EnemyGoal());
                     break;
                 case "leonard":
                     Robot www = Strategy.world.getRobot(RobotType.FRIEND_2);
-                    Ball  bbb = Strategy.world.getBall();
-                    System.out.println("Leonard.x = "+www.location.x);
-                    System.out.println("Leonard.y = "+www.location.y);
-                    System.out.println("Ball.x = "+bbb.location.x);
-                    System.out.println("Ball.y = "+bbb.location.y);
+                    Ball bbb = Strategy.world.getBall();
+                    System.out.println("Leonard.x = " + www.location.x);
+                    System.out.println("Leonard.y = " + www.location.y);
+                    System.out.println("Ball.x = " + bbb.location.x);
+                    System.out.println("Ball.y = " + bbb.location.y);
                     break;
                 case "kk":
                     ((FredRobotPort) fred.port).grabber(1);
@@ -226,8 +215,6 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
     }
 
 
-
-
     @Override
     public void nextWorld(DynamicWorld dynamicWorld) {
         world = dynamicWorld;
@@ -238,6 +225,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
     /**
      * SDP2017NOTE
      * This is the main() you want to run. It launches everything.
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -254,16 +242,16 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(world != null){
-            for(RobotBase robot : this.robots){
-                if(world.getRobot(robot.robotType) == null){
+        if (world != null) {
+            for (RobotBase robot : this.robots) {
+                if (world.getRobot(robot.robotType) == null) {
                     // Angry yelling.
                     Toolkit.getDefaultToolkit().beep();
                 }
-                try{
+                try {
                     // Tells all the Controllers of each robot to do what they need to do.
                     robot.perform();
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
