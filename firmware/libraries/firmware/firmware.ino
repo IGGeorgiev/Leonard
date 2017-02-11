@@ -12,10 +12,10 @@
 //define LEFT 3
 
 //Kickers in front
-#define FRONT 3
-#define RIGHT 0
-#define BACK 1
-#define LEFT 2
+#define FRONT 0
+#define RIGHT 1
+#define BACK 2
+#define LEFT 3
 
 #define KICKERS 4
 #define SPEAKER 5
@@ -71,28 +71,36 @@ void rationalMotors(){
   int back  = atoi(sCmd.next());
   int left  = atoi(sCmd.next());
   int right = atoi(sCmd.next());
-  motorControl(FRONT, front);
-  motorControl(BACK, back);
+  motorControl(FRONT, -front);
+  motorControl(BACK, -back);
   motorControl(LEFT, left);
-  motorControl(RIGHT, right);
+  motorControl(RIGHT, -right);
 }
 
 void pingMethod(){
   Serial.println("pang");
 }
 
+void grabberStatus() {
+  Serial.println("hello i am the tacho counts for the NXT motor.");
+}
+
 void kicker(){
   int type = atoi(sCmd.next());
-  Serial.print("Hellooooo!!!");
-  Serial.println(type);
   if(type == 0){
     motorStop(KICKERS);
   } else if (type == 1){
-    motorForward(KICKERS, 100);
-    kickerStatus = 1;
+    if(kickerStatus != 1){
+        Serial.print("Starting From: ");
+        Serial.println(positions[0] % 40);
+        motorForward(KICKERS, 100);
+        kickerStatus = 1;
+    }
   } else {
-    motorBackward(KICKERS, 100);
-    kickerStatus = -1;
+    if(kickerStatus != -1){
+        motorBackward(KICKERS, 100);
+        kickerStatus = -1;
+    }
   }
 }
 
@@ -111,7 +119,8 @@ void setup(){
   sCmd.addCommand("motor", spinmotor); 
   sCmd.addCommand("r", rationalMotors);
   sCmd.addCommand("ping", pingMethod); 
-  sCmd.addCommand("kick", kicker); 
+  sCmd.addCommand("kick", kicker);
+  sCmd.addCommand("grabberStatus", grabberStatus);
 
   SDPsetup();
   helloWorld();
