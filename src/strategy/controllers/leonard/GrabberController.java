@@ -46,14 +46,16 @@ public class GrabberController extends ControllerBase {
                 }
                 if (grabberIsDown && this.robot.robotType == Strategy.world.getProbableBallHolder()) {
                     // turn to the goal and kick (for now I just want him to kick if he has the ball)
-                    robotPort.grabber(1);
+                    robotPort.grabber(2);
                     grabberIsDown = false;
                 } else if (grabberIsDown && ballIsGrabbable) {
-                    robotPort.grabber(1);
+                    robotPort.grabber(2);
                     grabberIsDown = false;
                 } else {
                     /** the commented code below is a possible strategy to work the grabber
-                     *  right now it just lowers the grabber if the grabber was up**/
+                     *  right now it just lowers the grabber if the grabber was up
+                     *  robotPort.grabber(1); lowers the grabber
+                     *  robotPort.grabber(2); raises the grabber**/
 //                    if(ballIsGrabbable && sensor says ball is not within reach){
 //                        robotPort.grabber(0);
 //                    }else if(ballIsGrabbable && sensor says ball is within reach){
@@ -61,7 +63,7 @@ public class GrabberController extends ControllerBase {
 //                        Strategy.world.setProbableBallHolder(this.robot.robotType);
 //                        grabberIsDown = true;
 //                    }else{
-                    robotPort.grabber(-1);
+                    robotPort.grabber(1);
                     grabberIsDown = true;
 //                    }
                 }

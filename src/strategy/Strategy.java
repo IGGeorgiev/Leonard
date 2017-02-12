@@ -183,7 +183,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     System.out.println("Ball.x = " + bbb.location.x);
                     System.out.println("Ball.y = " + bbb.location.y);
                     break;
-                case "kk":
+                case "grab":
                     ((FredRobotPort) fred.port).grabber(1);
                     ActionListener taskPerformer = new ActionListener() {
                         public void actionPerformed(ActionEvent evt) {
@@ -195,7 +195,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     tm.setRepeats(false);
                     tm.start();
                     break;
-                case "gb":
+                case "lift":
                     ((FredRobotPort) fred.port).grabber(2);
                     ActionListener task2 = new ActionListener() {
                         public void actionPerformed(ActionEvent evt) {
