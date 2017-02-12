@@ -191,7 +191,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                             ((FredRobotPort) fred.port).grabber(0);
                         }
                     };
-                    Timer tm = new Timer(300, taskPerformer);
+                    Timer tm = new Timer(280, taskPerformer);
                     tm.setRepeats(false);
                     tm.start();
                     break;

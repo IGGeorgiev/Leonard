@@ -93,13 +93,13 @@ void kicker(){
     if(kickerStatus != 1){
         Serial.print("Starting From: ");
         Serial.println(positions[0] % 40);
-        motorForward(KICKERS, 100);
+        motorForward(KICKERS, 255);
         kickerStatus = 1;
     }
   } else {
-    if(kickerStatus != -1){
-        motorBackward(KICKERS, 100);
-        kickerStatus = -1;
+    if(kickerStatus != 2){
+        motorBackward(KICKERS, 255);
+        kickerStatus = 2;
     }
   }
 }
