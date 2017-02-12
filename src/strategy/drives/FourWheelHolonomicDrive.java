@@ -20,7 +20,7 @@ public class FourWheelHolonomicDrive implements DriveInterface{
         assert(port instanceof FourWheelHolonomicRobotPort);
 
         //********** Rotation Modification **********//
-        rotation += 0.785;
+        rotation -= 1.5;
         //********** Rotation Modification **********//
 
         VectorGeometry dir = new VectorGeometry();
