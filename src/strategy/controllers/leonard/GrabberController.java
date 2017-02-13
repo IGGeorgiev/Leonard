@@ -46,6 +46,7 @@ public class GrabberController extends ControllerBase {
                 }
                 if (grabberIsDown && this.robot.robotType == Strategy.world.getProbableBallHolder()) {
                     // turn to the goal and kick (for now I just want him to kick if he has the ball)
+
                     robotPort.grabber(2);
                     grabberIsDown = false;
                 } else if (grabberIsDown && ballIsGrabbable) {
