@@ -5,7 +5,8 @@ package vision.tools;
  *
  * SDP2017NOTE - This class contains everything you could possibly need for your mathsy calculations.
  */
-public class VectorGeometry {
+public class
+VectorGeometry {
     public double x;
     public double y;
 
