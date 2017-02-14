@@ -4,6 +4,7 @@ package strategy.controllers.leonard;
 import communication.ports.interfaces.GrabberEquipedRobotPort;
 import communication.ports.robotPorts.FredRobotPort;
 import strategy.Strategy;
+import strategy.actions.other.Stop;
 import strategy.controllers.ControllerBase;
 import strategy.points.DynamicPoint;
 import strategy.points.basicPoints.ConstantPoint;
@@ -39,8 +40,8 @@ public class GrabberController extends ControllerBase {
         robotPort.grabber(0);
     }
 
-    public void grab(int i){
-        FredRobotPort portie =(FredRobotPort) this.robot.port;
+    public void grab(int i) {
+        FredRobotPort portie = (FredRobotPort) this.robot.port;
         portie.grabber(i);
         ActionListener taskPerformer = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -64,8 +65,8 @@ public class GrabberController extends ControllerBase {
                 double xDiff = Math.abs(ball.location.x - us.location.x);
                 double yDiff = Math.abs(ball.location.y - us.location.y);
                 double distFromBall = xDiff * yDiff;
-                //experiment with the constant 5 to see what works best
-                if (distFromBall < 5) {
+                //experiment with the constant 10 to see what works best
+                if (distFromBall < 15) {
                     ballIsGrabbable = true;
                 }
 
@@ -75,8 +76,8 @@ public class GrabberController extends ControllerBase {
                     grabberIsDown = false;
                 } else if (grabberIsDown && this.robot.robotType == Strategy.world.getProbableBallHolder()) {
                     EnemyGoal enemyGoal = new EnemyGoal();
-                    robot.MOTION_CONTROLLER.setDestination(new ConstantPoint((int) us.location.x, (int) us.location.y));
-                    robot.MOTION_CONTROLLER.setHeading(enemyGoal);
+                    this.robot.ACTION_CONTROLLER.setAction(new Stop(this.robot));
+                    this.robot.MOTION_CONTROLLER.setHeading(enemyGoal);
                     System.out.println("we have the ball");
 
 //                    boolean openGoal = true;
@@ -89,7 +90,9 @@ public class GrabberController extends ControllerBase {
                     VectorGeometry lower = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() - 20);
                     VectorGeometry upper = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() + 20);
                     VectorGeometry kickDirection = VectorGeometry.intersectionWithFiniteLine(us.location, VectorGeometry.fromAngular(us.location.direction, 10, null), lower, upper);
-                    if (Math.abs(kickDirection.y) <= 20) {
+                    System.out.println("We are aiming in the direction: " + Math.abs(kickDirection.y));
+                    boolean facingGoal = Math.abs(kickDirection.y) <= 20;
+                    if (facingGoal) {
                         System.out.println("we are facing the goal");
                         grab(2);
                         grabberIsDown = false;
@@ -106,8 +109,10 @@ public class GrabberController extends ControllerBase {
 //                        Strategy.world.setProbableBallHolder(this.robot.robotType);
 //                        grabberIsDown = true;
 //                    }else{
-                    grab(1);
-                    grabberIsDown = true;
+                    if (distFromBall < 4) {
+                        grab(1);
+                        grabberIsDown = true;
+                    }
 //                    }
                 }
             }
