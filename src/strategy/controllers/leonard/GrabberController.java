@@ -62,6 +62,8 @@ public class GrabberController extends ControllerBase {
         if (us != null) {
             if (this.isActive()) {
                 boolean ballIsGrabbable = false;
+                boolean weHaveBall = false;
+                FredRobotPort portie = (FredRobotPort) this.robot.port;
                 double xDiff = Math.abs(ball.location.x - us.location.x);
                 double yDiff = Math.abs(ball.location.y - us.location.y);
                 double distFromBall = xDiff * yDiff;
@@ -69,16 +71,22 @@ public class GrabberController extends ControllerBase {
                 if (distFromBall < 15) {
                     ballIsGrabbable = true;
                 }
+                System.out.println("grabber is down: " + grabberIsDown);
 
-                if (grabberIsDown && ballIsGrabbable) {
-                    System.out.println("we are close to the ball");
-                    grab(2);
+
+                if (grabberIsDown && distFromBall < 15) {
+                    System.out.println("we are close to the ball " + distFromBall);
+                    System.out.println(grabberIsDown);
+
+                    portie.grabber(2);
                     grabberIsDown = false;
-                } else if (grabberIsDown && this.robot.robotType == Strategy.world.getProbableBallHolder()) {
-                    EnemyGoal enemyGoal = new EnemyGoal();
-                    this.robot.ACTION_CONTROLLER.setAction(new Stop(this.robot));
-                    this.robot.MOTION_CONTROLLER.setHeading(enemyGoal);
+                } else if (grabberIsDown && weHaveBall && this.robot.robotType == Strategy.world.getProbableBallHolder()) {
+//                    EnemyGoal enemyGoal = new EnemyGoal();
+//                    this.robot.ACTION_CONTROLLER.setAction(new Stop(this.robot));
+//                    this.robot.MOTION_CONTROLLER.setHeading(enemyGoal);
+
                     System.out.println("we have the ball");
+                    System.out.println(grabberIsDown);
 
 //                    boolean openGoal = true;
 //                    for (Robot r : Strategy.world.getRobots()) {
@@ -87,16 +95,17 @@ public class GrabberController extends ControllerBase {
 //                        }
 //                            openGoal = openGoal && r.location.distance(ball.location) > 10;
 //                    }
-                    VectorGeometry lower = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() - 20);
-                    VectorGeometry upper = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() + 20);
-                    VectorGeometry kickDirection = VectorGeometry.intersectionWithFiniteLine(us.location, VectorGeometry.fromAngular(us.location.direction, 10, null), lower, upper);
-                    System.out.println("We are aiming in the direction: " + Math.abs(kickDirection.y));
-                    boolean facingGoal = Math.abs(kickDirection.y) <= 20;
-                    if (facingGoal) {
-                        System.out.println("we are facing the goal");
-                        grab(2);
-                        grabberIsDown = false;
-                    }
+//                    VectorGeometry lower = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() - 20);
+//                    VectorGeometry upper = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() + 20);
+//                    VectorGeometry kickDirection = VectorGeometry.intersectionWithFiniteLine(us.location, VectorGeometry.fromAngular(us.location.direction, 10, null), lower, upper);
+//                    System.out.println("We are aiming in the direction: " + Math.abs(kickDirection.y));
+//                    boolean facingGoal = Math.abs(kickDirection.y) <= 20;
+//                    if (facingGoal) {
+//                        System.out.println("we are facing the goal");
+                    portie.grabber(2);
+                    grabberIsDown = false;
+                    weHaveBall = false;
+                    //                    }
                 } else {
                     /** the commented code below is a possible strategy to work the grabber
                      *  right now it just lowers the grabber if the grabber was up
@@ -109,10 +118,12 @@ public class GrabberController extends ControllerBase {
 //                        Strategy.world.setProbableBallHolder(this.robot.robotType);
 //                        grabberIsDown = true;
 //                    }else{
-                    if (distFromBall < 4) {
-                        grab(1);
-                        grabberIsDown = true;
-                    }
+//                    if (distFromBall < 8) {
+
+                    portie.grabber(1);
+                    weHaveBall = true;
+                    grabberIsDown = true;
+//                    }
 //                    }
                 }
             }
