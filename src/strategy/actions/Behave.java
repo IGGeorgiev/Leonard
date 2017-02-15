@@ -3,6 +3,7 @@ package strategy.actions;
 import strategy.GUI;
 import strategy.Strategy;
 import strategy.WorldTools;
+import strategy.actions.offense.DirectedKick;
 import strategy.actions.other.DefendGoal;
 import strategy.actions.other.GoToSafeLocation;
 import strategy.actions.offense.OffensiveKick;
@@ -19,7 +20,7 @@ import vision.tools.VectorGeometry;
  * Created by Simon Rovder
  */
 enum BehaviourEnum {
-    DEFEND, SHUNT, KICK, SAFE, EMPTY
+    DEFEND, SHUNT, KICK, SAFE, EMPTY, DIRECT
 }
 
 /**
@@ -63,6 +64,8 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
             case SAFE:
                 this.enterAction(new GoToSafeLocation(this.robot), 0, 0);
                 break;
+            case DIRECT:
+                this.enterAction(new DirectedKick(this.robot), 0, 0);
         }
     }
 
@@ -76,6 +79,9 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
             if (us == null) {
                 // TODO: Angry yelling
             } else {
+                double xDiff = Math.abs(ball.location.x - us.location.x);
+                double yDiff = Math.abs(ball.location.y - us.location.y);
+                double distFromBall = xDiff * yDiff;
                 VectorGeometry ourGoal = new VectorGeometry(-Constants.PITCH_WIDTH / 2, 0);
                 if (us.location.distance(ourGoal) > ball.location.distance(ourGoal)) {
                     this.nextState = BehaviourEnum.SAFE;
@@ -90,7 +96,11 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
                     }
                     if (canKick && (this.lastState != BehaviourEnum.DEFEND ||
                             VectorGeometry.angle(ball.velocity, VectorGeometry.fromTo(ball.location, ourGoal)) > 2)) {
-                        this.nextState = BehaviourEnum.KICK;
+                        if(distFromBall < 10){
+                            this.nextState = BehaviourEnum.KICK;
+                        }else {
+                            this.nextState = BehaviourEnum.KICK;
+                        }
                     } else {
                         this.nextState = BehaviourEnum.DEFEND;
                     }

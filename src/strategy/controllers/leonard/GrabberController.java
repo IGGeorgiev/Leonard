@@ -68,7 +68,7 @@ public class GrabberController extends ControllerBase {
                 double yDiff = Math.abs(ball.location.y - us.location.y);
                 double distFromBall = xDiff * yDiff;
                 //experiment with the constant 10 to see what works best
-                if (distFromBall < 15) {
+                if (distFromBall < 5) {
                     ballIsGrabbable = true;
                 }
 //                System.out.println("grabber is down: " + grabberIsDown);
@@ -106,7 +106,7 @@ public class GrabberController extends ControllerBase {
                     grabberIsDown = false;
                     weHaveBall = false;
                     //                    }
-                } else {
+                } else if(ballIsGrabbable){
                     /** the commented code below is a possible strategy to work the grabber
                      *  right now it just lowers the grabber if the grabber was up
                      *  robotPort.grabber(1); lowers the grabber

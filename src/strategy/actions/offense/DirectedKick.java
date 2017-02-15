@@ -10,19 +10,19 @@ import strategy.robots.RobotBase;
 /**
  * Created by Simon Rovder
  */
-public class OffensiveKick extends ActionBase {
+public class DirectedKick extends ActionBase {
 
-    public OffensiveKick(RobotBase robot) {
+    public DirectedKick(RobotBase robot) {
         super(robot);
         this.rawDescription = "OffensiveKick";
     }
     @Override
     public void enterState(int newState) {
-        this.robot.MOTION_CONTROLLER.setHeading(new BallPoint());
+        this.robot.MOTION_CONTROLLER.setHeading(new EnemyGoal());
         this.robot.MOTION_CONTROLLER.setDestination(new BallPoint());
         if(newState == 0){
             if(this.robot instanceof Fred){
-                ((Fred)this.robot).GRABBER_CONTROLLER.setActive(false);
+                ((Fred)this.robot).GRABBER_CONTROLLER.setActive(true);
             }
         }
         this.state = 0;
