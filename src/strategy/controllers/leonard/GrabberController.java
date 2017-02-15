@@ -71,12 +71,12 @@ public class GrabberController extends ControllerBase {
                 if (distFromBall < 15) {
                     ballIsGrabbable = true;
                 }
-                System.out.println("grabber is down: " + grabberIsDown);
+//                System.out.println("grabber is down: " + grabberIsDown);
 
 
                 if (grabberIsDown && distFromBall < 15) {
                     System.out.println("we are close to the ball " + distFromBall);
-                    System.out.println(grabberIsDown);
+
 
                     portie.grabber(2);
                     grabberIsDown = false;
@@ -86,7 +86,7 @@ public class GrabberController extends ControllerBase {
 //                    this.robot.MOTION_CONTROLLER.setHeading(enemyGoal);
 
                     System.out.println("we have the ball");
-                    System.out.println(grabberIsDown);
+
 
 //                    boolean openGoal = true;
 //                    for (Robot r : Strategy.world.getRobots()) {
@@ -119,6 +119,7 @@ public class GrabberController extends ControllerBase {
 //                        grabberIsDown = true;
 //                    }else{
 //                    if (distFromBall < 8) {
+                    System.out.println("lower");
 
                     portie.grabber(1);
                     weHaveBall = true;
