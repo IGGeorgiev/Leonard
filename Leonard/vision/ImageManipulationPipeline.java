@@ -3,6 +3,7 @@ package vision;
 import org.opencv.core.Mat;
 import vision.capture.MatFrameListener;
 import vision.capture.VideoCapture;
+import vision.capture.VideoFileCapture;
 import vision.detection.*;
 
 import java.util.LinkedList;
@@ -26,6 +27,7 @@ public class ImageManipulationPipeline implements MatFrameListener {
         pipeline.getLast().setNext(this);
     }
 
+    VideoFileCapture                       videoFileCap   = new VideoFileCapture("vision/calibration/pre_saved_values/capture.mkv");
     VideoCapture                           videoCapture   = new VideoCapture();
     private UndistortImage                 undistortImage = new UndistortImage();
     NormalizeImage                         normalizeImage = new NormalizeImage();
@@ -48,7 +50,8 @@ public class ImageManipulationPipeline implements MatFrameListener {
      * video.
      */
     LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
-        add(videoCapture);
+//        add(videoCapture);
+        add(videoFileCap);
         add(undistortImage);
         add(normalizeImage);
         add(threshold);
