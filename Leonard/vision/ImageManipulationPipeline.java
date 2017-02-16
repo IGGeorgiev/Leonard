@@ -3,7 +3,6 @@ package vision;
 import org.opencv.core.Mat;
 import vision.capture.MatFrameListener;
 import vision.capture.VideoCapture;
-import vision.capture.VideoFileCapture;
 import vision.detection.*;
 
 import java.util.LinkedList;
@@ -27,15 +26,16 @@ public class ImageManipulationPipeline implements MatFrameListener {
         pipeline.getLast().setNext(this);
     }
 
-    VideoFileCapture                       videoFileCap   = new VideoFileCapture("vision/calibration/pre_saved_values/capture.mkv");
+//    VideoFileCapture                       videoFileCap   = new VideoFileCapture("vision/calibration/pre_saved_values/capture.mkv");
     VideoCapture                           videoCapture   = new VideoCapture();
-    private UndistortImage                 undistortImage = new UndistortImage();
-    NormalizeImage                         normalizeImage = new NormalizeImage();
+    UndistortImage                         undistortImage = new UndistortImage();
+//    NormalizeImage                         normalizeImage = new NormalizeImage();
+    HSVConverter                           hsvImage       = new HSVConverter();
     private BackgroundSubtractionThreshold threshold      = new BackgroundSubtractionThreshold();
     private GaussianBlurImage              gaussianBlur   = new GaussianBlurImage();
-    private DilateImage                    dilateImage    = new DilateImage();
+    DilateImage                            dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
-    private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(undistortImage);
+    ApplyBinaryMask                        applyBinaryMask= new ApplyBinaryMask(undistortImage);
 
     // Failures
 
@@ -50,10 +50,10 @@ public class ImageManipulationPipeline implements MatFrameListener {
      * video.
      */
     LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
-//        add(videoCapture);
-        add(videoFileCap);
+        add(videoCapture);
         add(undistortImage);
-        add(normalizeImage);
+//        add(normalizeImage);
+        add(hsvImage);
         add(threshold);
         add(gaussianBlur);
         add(erodeImage);

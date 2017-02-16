@@ -1,6 +1,7 @@
 package vision.detection;
 
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -72,9 +73,9 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
         blueSlider.addChangeListener(this);
 
         sliders.add(new TitledComponent("All Thresholds", allThresholds));
-        sliders.add(new TitledComponent("Red Threshold: ", redSlider));
-        sliders.add(new TitledComponent("Green Threshold: ", greenSlider));
-        sliders.add(new TitledComponent("Blue Threshold: ", blueSlider));
+        sliders.add(new TitledComponent("Blue/Hue Threshold: ", redSlider));
+        sliders.add(new TitledComponent("Green/Saturation Threshold: ", greenSlider));
+        sliders.add(new TitledComponent("Red/Value Threshold: ", blueSlider));
     }
 
 
@@ -85,9 +86,9 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
 
         Mat subtractedImage = subtract(backgroundImage, input);
 
-        Mat thresholdedImage = new Mat();
+        Mat thresholdedImage = new Mat(input.rows(), input.cols(), CvType.CV_8UC1);
         Core.inRange(subtractedImage,
-                new Scalar(THRESHOLD_R, THRESHOLD_B, THRESHOLD_G),
+                new Scalar(THRESHOLD_B, THRESHOLD_G, THRESHOLD_R),
                 new Scalar(255,255,255),
                 thresholdedImage);
 

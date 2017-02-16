@@ -2,6 +2,7 @@ package vision;
 
 import org.opencv.core.Core;
 import vision.calibration.CalibrateEmptyPitchButton;
+import vision.calibration.SnapshotObjects;
 import vision.capture.VideoCapture;
 import vision.detection.*;
 
@@ -87,13 +88,12 @@ public class DetectionCalibrationGUI extends WindowAdapter {
             pane.add(c);
         for (Component c : optionsPanelDisplay)
             optionsPane.add(c);
-        optionsPane.add(new CalibrateEmptyPitchButton(controller.normalizeImage));
+        optionsPane.add(new CalibrateEmptyPitchButton(controller.hsvImage));
     }
 
 
     public void windowClosing(WindowEvent e) {
         saveValues();
-
         videoFeed.cleanupCapture();
         frame.dispose();
         System.out.println("Good Bye!");
