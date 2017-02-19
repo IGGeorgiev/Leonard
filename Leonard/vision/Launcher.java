@@ -2,6 +2,7 @@ package vision;
 
 import org.opencv.core.Core;
 import vision.capture.VideoCapture;
+import vision.gui.ClassifierGUI;
 import vision.gui.DetectionCalibrationGUI;
 
 import javax.swing.*;
@@ -14,6 +15,7 @@ import static vision.capture.VideoCapture.width;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 19/02/17.
+ * Launcher for the vision system
  */
 public class Launcher extends WindowAdapter {
 
@@ -27,7 +29,11 @@ public class Launcher extends WindowAdapter {
         frame = new JFrame();
         pane = new JTabbedPane();
         DetectionCalibrationGUI detectionGUI = new DetectionCalibrationGUI();
+//        ClassifierGUI classifierGUI = new ClassifierGUI();
+
         videoFeed = detectionGUI.videoFeed;
+
+//        pane.addTab("Classifier", classifierGUI);
         pane.addTab("Detection", detectionGUI);
 
         frame.add(pane);
