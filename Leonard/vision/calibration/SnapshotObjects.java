@@ -1,8 +1,8 @@
 package vision.calibration;
 
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import vision.detection.ImageManipulator;
@@ -12,8 +12,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.opencv.core.Core.findNonZero;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 16/02/17.
@@ -36,19 +34,17 @@ public class SnapshotObjects extends JButton implements ChangeListener {
         Mat img = catcher.catchMat();
         Mat mask = masker.catchMat();
 
-//        List<MatOfPoint> contours = new ArrayList<>();
-//        Mat hierarchy = new Mat();
-//        Imgproc.findContours(mask, contours, hierarchy,Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-//        Mat out = new Mat();
-//        findNonZero(mask, out);
-//
-//        int count = 0;
-//        for (int i = 0; i < 3; i++) {
-//            findNonZero(mask, 1);
-//            img.copyTo(out, mop);
-//            Imgcodecs.imwrite("vision/calibration/pre_saved_values/templates/file" + count + ".png"
-//                    , img);
-//            count++;
-//        }
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(mask, contours, hierarchy,Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        int count = 0;
+        for (MatOfPoint mop : contours) {
+            Rect boundingBox = Imgproc.boundingRect(mop);
+            Mat out = new Mat(img, boundingBox);
+            Imgcodecs.imwrite("Leonard/vision/calibration/pre_saved_values/templates/img" + count + ".png", out);
+            count++;
+        }
+
     }
 }

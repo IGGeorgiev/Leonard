@@ -1,7 +1,8 @@
-package vision.detection;
+package vision.detection.manipulators;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
+import vision.detection.ImageManipulatorWithOptions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.util.Properties;
 /**
  * Created by Ivan Georgiev (s1410984) on 01/02/17.
  * A Manipulator to remove lens distortion depending on pitch.
- * Constants are loaded from a separate class @ vision.detection.DistortionConstantsLoader
+ * Constants are loaded from a separate class @ vision.detection.manipulators.DistortionConstantsLoader
  */
 
 public class UndistortImage extends ImageManipulatorWithOptions implements ActionListener {

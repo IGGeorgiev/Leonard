@@ -14,9 +14,9 @@ import static vision.utils.Converter.matToBufferedImage;
  */
 public abstract class ImageManipulator implements MatFrameListener {
 
-    MatFrameListener nextManipulator = null;
-    JLabel manipulatorDisplay = new JLabel();
-    boolean isDisplayed = false;
+    public MatFrameListener nextManipulator = null;
+    public JLabel manipulatorDisplay = new JLabel();
+    public boolean isDisplayed = false;
     public Mat manipulatedImage = null;
 
     public JLabel getDisplay(boolean setIsDisplayed) {
@@ -35,7 +35,7 @@ public abstract class ImageManipulator implements MatFrameListener {
         isDisplayed = false;
     }
 
-    BufferedImage catchFrame() {
+    public BufferedImage catchFrame() {
         return matToBufferedImage(manipulatedImage, null);
     }
 
@@ -43,7 +43,7 @@ public abstract class ImageManipulator implements MatFrameListener {
         return manipulatedImage;
     }
 
-    public void setNext(MatFrameListener listener) {
+    void setNext(MatFrameListener listener) {
         nextManipulator = listener;
     }
 
