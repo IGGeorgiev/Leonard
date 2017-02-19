@@ -38,13 +38,14 @@ public class SnapshotObjects extends JButton implements ChangeListener {
         Mat hierarchy = new Mat();
         Imgproc.findContours(mask, contours, hierarchy,Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        int count = 0;
-        for (MatOfPoint mop : contours) {
-            Rect boundingBox = Imgproc.boundingRect(mop);
-            Mat out = new Mat(img, boundingBox);
-            Imgcodecs.imwrite("Leonard/vision/calibration/pre_saved_values/templates/img" + count + ".png", out);
-            count++;
+        if (contours.size() < 10) {
+            int count = 0;
+            for (MatOfPoint mop : contours) {
+                Rect boundingBox = Imgproc.boundingRect(mop);
+                Mat out = new Mat(img, boundingBox);
+                Imgcodecs.imwrite("Leonard/vision/calibration/pre_saved_values/templates/img" + count + ".png", out);
+                count++;
+            }
         }
-
     }
 }
