@@ -1,9 +1,10 @@
-package vision.detection;
+package vision.detection.manipulators;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import vision.detection.ImageManipulatorWithOptions;
 import vision.gui.TitledComponent;
 
 import javax.swing.*;

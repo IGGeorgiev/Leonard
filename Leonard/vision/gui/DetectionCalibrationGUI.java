@@ -1,56 +1,44 @@
-package vision;
+package vision.gui;
 
-import org.opencv.core.Core;
 import vision.calibration.CalibrateEmptyPitchButton;
 import vision.calibration.SnapshotObjects;
 import vision.capture.VideoCapture;
 import vision.detection.*;
+import vision.detection.manipulators.ApplyBinaryMask;
+import vision.detection.manipulators.DilateImage;
+import vision.detection.manipulators.UndistortImage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import static vision.DetectionPropertiesManager.loadValues;
-import static vision.DetectionPropertiesManager.saveValues;
-import static vision.capture.VideoCapture.height;
-import static vision.capture.VideoCapture.width;
+import static vision.detection.DetectionPropertiesManager.loadValues;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 29/01/17.
  * Graphical User Interface for the Vision System
  */
-public class DetectionCalibrationGUI extends WindowAdapter {
+public class DetectionCalibrationGUI extends JPanel {
 
-    private JFrame frame;
-    private JPanel pane;
     private JPanel optionsPane;
 
     private ImageManipulationPipeline controller = ImageManipulationPipeline.getInstance();
     private LinkedList<ImageManipulator> pipeline = controller.pipeline;
 
     // Note - entry point to the pipeline is always the video feed
-    private VideoCapture videoFeed = controller.videoCapture;
+    public VideoCapture videoFeed = controller.videoCapture;
 
-    private DetectionCalibrationGUI() {
-        frame = new JFrame();
-        pane = new JPanel(new GridLayout(2,2));
+    public DetectionCalibrationGUI() {
+        super(new GridLayout(2,2));
         optionsPane = new JPanel();
         optionsPane.setLayout(new BoxLayout(optionsPane, BoxLayout.Y_AXIS));
         optionsPane.setBorder(new EmptyBorder(20,20,20,20));
 
         chooseDisplays();
 
-        pane.add(optionsPane);
-        frame.add(pane);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.addWindowListener(this);
-        frame.setVisible(true);
-        frame.setSize(width, height);
-//        frame.setExtendedState( frame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
+        this.add(optionsPane);
     }
 
 
@@ -85,26 +73,19 @@ public class DetectionCalibrationGUI extends WindowAdapter {
 
         // Create View
         for (Component c : displayQueue)
-            pane.add(c);
+            this.add(c);
         for (Component c : optionsPanelDisplay)
             optionsPane.add(c);
         optionsPane.add(new CalibrateEmptyPitchButton(controller.hsvImage));
-    }
-
-
-    public void windowClosing(WindowEvent e) {
-        saveValues();
-        videoFeed.cleanupCapture();
-        frame.dispose();
-        System.out.println("Good Bye!");
+        optionsPane.add(new SnapshotObjects(controller.undistortImage, controller.dilateImage));
     }
 
 
 
-    public static void main(String args[]) {
-
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-        SwingUtilities.invokeLater(DetectionCalibrationGUI::new);
-    }
+//    public static void main(String args[]) {
+//
+//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+//
+//        SwingUtilities.invokeLater(DetectionCalibrationGUI::new);
+//    }
 }

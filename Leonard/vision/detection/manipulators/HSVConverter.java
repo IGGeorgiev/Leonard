@@ -1,7 +1,8 @@
-package vision.detection;
+package vision.detection.manipulators;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
+import vision.detection.ImageManipulator;
 
 /**
  * BGR to HSV converter

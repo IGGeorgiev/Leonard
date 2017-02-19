@@ -1,7 +1,4 @@
-package vision;
-
-import vision.detection.ImageManipulator;
-import vision.detection.ImageManipulatorWithOptions;
+package vision.detection;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,9 +11,9 @@ import java.util.Properties;
  * Created by Ivan Georgiev (s1410984) on 01/02/17.
  * Class to manage Properties I/O
  */
-class DetectionPropertiesManager {
+public class DetectionPropertiesManager {
 
-    static void loadValues() {
+    public static void loadValues() {
         File saveFile =
                 new File("Leonard/vision/calibration/pre_saved_values/calibrationOptions.properties");
         Properties prop = new Properties();
@@ -46,7 +43,7 @@ class DetectionPropertiesManager {
 
     }
 
-    static void saveValues() {
+    public static void saveValues() {
         File saveFile =
                 new File("Leonard/vision/calibration/pre_saved_values/calibrationOptions.properties");
         Properties prop = new Properties();

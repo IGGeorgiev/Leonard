@@ -1,4 +1,4 @@
-package vision.detection;
+package vision.detection.manipulators;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;

@@ -1,9 +1,9 @@
-package vision;
+package vision.detection;
 
 import org.opencv.core.Mat;
 import vision.capture.MatFrameListener;
 import vision.capture.VideoCapture;
-import vision.detection.*;
+import vision.detection.manipulators.*;
 
 import java.util.LinkedList;
 
@@ -15,7 +15,7 @@ public class ImageManipulationPipeline implements MatFrameListener {
 
     private static final ImageManipulationPipeline instance = new ImageManipulationPipeline();
 
-    static ImageManipulationPipeline getInstance() { return instance; }
+    public static ImageManipulationPipeline getInstance() { return instance; }
 
 
     private ImageManipulationPipeline() {
@@ -27,15 +27,14 @@ public class ImageManipulationPipeline implements MatFrameListener {
     }
 
 //    VideoFileCapture                       videoFileCap   = new VideoFileCapture("vision/calibration/pre_saved_values/capture.mkv");
-    VideoCapture                           videoCapture   = new VideoCapture();
-    UndistortImage                         undistortImage = new UndistortImage();
-//    NormalizeImage                         normalizeImage = new NormalizeImage();
-    HSVConverter                           hsvImage       = new HSVConverter();
+    public VideoCapture                    videoCapture   = new VideoCapture();
+    public UndistortImage undistortImage = new UndistortImage();
+    public HSVConverter                    hsvImage       = new HSVConverter();
     private BackgroundSubtractionThreshold threshold      = new BackgroundSubtractionThreshold();
     private GaussianBlurImage              gaussianBlur   = new GaussianBlurImage();
-    DilateImage                            dilateImage    = new DilateImage();
+    public DilateImage dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
-    ApplyBinaryMask                        applyBinaryMask= new ApplyBinaryMask(undistortImage);
+    public ApplyBinaryMask applyBinaryMask= new ApplyBinaryMask(undistortImage);
 
     // Failures
 
@@ -45,11 +44,14 @@ public class ImageManipulationPipeline implements MatFrameListener {
     // Multiple blurs deemed unnecessary
 //    private GaussianBlurImage              gaussianBlur2  = new GaussianBlurImage();
 
+    // Normalized RGB makes a noisy subtraction, which is difficult to threshold
+//    NormalizeImage                       normalizeImage = new NormalizeImage()
+// ;
     /**
      * This list is what determines what order (and which manipulations are applied to the input
      * video.
      */
-    LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
+    public LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
         add(videoCapture);
         add(undistortImage);
 //        add(normalizeImage);
