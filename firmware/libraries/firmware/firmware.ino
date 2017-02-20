@@ -4,13 +4,6 @@
 #include <Arduino.h>
 #include <I2CPort.h>
 
-
-//Kickers in back
-//define FRONT 1
-//define RIGHT 7
-//define BACK 5
-//define LEFT 3
-
 //Kickers in front
 #define FRONT 3
 #define RIGHT 0
