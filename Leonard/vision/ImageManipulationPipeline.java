@@ -3,7 +3,7 @@ package vision;
 import org.opencv.core.Mat;
 import vision.capture.MatFrameListener;
 import vision.capture.VideoCapture;
-import vision.classification.SURFClassifier;
+import vision.classification.PatternMatcher;
 import vision.detection.ImageManipulator;
 import vision.detection.manipulators.*;
 
@@ -37,7 +37,7 @@ public class ImageManipulationPipeline implements MatFrameListener {
     public DilateImage                     dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
     private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(undistortImage);
-    private SURFClassifier                 classifier = new SURFClassifier();
+    private PatternMatcher classifier = new PatternMatcher();
 
     // Failures
 
