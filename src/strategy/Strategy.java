@@ -170,6 +170,8 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     fred.ACTION_CONTROLLER.setActive(false);
                     fred.MOTION_CONTROLLER.setDestination(new Rotate());
                     fred.MOTION_CONTROLLER.setHeading(new BallPoint());
+                    System.out.println(new BallPoint().getX());
+                    System.out.println(new BallPoint().getY());
                     break;
                 case "test":
                     fred.MOTION_CONTROLLER.setHeading(new EnemyGoal());
@@ -209,6 +211,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     break;
                 case "rotate": // point to ball
                     fred.MOTION_CONTROLLER.setHeading(new BallPoint());
+                    fred.MOTION_CONTROLLER.setDestination(new RobotPoint(fred.robotType));
                     break;
             }
         }
