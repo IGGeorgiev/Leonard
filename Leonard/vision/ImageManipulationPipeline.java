@@ -57,9 +57,9 @@ public class ImageManipulationPipeline implements MatFrameListener {
     public LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
         add(videoCapture);
         add(undistortImage);
+        add(gaussianBlur);
         add(hsvImage);
         add(threshold);
-        add(gaussianBlur);
         add(erodeImage);
         add(dilateImage);
         add(applyBinaryMask);
