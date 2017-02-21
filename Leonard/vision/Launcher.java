@@ -2,7 +2,6 @@ package vision;
 
 import org.opencv.core.Core;
 import vision.capture.VideoCapture;
-import vision.classification.SURFClassifier;
 import vision.gui.ClassifierGUI;
 import vision.gui.DetectionCalibrationGUI;
 

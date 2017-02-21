@@ -1,7 +1,7 @@
 package vision.gui;
 
 import vision.ImageManipulationPipeline;
-import vision.classification.SURFClassifier;
+import vision.classification.PatternMatcher;
 import vision.detection.ImageManipulator;
 
 import javax.swing.*;
@@ -31,7 +31,7 @@ public class ClassifierGUI extends JPanel {
 
         // Choose what to display here
         for (ImageManipulator i : pipeline) {
-            if (i instanceof SURFClassifier) {
+            if (i instanceof PatternMatcher) {
                 displayQueue.add(i.getDisplay());
                 displayedManipulators.add(i);
             }
