@@ -1,8 +1,7 @@
 package vision.gui;
 
-import vision.capture.VideoCapture;
+import vision.ImageManipulationPipeline;
 import vision.classification.SURFClassifier;
-import vision.detection.ImageManipulationPipeline;
 import vision.detection.ImageManipulator;
 
 import javax.swing.*;
@@ -19,8 +18,7 @@ public class ClassifierGUI extends JPanel {
     private ImageManipulationPipeline controller = ImageManipulationPipeline.getInstance();
     private LinkedList<ImageManipulator> pipeline = controller.pipeline;
 
-    // Note - entry point to the pipeline is always the video feed
-    public VideoCapture videoFeed = controller.videoCapture;
+    private ArrayList<ImageManipulator> displayedManipulators = new ArrayList<>();
 
     public ClassifierGUI() {
         super(new GridLayout(2,2));
@@ -33,13 +31,20 @@ public class ClassifierGUI extends JPanel {
 
         // Choose what to display here
         for (ImageManipulator i : pipeline) {
-            if (i instanceof SURFClassifier)
+            if (i instanceof SURFClassifier) {
                 displayQueue.add(i.getDisplay());
+                displayedManipulators.add(i);
+            }
         }
 
         // Create View
-        for (Component c : displayQueue)
-            this.add(c);
+        displayQueue.forEach(this::add);
     }
+
+    public void hideAll() {
+        displayedManipulators.forEach(ImageManipulator::hideDisplay);
+    }
+
+    public void showAll() {displayedManipulators.forEach(ImageManipulator::getDisplay); }
 
 }

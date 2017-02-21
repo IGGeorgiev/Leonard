@@ -1,5 +1,6 @@
 package vision.gui;
 
+import vision.ImageManipulationPipeline;
 import vision.calibration.CalibrateEmptyPitchButton;
 import vision.calibration.SnapshotObjects;
 import vision.capture.VideoCapture;
@@ -30,6 +31,8 @@ public class DetectionCalibrationGUI extends JPanel {
     // Note - entry point to the pipeline is always the video feed
     public VideoCapture videoFeed = controller.videoCapture;
 
+    private ArrayList<ImageManipulator> displayedManipulators = new ArrayList<>();
+
     public DetectionCalibrationGUI() {
         super(new GridLayout(2,2));
         optionsPane = new JPanel();
@@ -50,8 +53,10 @@ public class DetectionCalibrationGUI extends JPanel {
         for (ImageManipulator i : pipeline) {
 //            if (i instanceof VideoCapture)
 //                displayQueue.add(i.getDisplay());
-            if (i instanceof UndistortImage)
+            if (i instanceof UndistortImage) {
                 displayQueue.add(i.getDisplay());
+                displayedManipulators.add(i);
+            }
 //            if (i instanceof NormalizeImage)
 //                displayQueue.add(i.getDisplay());
 //            if (i instanceof BackgroundSubtractionThreshold)
@@ -59,11 +64,13 @@ public class DetectionCalibrationGUI extends JPanel {
 //            if (i instanceof GaussianBlurImage)
 //                displayQueue.add(i.getDisplay());
 //            if (i instanceof ErodeImage)
-//                displayQueue.add(i.getDisplay());
+//                displayQueue.add(i.getDis
             if (i instanceof DilateImage)
                 displayQueue.add(i.getDisplay());
+                displayedManipulators.add(i);
             if (i instanceof ApplyBinaryMask)
                 displayQueue.add(i.getDisplay());
+                displayedManipulators.add(i);
             if (i instanceof ImageManipulatorWithOptions)
                 optionsPanelDisplay.add(((ImageManipulatorWithOptions) i).getModificationGUI());
         }
@@ -72,15 +79,18 @@ public class DetectionCalibrationGUI extends JPanel {
         loadValues();
 
         // Create View
-        for (Component c : displayQueue)
-            this.add(c);
-        for (Component c : optionsPanelDisplay)
-            optionsPane.add(c);
+        displayQueue.forEach(this::add);
+        optionsPanelDisplay.forEach((x) -> optionsPane.add(x));
+
         optionsPane.add(new CalibrateEmptyPitchButton(controller.hsvImage));
         optionsPane.add(new SnapshotObjects(controller.undistortImage, controller.dilateImage));
     }
 
+    public void hideAll() {
+        displayedManipulators.forEach(ImageManipulator::hideDisplay);
+    }
 
+    public void showAll() {displayedManipulators.forEach(ImageManipulator::getDisplay); }
 
 //    public static void main(String args[]) {
 //

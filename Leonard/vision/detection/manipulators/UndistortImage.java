@@ -111,7 +111,8 @@ public class UndistortImage extends ImageManipulatorWithOptions implements Actio
         manipulatedImage = run(image);
         if (manipulatedImage != null) {
             if (isDisplayed)
-                manipulatorDisplay.getGraphics().drawImage(catchFrame(), 0, 0, null);
+                if (manipulatorDisplay != null)
+                    manipulatorDisplay.getGraphics().drawImage(catchFrame(), 0, 0, null);
             if (nextManipulator != null)
                 new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage.clone())).run();
         }
