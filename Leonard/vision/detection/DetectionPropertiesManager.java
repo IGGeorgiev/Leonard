@@ -1,5 +1,7 @@
 package vision.detection;
 
+import vision.ImageManipulationPipeline;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

@@ -1,9 +1,10 @@
-package vision.detection;
+package vision;
 
 import org.opencv.core.Mat;
 import vision.capture.MatFrameListener;
 import vision.capture.VideoCapture;
 import vision.classification.SURFClassifier;
+import vision.detection.ImageManipulator;
 import vision.detection.manipulators.*;
 
 import java.util.LinkedList;
@@ -29,14 +30,14 @@ public class ImageManipulationPipeline implements MatFrameListener {
 
 //    VideoFileCapture                       videoFileCap   = new VideoFileCapture("vision/calibration/pre_saved_values/capture.mkv");
     public VideoCapture                    videoCapture   = new VideoCapture();
-    public UndistortImage undistortImage = new UndistortImage();
+    public UndistortImage                  undistortImage = new UndistortImage();
     public HSVConverter                    hsvImage       = new HSVConverter();
     private BackgroundSubtractionThreshold threshold      = new BackgroundSubtractionThreshold();
     private GaussianBlurImage              gaussianBlur   = new GaussianBlurImage();
-    public DilateImage dilateImage    = new DilateImage();
+    public DilateImage                     dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
-    public ApplyBinaryMask applyBinaryMask= new ApplyBinaryMask(undistortImage);
-//    private SURFClassifier             classifier = new SURFClassifier();
+    private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(undistortImage);
+    private SURFClassifier                 classifier = new SURFClassifier();
 
     // Failures
 
@@ -56,14 +57,13 @@ public class ImageManipulationPipeline implements MatFrameListener {
     public LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
         add(videoCapture);
         add(undistortImage);
-//        add(normalizeImage);
         add(hsvImage);
         add(threshold);
         add(gaussianBlur);
         add(erodeImage);
         add(dilateImage);
         add(applyBinaryMask);
-//        add(classifier);
+        add(classifier);
     }};
 
     @Override

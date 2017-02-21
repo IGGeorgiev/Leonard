@@ -7,9 +7,10 @@ import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import vision.detection.ImageManipulationPipeline;
+import vision.ImageManipulationPipeline;
 import vision.detection.ImageManipulator;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,39 +64,68 @@ public class SURFClassifier extends ImageManipulator {
         redBall = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/ball_red.png");
         blueBall = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/ball_blue.png");
 
+        Imgproc.cvtColor(redBall, redBall, Imgproc.COLOR_BGR2HSV);
         // Detect key points of templates
         featureDetector = FeatureDetector.create(FeatureDetector.SURF);
 
-        featureDetector.detect(yellowGreen, ygKeyPoints);
-        featureDetector.detect(yellowPink, ypKeyPoints);
-        featureDetector.detect(blueGreen, bgKeyPoints);
-        featureDetector.detect(bluePink, bpKeyPoints);
-        featureDetector.detect(redBall, rbKeyPoints);
-        featureDetector.detect(blueBall, bbKeyPoints);
+//        ygKeyPoints = getAllCentralPoints(yellowGreen);
+//        ypKeyPoints = getAllCentralPoints(yellowPink);
+//        rbKeyPoints = getAllCentralPoints(redBall);
 
+//        featureDetector.detect(yellowGreen, ygKeyPoints);
+//        featureDetector.detect(yellowPink, ypKeyPoints);
+//        featureDetector.detect(blueGreen, bgKeyPoints);
+//        featureDetector.detect(bluePink, bpKeyPoints);
+        featureDetector.detect(redBall, rbKeyPoints);
+//        featureDetector.detect(blueBall, bbKeyPoints);
         // Describe key points
+
         descriptionExtractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
 
-        descriptionExtractor.compute(yellowGreen, ygKeyPoints, ygDesc);
-        descriptionExtractor.compute(yellowPink, ypKeyPoints, ypDesc);
-        descriptionExtractor.compute(blueGreen, bgKeyPoints, bgDesc);
-        descriptionExtractor.compute(bluePink, bpKeyPoints, bpDesc);
+//        descriptionExtractor.compute(yellowGreen, ygKeyPoints, ygDesc);
+//        descriptionExtractor.compute(yellowPink, ypKeyPoints, ypDesc);
+//        descriptionExtractor.compute(blueGreen, bgKeyPoints, bgDesc);
+//        descriptionExtractor.compute(bluePink, bpKeyPoints, bpDesc);
         descriptionExtractor.compute(redBall, rbKeyPoints, rbDesc);
-        descriptionExtractor.compute(blueBall, bbKeyPoints, bbDesc);
-    }
 
+//        descriptionExtractor.compute(blueBall, bbKeyPoints, bbDesc);
+    }
 
     @Override
     protected Mat run(Mat image) {
         MatOfKeyPoint keyPoints = new MatOfKeyPoint();
+
+        Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2HSV);
         featureDetector.detect(image, keyPoints);
         Mat kpDesc = new Mat();
         descriptionExtractor.compute(image, keyPoints, kpDesc);
 
         Mat outputMat = ImageManipulationPipeline.getInstance().undistortImage.catchMat();
-        findMatches(keyPoints, ygKeyPoints, kpDesc, ygDesc, outputMat, yellowGreen);
-
+        // Catch in case the key points of interest are much less than the ones in the query
+        if (keyPoints.size().area() > ygKeyPoints.size().area()) {
+//            findMatches(keyPoints, ygKeyPoints, kpDesc, ygDesc, outputMat, yellowGreen);
+//        findMatches(keyPoints, ypKeyPoints, kpDesc, ypDesc, outputMat, yellowPink);
+            findMatchTest(image, redBall, outputMat);
+        }
         return outputMat;
+    }
+
+    private void findMatchTest(Mat image, Mat temp, Mat out) {
+        int matcherType = Imgproc.TM_CCOEFF;
+        int result_rows = image.rows() - temp.rows() + 1;
+        int result_cols = image.cols() - temp.cols() + 1;
+        Mat result = new Mat(result_rows, result_cols, CvType.CV_32FC1);
+
+        Imgproc.matchTemplate(image, temp, result, matcherType);
+        Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+
+        Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
+
+        Point matchLocationTL = mmr.maxLoc;
+        Point matchLocationBR = new Point(matchLocationTL.x + temp.cols(),
+                matchLocationTL.y + temp.rows());
+
+        Imgproc.rectangle(out, matchLocationTL, matchLocationBR, new Scalar(0,255) );
     }
 
     private void findMatches(
@@ -105,12 +135,12 @@ public class SURFClassifier extends ImageManipulator {
 
         // Find Matching clusters
         LinkedList<MatOfDMatch> matches = new LinkedList<>();
-        descriptorMatcher.knnMatch(objectKPDesc, pitchKPDesc, matches, 2); // TODO Variable K?
+        descriptorMatcher.knnMatch(objectKPDesc, pitchKPDesc, matches, 2);
 
         // Determine good matches
         LinkedList<DMatch> goodMatchesList = new LinkedList<>();
 
-        float nndrRatio = 0.7f; // TODO Vary?
+        float nndrRatio = 0.8f;
 
         for (MatOfDMatch m : matches) {
             DMatch[] dMatchArray = m.toArray();
@@ -123,42 +153,75 @@ public class SURFClassifier extends ImageManipulator {
             }
         }
 
+
+        System.out.println("Key Points: " + pitchKeyPoints.size() + " " + objectKeyPoints.size());
+        System.out.println("Matches found: " + matches.size() + " " + goodMatchesList.size());
+
+
         // Check if object has been located
-        if (goodMatchesList.size() >= 7) { // TODO Vary 7 (might be too small)
+        if (goodMatchesList.size() >= 1) {
 
-            List<KeyPoint> objectKeyPointList = objectKeyPoints.toList();
-            List<KeyPoint> pitchKeyPointList = pitchKeyPoints.toList();
+            System.out.println("Object Found!");
 
-            // Extract Point objects from matches
-            LinkedList<Point> objectPoints = new LinkedList<>();
-            LinkedList<Point> pitchPoints = new LinkedList<>();
+            if (this.isDisplayed) {
+                List<KeyPoint> objectKeyPointList = objectKeyPoints.toList();
+                List<KeyPoint> pitchKeyPointList = pitchKeyPoints.toList();
 
-            for (DMatch m : goodMatchesList) {
-                objectPoints.addLast(objectKeyPointList.get(m.queryIdx).pt);
-                pitchPoints.addLast(pitchKeyPointList.get(m.queryIdx).pt);
+                // Extract Point objects from matches
+                LinkedList<Point> objectPoints = new LinkedList<>();
+                LinkedList<Point> pitchPoints = new LinkedList<>();
+
+                for (DMatch m : goodMatchesList) {
+                    objectPoints.addLast(objectKeyPointList.get(m.queryIdx).pt);
+                    pitchPoints.addLast(pitchKeyPointList.get(m.trainIdx).pt);
+                }
+
+
+                for (DMatch m : goodMatchesList) {
+                    Imgproc.drawMarker(originalImage, pitchPoints.get(m.imgIdx), new Scalar(0, 255, 0));
+                }
+
+                // Convert to a MatOfPoint2f
+                MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
+                objMatOfPoint2f.fromList(objectPoints);
+                MatOfPoint2f scnMatOfPoint2f = new MatOfPoint2f();
+                scnMatOfPoint2f.fromList(pitchPoints);
+
+                Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f);
+
+                Mat obj_corners = new Mat(4, 1, CvType.CV_32FC2);
+                Mat pitch_corners = new Mat(4, 1, CvType.CV_32FC2);
+
+                obj_corners.put(0, 0, 0, 0);
+                obj_corners.put(1, 0, templateImage.cols(), 0);
+                obj_corners.put(2, 0, templateImage.cols(), templateImage.rows());
+                obj_corners.put(3, 0, 0, templateImage.rows());
+
+                if (homography.size().area() != 0) {
+                    // Transfer corners using homography matrix
+                    Core.perspectiveTransform(obj_corners, pitch_corners, homography);
+
+                    // Draw Lines on image
+                    Imgproc.line(originalImage, new Point(pitch_corners.get(0, 0)), new Point(pitch_corners.get(1, 0)), new Scalar(0, 255, 0), 10);
+                    Imgproc.line(originalImage, new Point(pitch_corners.get(1, 0)), new Point(pitch_corners.get(2, 0)), new Scalar(0, 255, 0), 10);
+                    Imgproc.line(originalImage, new Point(pitch_corners.get(2, 0)), new Point(pitch_corners.get(3, 0)), new Scalar(0, 255, 0), 10);
+                    Imgproc.line(originalImage, new Point(pitch_corners.get(3, 0)), new Point(pitch_corners.get(0, 0)), new Scalar(0, 255, 0), 10);
+                }
             }
-
-            // Convert to a MatOfPoint2f
-            MatOfPoint2f objMatOfPoint2f = new MatOfPoint2f();
-            objMatOfPoint2f.fromList(objectPoints);
-            MatOfPoint2f scnMatOfPoint2f = new MatOfPoint2f();
-            scnMatOfPoint2f.fromList(pitchPoints);
-
-            Mat homography = Calib3d.findHomography(objMatOfPoint2f, scnMatOfPoint2f, Calib3d.RANSAC, 3);
-
-            Mat obj_corners = new Mat(4, 1, CvType.CV_32FC2);
-            Mat pitch_corners = new Mat(4, 1, CvType.CV_32FC2);
-
-            obj_corners.put(0, 0, 0, 0);
-            obj_corners.put(1, 0, templateImage.cols(), 0);
-            obj_corners.put(2, 0, templateImage.cols(), templateImage.rows());
-            obj_corners.put(3, 0, 0, templateImage.rows());
-
-            // Draw Lines on image
-            Imgproc.line(originalImage, new Point(pitch_corners.get(0, 0)), new Point(pitch_corners.get(1, 0)), new Scalar(0, 255, 0), 4);
-            Imgproc.line(originalImage, new Point(pitch_corners.get(1, 0)), new Point(pitch_corners.get(2, 0)), new Scalar(0, 255, 0), 4);
-            Imgproc.line(originalImage, new Point(pitch_corners.get(2, 0)), new Point(pitch_corners.get(3, 0)), new Scalar(0, 255, 0), 4);
-            Imgproc.line(originalImage, new Point(pitch_corners.get(3, 0)), new Point(pitch_corners.get(0, 0)), new Scalar(0, 255, 0), 4);
         }
+    }
+
+    private MatOfKeyPoint getAllCentralPoints(Mat img) {
+
+        ArrayList<KeyPoint> kps = new ArrayList<>();
+        for (int i = 9; i<img.rows(); i++) {
+            for (int j = 0; j < img.cols(); j++) {
+                kps.add(new KeyPoint((float) j, (float) i, 1));
+            }
+        }
+
+        KeyPoint[] kpsArray = new KeyPoint[kps.size()];
+        kps.toArray(kpsArray);
+        return new MatOfKeyPoint(kpsArray);
     }
 }
