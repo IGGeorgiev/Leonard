@@ -18,6 +18,7 @@ public class PatternMatcher extends ImageManipulator {
     // Template Images
     private Mat redBall;
     private Mat pinkDot;
+    private Mat blueDot;
 
     public PatternMatcher() {
 
@@ -25,17 +26,19 @@ public class PatternMatcher extends ImageManipulator {
 
         redBall = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/ball_red.png");
         pinkDot = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/pink_dot.png");
+        blueDot = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/blue_dot.png");
 
         Imgproc.cvtColor(redBall, redBall, Imgproc.COLOR_BGR2HSV);
         Imgproc.cvtColor(pinkDot, pinkDot, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(blueDot, blueDot, Imgproc.COLOR_BGR2HSV);
     }
 
     @Override
     protected Mat run(Mat image) {
         Mat outputMat = ImageManipulationPipeline.getInstance().undistortImage.catchMat();
-
         Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2HSV);
-        findSingleMatch(image, pinkDot, outputMat, new Scalar(203,192,255));
+//        findMatches(image, pinkDot, outputMat, new Scalar(203,192,255));
+        findMatches(image, blueDot, outputMat, new Scalar(255,0,0));
         findSingleMatch(image, redBall, outputMat, new Scalar(0,0,255));
         return outputMat;
     }
@@ -45,8 +48,8 @@ public class PatternMatcher extends ImageManipulator {
         Imgproc.matchTemplate(image, temp, result, Imgproc.TM_CCOEFF);
 
 
-        double thresh = 0.7;
-        Imgproc.threshold(result, result, thresh, 1., Imgproc.THRESH_BINARY);
+        double thresh = 0.9f;
+        Imgproc.threshold(result, result, thresh, 1, Imgproc.THRESH_BINARY);
 
 
         Mat resb = new Mat();
@@ -55,14 +58,15 @@ public class PatternMatcher extends ImageManipulator {
         List<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(resb, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        for (int i=0; i<contours.size(); ++i)
-        {
-            Mat mask = new Mat(result.rows(), result.cols(), 0);
-            Imgproc.drawContours(mask, contours, i, new Scalar(255), Core.FILLED);
+        if (isDisplayed) {
+            for (int i = 0; i < contours.size(); ++i) {
+                Mat mask = new Mat(result.rows(), result.cols(), 0);
+                Imgproc.drawContours(mask, contours, i, new Scalar(255), Core.FILLED);
 
-            Core.minMaxLoc(result, mask);
-
-//            rectangle(img, Rect(max_point.x, max_point.y, templ.cols, templ.rows), Scalar(0,255,0), 2);
+                Core.MinMaxLocResult mmr = Core.minMaxLoc(result, mask);
+                Rect box = new Rect((int) mmr.maxLoc.x, (int) mmr.maxLoc.y, temp.cols(), temp.rows());
+                Imgproc.rectangle(out, box.tl(), box.br(), colour);
+            }
         }
     }
 
@@ -71,9 +75,9 @@ public class PatternMatcher extends ImageManipulator {
         Mat result = new Mat();
 
         Imgproc.matchTemplate(image, temp, result, matcherType);
-        Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+//        Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
-        Core.MinMaxLocResult mmr = minMaxLoc(result);
+        Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
         Point matchLocationTL;
 
 //        if (matcherType  == Imgproc.TM_SQDIFF || matcherType == Imgproc.TM_SQDIFF_NORMED)
@@ -84,7 +88,7 @@ public class PatternMatcher extends ImageManipulator {
         Point matchLocationBR = new Point(matchLocationTL.x + temp.cols(),
                 matchLocationTL.y + temp.rows());
 
-        if (isDisplayed)
+        if (isDisplayed && mmr.maxVal > 0.1)
             Imgproc.rectangle(out, matchLocationTL, matchLocationBR, colour );
     }
 }
