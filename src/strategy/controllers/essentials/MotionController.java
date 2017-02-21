@@ -135,6 +135,7 @@ public class MotionController extends ControllerBase {
         }
         if(this.destination != null && us.location.distance(destination) < tolerance){
             this.robot.port.stop();
+            System.out.println("Should be stopping here!");
             return;
         }
 
