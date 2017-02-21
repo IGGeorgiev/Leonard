@@ -102,20 +102,24 @@ public class GrabberController extends ControllerBase {
                      *  right now it just lowers the grabber if the grabber was up
                      *  robotPort.grabber(1); lowers the grabber
                      *  robotPort.grabber(2); raises the grabber**/
-//                    if(ballIsGrabbable && sensor says ball is not within reach){
-//                        robotPort.grabber(0);
-//                    }else if(ballIsGrabbable && sensor says ball is within reach){
-//                        robotPort.grabber(-1);
-//                        Strategy.world.setProbableBallHolder(this.robot.robotType);
-//                        grabberIsDown = true;
-//                    }else{
                     if (distFromBall < 4) {
                         grab(1);
                         grabberIsDown = true;
                     }
-//                    }
                 }
             }
         }
+    }
+
+    public boolean isFacingBall(Robot us){
+        /**this is the general idea of how to get this to work.*/
+//        VectorGeometry kickDirection = VectorGeometry.intersectionWithFiniteLine(us.location, VectorGeometry.fromAngular(us.location.direction, 10, null), lower, upper);
+//        System.out.println("We are aiming in the direction: " + Math.abs(kickDirection.y));
+//        boolean facingGoal = Math.abs(kickDirection.y) <= 20;
+//        if (facingGoal) {
+//            System.out.println("we are facing the goal");
+//            grab(2);
+//            grabberIsDown = false;
+        return false;
     }
 }
