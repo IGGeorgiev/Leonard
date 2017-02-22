@@ -15,6 +15,9 @@ import vision.tools.VectorGeometry;
 
 import java.util.LinkedList;
 
+
+import communication.ports.interfaces.FourWheelHolonomicRobotPort;
+
 /**
  * Created by Simon Rovder
  */
@@ -140,6 +143,14 @@ public class MotionController extends ControllerBase {
         if(this.destination != null && us.location.distance(destination) < tolerance){
             this.robot.port.stop();
             System.out.println("Should be stopping here!");
+            while(rotation > 0.1) {
+                robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
+                robotToPoint = VectorGeometry.fromTo(us.location, heading);
+                factor = 1;
+                rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
+                double constant = 255*rotation;
+                ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
+            }
             return;
         }
 
