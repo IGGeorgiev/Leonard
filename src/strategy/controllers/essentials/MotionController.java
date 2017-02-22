@@ -139,12 +139,15 @@ public class MotionController extends ControllerBase {
         if(this.destination != null && us.location.distance(destination) < tolerance){
             this.robot.port.stop();
             System.out.println("Should be stopping here!");
-            while(rotation > 0.1) {
+
+            int p = 0.1;
+            double constant;
+            while (rotation >= 0.1) {
                 robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
                 robotToPoint = VectorGeometry.fromTo(us.location, heading);
                 factor = 1;
                 rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-                double constant = 255*rotation;
+                constant = 100 * rotation * p;
                 ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
             }
             return;
