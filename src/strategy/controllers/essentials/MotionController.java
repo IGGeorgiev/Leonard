@@ -73,7 +73,7 @@ public class MotionController extends ControllerBase {
 
 
 
-        if(this.destination != null){
+        if(this.destination != null) {
             this.destination.recalculate();
 
             destination = new VectorGeometry(this.destination.getX(), this.destination.getY());
@@ -81,17 +81,17 @@ public class MotionController extends ControllerBase {
             boolean intersects = false;
 
 
-            for(Obstacle o : this.obstacles){
+            for (Obstacle o : this.obstacles) {
                 intersects = intersects || o.intersects(us.location, destination);
             }
 
-            for(Robot r : Strategy.world.getRobots()){
-                if(r != null && r.type != RobotType.FRIEND_2){
+            for (Robot r : Strategy.world.getRobots()) {
+                if (r != null && r.type != RobotType.FRIEND_2) {
                     intersects = intersects || VectorGeometry.vectorToClosestPointOnFiniteLine(us.location, destination, r.location).minus(r.location).length() < 30;
                 }
             }
 
-            if(intersects || us.location.distance(destination) > 30){
+            if (intersects || us.location.distance(destination) > 30) {
                 navigation = new AStarNavigation();
                 GUI.gui.searchType.setText("A*");
             } else {
@@ -103,6 +103,10 @@ public class MotionController extends ControllerBase {
 
 
         } else {
+//            navigation = new PotentialFieldNavigation();
+//            GUI.gui.searchType.setText("Potential Fields");
+//            destination = new VectorGeometry(us.location.x, us.location.y);
+//            navigation.setDestination(new VectorGeometry(us.location.x, us.location.y));
             return;
         }
 

@@ -244,8 +244,8 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     tm2.start();
                     break;
                 case "rotate": // point to ball
+
                     fred.MOTION_CONTROLLER.setHeading(new BallPoint());
-                    fred.MOTION_CONTROLLER.setDestination(new RobotPoint(fred.robotType));
                     break;
             }
         }
