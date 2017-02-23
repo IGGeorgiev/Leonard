@@ -4,10 +4,9 @@ import vision.ImageManipulationPipeline;
 import vision.calibration.CalibrateEmptyPitchButton;
 import vision.calibration.SnapshotObjects;
 import vision.capture.VideoCapture;
+import vision.classification.PatternMatcher;
 import vision.detection.*;
-import vision.detection.manipulators.ApplyBinaryMask;
-import vision.detection.manipulators.DilateImage;
-import vision.detection.manipulators.UndistortImage;
+import vision.detection.manipulators.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -53,7 +52,7 @@ public class DetectionCalibrationGUI extends JPanel {
         for (ImageManipulator i : pipeline) {
 //            if (i instanceof VideoCapture)
 //                displayQueue.add(i.getDisplay());
-            if (i instanceof UndistortImage) {
+            if (i instanceof GaussianBlurImage) {
                 displayQueue.add(i.getDisplay());
                 displayedManipulators.add(i);
             }
@@ -65,12 +64,14 @@ public class DetectionCalibrationGUI extends JPanel {
 //                displayQueue.add(i.getDisplay());
 //            if (i instanceof ErodeImage)
 //                displayQueue.add(i.getDis
-            if (i instanceof DilateImage)
+            if (i instanceof DilateImage) {
                 displayQueue.add(i.getDisplay());
                 displayedManipulators.add(i);
-            if (i instanceof ApplyBinaryMask)
+            }
+            if (i instanceof ApplyBinaryMask) {
                 displayQueue.add(i.getDisplay());
                 displayedManipulators.add(i);
+            }
             if (i instanceof ImageManipulatorWithOptions)
                 optionsPanelDisplay.add(((ImageManipulatorWithOptions) i).getModificationGUI());
         }
@@ -83,7 +84,7 @@ public class DetectionCalibrationGUI extends JPanel {
         optionsPanelDisplay.forEach((x) -> optionsPane.add(x));
 
         optionsPane.add(new CalibrateEmptyPitchButton(controller.hsvImage));
-        optionsPane.add(new SnapshotObjects(controller.undistortImage, controller.dilateImage));
+        optionsPane.add(new SnapshotObjects(controller.gaussianBlur, controller.dilateImage));
     }
 
     public void hideAll() {

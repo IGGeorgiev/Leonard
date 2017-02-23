@@ -5,6 +5,8 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import vision.ImageManipulationPipeline;
 import vision.detection.ImageManipulator;
+import vision.detection.manipulators.GaussianBlurImage;
+import vision.detection.manipulators.UndistortImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +21,10 @@ public class PatternMatcher extends ImageManipulator {
     private Mat redBall;
     private Mat pinkDot;
     private Mat blueDot;
+    private ImageManipulator undistortImage;
 
-    public PatternMatcher() {
+    public PatternMatcher(ImageManipulator undistortionFeed) {
+        undistortImage = undistortionFeed;
 
         System.out.println("Loading template images...");
 
@@ -35,17 +39,19 @@ public class PatternMatcher extends ImageManipulator {
 
     @Override
     protected Mat run(Mat image) {
-        Mat outputMat = ImageManipulationPipeline.getInstance().undistortImage.catchMat();
+        Mat outputMat = new Mat();
+        undistortImage.catchMat().copyTo(outputMat);
         Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2HSV);
 //        findMatches(image, pinkDot, outputMat, new Scalar(203,192,255));
         findMatches(image, blueDot, outputMat, new Scalar(255,0,0));
-        findSingleMatch(image, redBall, outputMat, new Scalar(0,0,255));
+        findMatches(image, redBall, outputMat, new Scalar(0,0,255));
         return outputMat;
     }
 
     private void findMatches(Mat image, Mat temp, Mat out, Scalar colour) {
         Mat result = new Mat();
         Imgproc.matchTemplate(image, temp, result, Imgproc.TM_CCOEFF);
+        Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
 
         double thresh = 0.9f;
@@ -75,7 +81,7 @@ public class PatternMatcher extends ImageManipulator {
         Mat result = new Mat();
 
         Imgproc.matchTemplate(image, temp, result, matcherType);
-//        Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+        Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
         Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
         Point matchLocationTL;
@@ -83,12 +89,15 @@ public class PatternMatcher extends ImageManipulator {
 //        if (matcherType  == Imgproc.TM_SQDIFF || matcherType == Imgproc.TM_SQDIFF_NORMED)
 //            matchLocationTL = mmr.minLoc;
 //        else
-        matchLocationTL = mmr.maxLoc;
 
-        Point matchLocationBR = new Point(matchLocationTL.x + temp.cols(),
-                matchLocationTL.y + temp.rows());
+        if (mmr.maxVal >= 0.9f) {
+            matchLocationTL = mmr.maxLoc;
 
-        if (isDisplayed && mmr.maxVal > 0.1)
-            Imgproc.rectangle(out, matchLocationTL, matchLocationBR, colour );
+            Point matchLocationBR = new Point(matchLocationTL.x + temp.cols(),
+                    matchLocationTL.y + temp.rows());
+
+            if (isDisplayed)
+                Imgproc.rectangle(out, matchLocationTL, matchLocationBR, colour);
+        }
     }
 }

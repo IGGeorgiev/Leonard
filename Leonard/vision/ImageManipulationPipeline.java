@@ -17,7 +17,7 @@ public class ImageManipulationPipeline implements MatFrameListener {
 
     private static final ImageManipulationPipeline instance = new ImageManipulationPipeline();
 
-    public static ImageManipulationPipeline getInstance() { return instance; }
+    public synchronized static ImageManipulationPipeline getInstance() { return instance; }
 
 
     private ImageManipulationPipeline() {
@@ -33,16 +33,17 @@ public class ImageManipulationPipeline implements MatFrameListener {
     public UndistortImage                  undistortImage = new UndistortImage();
     public HSVConverter                    hsvImage       = new HSVConverter();
     private BackgroundSubtractionThreshold threshold      = new BackgroundSubtractionThreshold();
-    private GaussianBlurImage              gaussianBlur   = new GaussianBlurImage();
+    public GaussianBlurImage              gaussianBlur   = new GaussianBlurImage();
     public DilateImage                     dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
     private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(undistortImage);
-    private PatternMatcher classifier = new PatternMatcher();
+    public PatternMatcher                  classifier     = new PatternMatcher(gaussianBlur);
 
     // Failures
 
     // Performance heavy
 //    private RemoveSmallBlobs               rmSmallBlobs   = new RemoveSmallBlobs();
+//    public NonLocalMeansDenoising          denoising      = new NonLocalMeansDenoising();
 
     // Multiple blurs deemed unnecessary
 //    private GaussianBlurImage              gaussianBlur2  = new GaussianBlurImage();

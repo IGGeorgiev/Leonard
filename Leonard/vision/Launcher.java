@@ -8,6 +8,7 @@ import vision.gui.DetectionCalibrationGUI;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -41,12 +42,10 @@ public class Launcher extends WindowAdapter implements ChangeListener{
         classifierGUI = new ClassifierGUI();
         detectionGUI = new DetectionCalibrationGUI();
 
-        detectionGUI.hideAll();
-
         videoFeed = detectionGUI.videoFeed;
 
-        pane.addTab(CLASSIFIER_TAB, classifierGUI);
-        pane.addTab(DETECTION_TAB, detectionGUI);
+        pane.insertTab(DETECTION_TAB, null, detectionGUI, "Detection Pipeline", 0);
+        pane.insertTab(CLASSIFIER_TAB, null, classifierGUI, "Classification output", 1);
 
         frame.add(pane);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -83,6 +82,9 @@ public class Launcher extends WindowAdapter implements ChangeListener{
                 detectionGUI.hideAll();
                 classifierGUI.showAll();
                 break;
+            default:
+                detectionGUI.hideAll();
+                classifierGUI.hideAll();
         }
     }
 }

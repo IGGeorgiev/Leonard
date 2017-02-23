@@ -21,7 +21,7 @@ public class ClassifierGUI extends JPanel {
     private ArrayList<ImageManipulator> displayedManipulators = new ArrayList<>();
 
     public ClassifierGUI() {
-        super(new GridLayout(2,2));
+        super(new GridLayout(1,1));
         chooseDisplays();
     }
 
@@ -45,6 +45,7 @@ public class ClassifierGUI extends JPanel {
         displayedManipulators.forEach(ImageManipulator::hideDisplay);
     }
 
-    public void showAll() {displayedManipulators.forEach(ImageManipulator::getDisplay); }
-
+    public void showAll() {
+        displayedManipulators.forEach(ImageManipulator::getDisplay);
+    }
 }
