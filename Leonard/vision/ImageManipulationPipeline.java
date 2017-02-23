@@ -4,6 +4,7 @@ import org.opencv.core.Mat;
 import vision.capture.MatFrameListener;
 import vision.capture.VideoCapture;
 import vision.classification.PatternMatcher;
+import vision.classification.SURFClassifier;
 import vision.detection.ImageManipulator;
 import vision.detection.manipulators.*;
 
@@ -33,11 +34,12 @@ public class ImageManipulationPipeline implements MatFrameListener {
     public UndistortImage                  undistortImage = new UndistortImage();
     public HSVConverter                    hsvImage       = new HSVConverter();
     private BackgroundSubtractionThreshold threshold      = new BackgroundSubtractionThreshold();
-    public GaussianBlurImage              gaussianBlur   = new GaussianBlurImage();
+    public GaussianBlurImage               gaussianBlur   = new GaussianBlurImage();
     public DilateImage                     dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
     private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(undistortImage);
     public PatternMatcher                  classifier     = new PatternMatcher(gaussianBlur);
+//    public SURFClassifier                  surfclassifier = new SURFClassifier();
 
     // Failures
 
@@ -64,6 +66,7 @@ public class ImageManipulationPipeline implements MatFrameListener {
         add(erodeImage);
         add(dilateImage);
         add(applyBinaryMask);
+//        add(surfclassifier);
         add(classifier);
     }};
 

@@ -54,6 +54,8 @@ public class SURFClassifier extends ImageManipulator {
     private DescriptorMatcher descriptorMatcher = DescriptorMatcher.create(DescriptorMatcher.FLANNBASED);
 
     public SURFClassifier() {
+        Size ballsize = new Size(300, 300);
+        Size matSize = new Size(500,500);
 
         System.out.println("Loading template images...");
 
@@ -64,10 +66,14 @@ public class SURFClassifier extends ImageManipulator {
         redBall = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/ball_red.png");
         blueBall = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/ball_blue.png");
 
+        Imgproc.resize(yellowPink, yellowPink, matSize);
+        Imgproc.resize(redBall, redBall, ballsize);
+
         Imgproc.cvtColor(yellowPink, yellowPink, Imgproc.COLOR_BGR2HSV);
+        Imgproc.cvtColor(redBall, redBall, Imgproc.COLOR_BGR2HSV);
 
         // Detect key points of templates
-        featureDetector = FeatureDetector.create(FeatureDetector.SURF);
+        featureDetector = FeatureDetector.create(FeatureDetector.HARRIS);
 
 //        ygKeyPoints = getAllCentralPoints(yellowGreen);
 //        ypKeyPoints = getAllCentralPoints(yellowPink);
@@ -77,34 +83,39 @@ public class SURFClassifier extends ImageManipulator {
         featureDetector.detect(yellowPink, ypKeyPoints);
 //        featureDetector.detect(blueGreen, bgKeyPoints);
 //        featureDetector.detect(bluePink, bpKeyPoints);
-//        featureDetector.detect(redBall, rbKeyPoints);
+        featureDetector.detect(redBall, rbKeyPoints);
 //        featureDetector.detect(blueBall, bbKeyPoints);
         // Describe key points
 
-        descriptionExtractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
+        descriptionExtractor = DescriptorExtractor.create(DescriptorExtractor.SIFT);
 
 //        descriptionExtractor.compute(yellowGreen, ygKeyPoints, ygDesc);
         descriptionExtractor.compute(yellowPink, ypKeyPoints, ypDesc);
 //        descriptionExtractor.compute(blueGreen, bgKeyPoints, bgDesc);
 //        descriptionExtractor.compute(bluePink, bpKeyPoints, bpDesc);
-//        descriptionExtractor.compute(redBall, rbKeyPoints, rbDesc);
+        descriptionExtractor.compute(redBall, rbKeyPoints, rbDesc);
 
 //        descriptionExtractor.compute(blueBall, bbKeyPoints, bbDesc);
     }
 
     @Override
     protected Mat run(Mat image) {
+        Size resize = new Size(1280,800);
+        Imgproc.resize(image, image, resize);
         MatOfKeyPoint keyPoints = new MatOfKeyPoint();
 
         Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2HSV);
+
         featureDetector.detect(image, keyPoints);
         Mat kpDesc = new Mat();
         descriptionExtractor.compute(image, keyPoints, kpDesc);
 
         Mat outputMat = ImageManipulationPipeline.getInstance().undistortImage.catchMat();
+        Imgproc.resize(outputMat, outputMat, resize);
         // Catch in case the key points of interest are much less than the ones in the query
         if (keyPoints.size().area() > ygKeyPoints.size().area()) {
-            findMatches(keyPoints, ypKeyPoints, kpDesc, ypDesc, outputMat, yellowPink);
+            findMatches(keyPoints, ypKeyPoints, kpDesc, ypDesc, outputMat, yellowPink, new Scalar(0,255,255), 10);
+            findMatches(keyPoints, rbKeyPoints, kpDesc, rbDesc, outputMat, redBall, new Scalar(0,0,255), 3);
         }
         return outputMat;
     }
@@ -112,7 +123,8 @@ public class SURFClassifier extends ImageManipulator {
     private void findMatches(
             MatOfKeyPoint pitchKeyPoints, MatOfKeyPoint objectKeyPoints,
             Mat pitchKPDesc, Mat objectKPDesc,
-            Mat originalImage, Mat templateImage) {
+            Mat originalImage, Mat templateImage,
+            Scalar color, int necessaryPoints) {
 
         // Find Matching clusters
         LinkedList<MatOfDMatch> matches = new LinkedList<>();
@@ -121,7 +133,7 @@ public class SURFClassifier extends ImageManipulator {
         // Determine good matches
         LinkedList<DMatch> goodMatchesList = new LinkedList<>();
 
-        float nndrRatio = 0.8f;
+        float nndrRatio = 0.7f;
 
         for (MatOfDMatch m : matches) {
             DMatch[] dMatchArray = m.toArray();
@@ -134,13 +146,12 @@ public class SURFClassifier extends ImageManipulator {
             }
         }
 
-
         System.out.println("Key Points: " + pitchKeyPoints.size() + " " + objectKeyPoints.size());
         System.out.println("Matches found: " + matches.size() + " " + goodMatchesList.size());
 
 
         // Check if object has been located
-        if (goodMatchesList.size() >= 1) {
+        if (goodMatchesList.size() >= necessaryPoints) {
 
             System.out.println("Object Found!");
 
@@ -159,7 +170,7 @@ public class SURFClassifier extends ImageManipulator {
 
 
                 for (DMatch m : goodMatchesList) {
-                    Imgproc.drawMarker(originalImage, pitchPoints.get(m.imgIdx), new Scalar(0, 255, 0));
+                    Imgproc.drawMarker(originalImage, pitchPoints.get(m.imgIdx), color);
                 }
 
                 // Convert to a MatOfPoint2f
@@ -183,10 +194,10 @@ public class SURFClassifier extends ImageManipulator {
                     Core.perspectiveTransform(obj_corners, pitch_corners, homography);
 
                     // Draw Lines on image
-                    Imgproc.line(originalImage, new Point(pitch_corners.get(0, 0)), new Point(pitch_corners.get(1, 0)), new Scalar(0, 255, 0), 10);
-                    Imgproc.line(originalImage, new Point(pitch_corners.get(1, 0)), new Point(pitch_corners.get(2, 0)), new Scalar(0, 255, 0), 10);
-                    Imgproc.line(originalImage, new Point(pitch_corners.get(2, 0)), new Point(pitch_corners.get(3, 0)), new Scalar(0, 255, 0), 10);
-                    Imgproc.line(originalImage, new Point(pitch_corners.get(3, 0)), new Point(pitch_corners.get(0, 0)), new Scalar(0, 255, 0), 10);
+                    Imgproc.line(originalImage, new Point(pitch_corners.get(0, 0)), new Point(pitch_corners.get(1, 0)), color, 10);
+                    Imgproc.line(originalImage, new Point(pitch_corners.get(1, 0)), new Point(pitch_corners.get(2, 0)), color, 10);
+                    Imgproc.line(originalImage, new Point(pitch_corners.get(2, 0)), new Point(pitch_corners.get(3, 0)), color, 10);
+                    Imgproc.line(originalImage, new Point(pitch_corners.get(3, 0)), new Point(pitch_corners.get(0, 0)), color, 10);
                 }
             }
         }
