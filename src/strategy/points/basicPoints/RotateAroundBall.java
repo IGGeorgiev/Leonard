@@ -2,26 +2,26 @@ package strategy.points.basicPoints;
 
 import strategy.Strategy;
 import strategy.points.DynamicPointBase;
+import vision.Ball;
 import vision.Robot;
 import vision.RobotType;
 import vision.tools.VectorGeometry;
 
-/**
- * Created by Simon Rovder
- */
-public class Rotate extends DynamicPointBase {
+import javax.xml.bind.ValidationEvent;
 
-    public Rotate(){
+public class RotateAroundBall extends DynamicPointBase {
+
+    public RotateAroundBall(){
         super();
     }
 
     @Override
     public void recalculate() {
         Robot us = Strategy.world.getRobot(RobotType.FRIEND_2);
+        Ball ball = Strategy.world.getBall();
         if(us != null){
             VectorGeometry location = us.location.clone();
-            location.setLengthRot(50);
-            location.rotate(0.3);
+            location.rotateAroundPoint(30, new VectorGeometry(ball.location.x, ball.location.y));
             this.x = (int)location.x;
             this.y = (int)location.y;
         }

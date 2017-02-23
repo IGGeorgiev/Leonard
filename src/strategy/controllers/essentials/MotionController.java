@@ -76,7 +76,7 @@ public class MotionController extends ControllerBase {
 
 
 
-        if(this.destination != null){
+        if(this.destination != null) {
             this.destination.recalculate();
 
             destination = new VectorGeometry(this.destination.getX(), this.destination.getY());
@@ -84,17 +84,17 @@ public class MotionController extends ControllerBase {
             boolean intersects = false;
 
 
-            for(Obstacle o : this.obstacles){
+            for (Obstacle o : this.obstacles) {
                 intersects = intersects || o.intersects(us.location, destination);
             }
 
-            for(Robot r : Strategy.world.getRobots()){
-                if(r != null && r.type != RobotType.FRIEND_2){
+            for (Robot r : Strategy.world.getRobots()) {
+                if (r != null && r.type != RobotType.FRIEND_2) {
                     intersects = intersects || VectorGeometry.vectorToClosestPointOnFiniteLine(us.location, destination, r.location).minus(r.location).length() < 30;
                 }
             }
 
-            if(intersects || us.location.distance(destination) > 30){
+            if (intersects || us.location.distance(destination) > 30) {
                 navigation = new AStarNavigation();
                 GUI.gui.searchType.setText("A*");
             } else {
@@ -106,6 +106,10 @@ public class MotionController extends ControllerBase {
 
 
         } else {
+//            navigation = new PotentialFieldNavigation();
+//            GUI.gui.searchType.setText("Potential Fields");
+//            destination = new VectorGeometry(us.location.x, us.location.y);
+//            navigation.setDestination(new VectorGeometry(us.location.x, us.location.y));
             return;
         }
 
@@ -138,17 +142,20 @@ public class MotionController extends ControllerBase {
         }
         if(this.destination != null && us.location.distance(destination) < tolerance){
             this.robot.port.stop();
-            System.out.println("Should be stopping here!");
-
-            double p = 0.1;
             double constant;
-            while (rotation >= 0.1) {
+            while (Math.abs(rotation) >= 0.2) {
+                us = Strategy.world.getRobot(RobotType.FRIEND_2);
                 robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
                 robotToPoint = VectorGeometry.fromTo(us.location, heading);
-                factor = 1;
                 rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-                constant = 100 * rotation * p;
+                constant = 100 * rotation;
+                System.out.println("rotation: " + rotation + " constant: " + constant);
                 ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
+
+
+//                fred.MOTION_CONTROLLER.setDestination(new Rotate());
+//                fred.MOTION_CONTROLLER.setHeading(new BallPoint());
+
             }
             return;
         }
