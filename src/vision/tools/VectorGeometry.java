@@ -1,5 +1,7 @@
 package vision.tools;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+
 /**
  * Created by Simon Rovder
  *
@@ -94,6 +96,26 @@ VectorGeometry {
         return this;
     }
 
+    public VectorGeometry setLengthRot(double len){
+        double length = this.length();
+        System.out.println(length);
+        if(length == 0) return this;
+        double factor = len / length;
+        this.x = this.x * factor;
+        this.y = this.y * factor;
+        return this;
+    }
+    public VectorGeometry setLength(double len, double ballX, double ballY) {
+        double length = squareDistance(ballX, ballY, this.x, this.y);
+        System.out.println(length);
+//        System.out.println("this.x = " +this.x+" this.y = "+this.y);
+        if(length == 0) return this;
+        double factor = len / length;
+        this.x = this.x * factor;
+        this.y = this.y * factor;
+        return this;
+    }
+
     public VectorGeometry fromAngular(double d, double distance){
         this.x = distance*Math.cos(d);
         this.y = distance*Math.sin(d);
@@ -121,6 +143,12 @@ VectorGeometry {
     public VectorGeometry rotate(double d){
         this.x = Math.cos(d)*this.x - Math.sin(d)*this.y;
         this.y = Math.sin(d)*this.x + Math.cos(d)*this.y;
+        return this;
+    }
+
+    public VectorGeometry rotateAroundPoint(double d, VectorGeometry point) {
+        this.x = Math.cos(d)*point.x - Math.sin(d)*point.y;
+        this.y = Math.sin(d)*point.x + Math.cos(d)*point.y;
         return this;
     }
 

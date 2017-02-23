@@ -151,6 +151,11 @@ public class MotionController extends ControllerBase {
                 constant = 100 * rotation;
                 System.out.println("rotation: " + rotation + " constant: " + constant);
                 ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
+
+
+//                fred.MOTION_CONTROLLER.setDestination(new Rotate());
+//                fred.MOTION_CONTROLLER.setHeading(new BallPoint());
+
             }
             return;
         }

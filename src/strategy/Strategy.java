@@ -168,8 +168,19 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     ((FredRobotPort) fred.port).grabber(0);
                     ((FredRobotPort) fred.port).grabber(0);
                     fred.ACTION_CONTROLLER.setActive(false);
+                    fred.MOTION_CONTROLLER.setDestination(new RotateAroundBall());
+                    fred.MOTION_CONTROLLER.setHeading(new EnemyGoal());
+                    fred.MOTION_CONTROLLER.setTolerance(-1);
+                    break;
+                case "rot2":
+                    fred.GRABBER_CONTROLLER.setActive(false);
+                    ((FredRobotPort) fred.port).grabber(0);
+                    ((FredRobotPort) fred.port).grabber(0);
+                    ((FredRobotPort) fred.port).grabber(0);
+                    fred.ACTION_CONTROLLER.setActive(false);
                     fred.MOTION_CONTROLLER.setDestination(new Rotate());
                     fred.MOTION_CONTROLLER.setHeading(new EnemyGoal());
+                    fred.MOTION_CONTROLLER.setTolerance(-1);
                     break;
                 case "head2":
                     fred.GRABBER_CONTROLLER.setActive(false);
