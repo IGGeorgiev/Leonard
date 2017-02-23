@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Properties;
 
 /**
@@ -72,5 +73,24 @@ public class GaussianBlurImage extends ImageManipulatorWithOptions implements Ch
         int value = slider.getValue();
         if (value % 2 == 1 || value == 0)
             GAUSSIAN_BLUR_SIZE = value;
+    }
+
+    @Override
+    public void onFrameReceived(Mat image) {
+        manipulatedImage = run(image);
+        if (manipulatedImage != null) {
+            if (isDisplayed) {
+                BufferedImage frame = catchFrame();
+                if (frame != null && manipulatorDisplay.getGraphics() != null)
+                    if (manipulatorDisplay != null)
+                        manipulatorDisplay.getGraphics().drawImage(catchFrame(), 0, 0, null);
+            }
+            if (nextManipulator != null) {
+                Mat out = new Mat();
+                manipulatedImage.copyTo(out);
+//                new Thread(() -> nextManipulator.onFrameReceived(out)).run();
+                nextManipulator.onFrameReceived(out);
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.Properties;
 
 /**
@@ -107,15 +108,23 @@ public class UndistortImage extends ImageManipulatorWithOptions implements Actio
     }
 
     @Override
+    public Mat catchMat() {
+        return manipulatedImage.clone();
+    }
+
+    @Override
     public void onFrameReceived(Mat image) {
         manipulatedImage = run(image);
         if (manipulatedImage != null) {
-            if (isDisplayed)
-                if (manipulatorDisplay != null)
-                    manipulatorDisplay.getGraphics().drawImage(catchFrame(), 0, 0, null);
-            if (nextManipulator != null)
+            if (isDisplayed) {
+                BufferedImage frame = catchFrame();
+                if (frame != null && manipulatorDisplay.getGraphics() != null)
+                    if (manipulatorDisplay != null)
+                        manipulatorDisplay.getGraphics().drawImage(catchFrame(), 0, 0, null);
+            }
+            if (nextManipulator != null) {
                 new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage.clone())).run();
+            }
         }
     }
-
 }

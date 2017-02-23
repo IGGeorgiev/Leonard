@@ -2,6 +2,7 @@ package vision.detection;
 
 import org.opencv.core.Mat;
 import vision.capture.MatFrameListener;
+import vision.classification.PatternMatcher;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -27,20 +28,26 @@ public abstract class ImageManipulator implements MatFrameListener {
     }
 
     public JLabel getDisplay() {
+        manipulatorDisplay.setVisible(true);
         isDisplayed = true;
         return manipulatorDisplay;
     }
 
     public void hideDisplay() {
+        manipulatorDisplay.setVisible(false);
         isDisplayed = false;
     }
 
     public BufferedImage catchFrame() {
-        return matToBufferedImage(manipulatedImage, null);
+        Mat out = new Mat();
+        manipulatedImage.copyTo(out);
+        return matToBufferedImage(out, null);
     }
 
     public Mat catchMat() {
-        return manipulatedImage.clone();
+        Mat out = new Mat();
+        manipulatedImage.copyTo(out);
+        return out;
     }
 
     public void setNext(MatFrameListener listener) {
@@ -52,11 +59,12 @@ public abstract class ImageManipulator implements MatFrameListener {
         if (manipulatedImage != null) {
             if (isDisplayed) {
                 BufferedImage frame = catchFrame();
-                if (frame != null && manipulatorDisplay.getGraphics() != null)
+                if (frame != null && manipulatorDisplay.getGraphics() != null && manipulatorDisplay.isVisible())
                     manipulatorDisplay.getGraphics().drawImage(frame, 0, 0, null);
             }
             if (nextManipulator != null)
-                new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage)).run();
+//                new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage)).run();
+                nextManipulator.onFrameReceived(manipulatedImage);
         }
     }
 
