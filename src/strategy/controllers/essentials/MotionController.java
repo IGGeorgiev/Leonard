@@ -140,7 +140,7 @@ public class MotionController extends ControllerBase {
             this.robot.port.stop();
             System.out.println("Should be stopping here!");
 
-            int p = 0.1;
+            double p = 0.1;
             double constant;
             while (rotation >= 0.1) {
                 robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
