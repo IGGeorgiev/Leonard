@@ -1,6 +1,7 @@
 package vision.gui;
 
 import vision.ImageManipulationPipeline;
+import vision.classification.CircleDetection;
 import vision.classification.PatternMatcher;
 import vision.classification.SURFClassifier;
 import vision.detection.ImageManipulator;
@@ -37,6 +38,10 @@ public class ClassifierGUI extends JPanel {
                 displayedManipulators.add(i);
             }
             if (i instanceof SURFClassifier) {
+                displayQueue.add(i.getDisplay());
+                displayedManipulators.add(i);
+            }
+            if (i instanceof CircleDetection) {
                 displayQueue.add(i.getDisplay());
                 displayedManipulators.add(i);
             }
