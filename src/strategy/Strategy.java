@@ -1,6 +1,7 @@
 package strategy;
 
 import strategy.actions.Behave;
+import strategy.actions.offense.GoalKick;
 import strategy.actions.other.*;
 import strategy.actions.offense.OffensiveKick;
 import strategy.actions.offense.ShuntKick;
@@ -118,6 +119,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     break;
                 case "kick":
                     fred.ACTION_CONTROLLER.setAction(new OffensiveKick(fred));
+                    break;
+                case "gkick":
+                    fred.ACTION_CONTROLLER.setAction(new GoalKick(fred));
                     break;
                 case "h":
                     fred.ACTION_CONTROLLER.setAction(new Waiting(fred));
