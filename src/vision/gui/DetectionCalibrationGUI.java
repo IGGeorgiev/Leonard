@@ -1,12 +1,13 @@
 package vision.gui;
 
-import vision.ImageManipulationPipeline;
-import vision.calibration.CalibrateEmptyPitchButton;
-import vision.calibration.SnapshotObjects;
-import vision.capture.VideoCapture;
-import vision.classification.PatternMatcher;
-import vision.detection.*;
-import vision.detection.manipulators.*;
+import vision.objectRecognition.ImageManipulationPipeline;
+import vision.objectRecognition.calibration.CalibrateEmptyPitchButton;
+import vision.objectRecognition.calibration.SnapshotObjects;
+import vision.objectRecognition.detection.ImageManipulator;
+import vision.objectRecognition.detection.ImageManipulatorWithOptions;
+import vision.objectRecognition.detection.manipulators.ApplyBinaryMask;
+import vision.objectRecognition.detection.manipulators.DilateImage;
+import vision.objectRecognition.detection.manipulators.GaussianBlurImage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,7 +15,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import static vision.detection.DetectionPropertiesManager.loadValues;
+import static vision.objectRecognition.detection.DetectionPropertiesManager.loadValues;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 29/01/17.
@@ -26,9 +27,6 @@ public class DetectionCalibrationGUI extends JPanel {
 
     private ImageManipulationPipeline controller = ImageManipulationPipeline.getInstance();
     private LinkedList<ImageManipulator> pipeline = controller.pipeline;
-
-    // Note - entry point to the pipeline is always the video feed
-    public VideoCapture videoFeed = controller.videoCapture;
 
     private ArrayList<ImageManipulator> displayedManipulators = new ArrayList<>();
 

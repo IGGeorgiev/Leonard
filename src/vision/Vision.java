@@ -1,12 +1,18 @@
 package vision;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import org.opencv.core.Core;
 import vision.colorAnalysis.ColorCalibration;
+import vision.gui.DetectionCalibrationGUI;
+import vision.objectRecognition.ImageManipulationPipeline;
 import vision.tools.CommandLineParser;
 import vision.distortion.Distortion;
 import vision.distortion.DistortionPreview;
@@ -29,9 +35,10 @@ import vision.spotAnalysis.recursiveSpotAnalysis.RecursiveSpotAnalysis;
  * This is the main Vision class. It creates the entire vision system. Run this file to see the magic. :)
  */
 
-public class Vision extends JFrame implements DynamicWorldListener {
+public class Vision extends JFrame implements DynamicWorldListener, ChangeListener {
 
 	private LinkedList<VisionListener> visionListeners;
+	private DetectionCalibrationGUI detectionGUI;
 	
 	/**
 	 * Add a vision listener. The Listener will be notified whenever the
@@ -50,16 +57,20 @@ public class Vision extends JFrame implements DynamicWorldListener {
 		
 		this.visionListeners   = new LinkedList<VisionListener>();
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addChangeListener(this);
 
 		SpotAnalysisBase recursiveSpotAnalysis   = new RecursiveSpotAnalysis();
 		SpotAnalysisBase approximateSpotAnalysis = new ApproximatedSpotAnalysis();
 
+		detectionGUI = new DetectionCalibrationGUI();
+		detectionGUI.hideAll();
 
 		// SDP2017NOTE
 		// This part builds the vision system pipeline
 		RawInput.addRawInputListener(recursiveSpotAnalysis);
-		RawInput.addRawInputListener(Preview.preview);
+//		RawInput.addRawInputListener(Preview.preview);
 		RawInput.addRawInputListener(Distortion.distortion);
+		RawInput.addRawInputListener(ImageManipulationPipeline.getInstance());
 		recursiveSpotAnalysis.addSpotListener(Distortion.distortion);
 		DistortionPreview.addDistortionPreviewClickListener(Distortion.distortion);
 		Distortion.addDistortionListener(RobotPreview.preview);
@@ -71,6 +82,9 @@ public class Vision extends JFrame implements DynamicWorldListener {
 		
 		
 		tabbedPane.addTab("Input Selection", null, RawInput.rawInputMultiplexer, null);
+
+		tabbedPane.addTab("BackgroundSubtraction", null, new DetectionCalibrationGUI(), null);
+
 		tabbedPane.addTab("Color Calibration", null, ColorCalibration.colorCalibration, null);
 		tabbedPane.addTab("Distortion", null, Distortion.distortion, null);
 //		tabbedPane.addTab("Robots", null, RobotAnalysis.strategy.robots, null);
@@ -98,6 +112,7 @@ public class Vision extends JFrame implements DynamicWorldListener {
 	}
 
 	public static void main(String[] args){
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		new Vision(args);
 	}
 
@@ -105,6 +120,16 @@ public class Vision extends JFrame implements DynamicWorldListener {
 	public void nextDynamicWorld(DynamicWorld state) {
 		for(VisionListener visionListener : this.visionListeners){
 			visionListener.nextWorld(state);
+		}
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+		if (tabbedPane.getTitleAt(tabbedPane.getSelectedIndex()).equals("BackgroundSubtraction")) {
+			detectionGUI.showAll();
+		} else {
+			detectionGUI.hideAll();
 		}
 	}
 }

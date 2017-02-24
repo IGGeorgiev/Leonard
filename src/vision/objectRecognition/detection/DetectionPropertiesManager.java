@@ -1,6 +1,6 @@
-package vision.detection;
+package vision.objectRecognition.detection;
 
-import vision.ImageManipulationPipeline;
+import vision.objectRecognition.ImageManipulationPipeline;
 
 import java.io.File;
 import java.io.FileInputStream;

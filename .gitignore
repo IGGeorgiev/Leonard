@@ -165,5 +165,5 @@ crashlytics-build.properties
 fabric.properties
 
 # Application Properties
-/Leonard/vision/calibration/pre_saved_values/*
-!/Leonard/vision/calibration/pre_saved_values/.gitkeep
+/src/vision/objectRecognition/calibration/pre_saved_values/*
+!/src/vision/objectRecognition/calibration/pre_saved_values/.gitkeep

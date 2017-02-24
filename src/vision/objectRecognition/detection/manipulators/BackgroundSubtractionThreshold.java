@@ -1,11 +1,11 @@
-package vision.detection.manipulators;
+package vision.objectRecognition.detection.manipulators;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
-import vision.detection.ImageManipulatorWithOptions;
+import vision.objectRecognition.detection.ImageManipulatorWithOptions;
 import vision.gui.TitledComponent;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.Properties;
 
-import static vision.utils.Subtractor.subtract;
+import static vision.objectRecognition.utils.Subtractor.subtract;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 02/02/17.
@@ -83,17 +83,20 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
     @Override
     protected Mat run(Mat input) {
         Mat backgroundImage =
-                Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/empty_pitch_norm.png");
+                Imgcodecs.imread("src/vision/objectRecognition/calibration/pre_saved_values/empty_pitch_norm.png");
 
-        Mat subtractedImage = subtract(backgroundImage, input);
+        if (backgroundImage.height() != 0 || backgroundImage.width() != 0) {
+            Mat subtractedImage = subtract(backgroundImage, input);
 
-        Mat thresholdedImage = new Mat(input.rows(), input.cols(), CvType.CV_8UC1);
-        Core.inRange(subtractedImage,
-                new Scalar(THRESHOLD_B, THRESHOLD_G, THRESHOLD_R),
-                new Scalar(255,255,255),
-                thresholdedImage);
+            Mat thresholdedImage = new Mat(input.rows(), input.cols(), CvType.CV_8UC1);
+            Core.inRange(subtractedImage,
+                    new Scalar(THRESHOLD_B, THRESHOLD_G, THRESHOLD_R),
+                    new Scalar(255, 255, 255),
+                    thresholdedImage);
 
-        return thresholdedImage;
+            return thresholdedImage;
+        }
+        return input;
     }
 
     @Override

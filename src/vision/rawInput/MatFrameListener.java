@@ -1,4 +1,4 @@
-package vision.capture;
+package vision.rawInput;
 
 import org.opencv.core.Mat;
 
@@ -7,7 +7,7 @@ import org.opencv.core.Mat;
  */
 
 public interface MatFrameListener {
-    void onFrameReceived(Mat image);
+    void onFrameReceived(Mat image, long time);
 }
 
 

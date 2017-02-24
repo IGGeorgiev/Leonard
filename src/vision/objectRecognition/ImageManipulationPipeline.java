@@ -1,21 +1,23 @@
-package vision;
+package vision.objectRecognition;
 
 import org.opencv.core.Mat;
-import vision.capture.MatFrameListener;
-import vision.capture.VideoCapture;
-import vision.classification.CircleDetection;
-import vision.classification.PatternMatcher;
-import vision.classification.SURFClassifier;
-import vision.detection.ImageManipulator;
-import vision.detection.manipulators.*;
+import vision.objectRecognition.detection.ImageManipulator;
+import vision.objectRecognition.detection.manipulators.*;
+import vision.rawInput.MatFrameListener;
+import vision.rawInput.RawInputListener;
 
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+
+import static vision.gui.Preview.preview;
+import static vision.objectRecognition.utils.Converter.imageToMat;
+import static vision.objectRecognition.utils.Converter.matToImage;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 01/02/17.
  * A class to orchestrate
  */
-public class ImageManipulationPipeline implements MatFrameListener {
+public class ImageManipulationPipeline implements MatFrameListener, RawInputListener {
 
     private static final ImageManipulationPipeline instance = new ImageManipulationPipeline();
 
@@ -31,7 +33,6 @@ public class ImageManipulationPipeline implements MatFrameListener {
     }
 
 //    VideoFileCapture                       videoFileCap   = new VideoFileCapture("vision/calibration/pre_saved_values/capture.mkv");
-    public VideoCapture                    videoCapture   = new VideoCapture();
     public UndistortImage                  undistortImage = new UndistortImage();
     public HSVConverter                    hsvImage       = new HSVConverter();
     private BackgroundSubtractionThreshold threshold      = new BackgroundSubtractionThreshold();
@@ -39,9 +40,6 @@ public class ImageManipulationPipeline implements MatFrameListener {
     public DilateImage                     dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
     private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(undistortImage);
-    public PatternMatcher                  classifier     = new PatternMatcher(gaussianBlur);
-//    public SURFClassifier                  surfclassifier = new SURFClassifier();
-    public CircleDetection                  circleDetector= new CircleDetection();
 
     // Failures
 
@@ -60,7 +58,6 @@ public class ImageManipulationPipeline implements MatFrameListener {
      * video.
      */
     public LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
-        add(videoCapture);
         add(undistortImage);
         add(gaussianBlur);
         add(hsvImage);
@@ -68,13 +65,15 @@ public class ImageManipulationPipeline implements MatFrameListener {
         add(erodeImage);
         add(dilateImage);
         add(applyBinaryMask);
-        add(circleDetector);
-//        add(surfclassifier);
-//        add(classifier);
     }};
 
     @Override
-    public void onFrameReceived(Mat image) {
-        // TODO Analyse processed image
+    public void onFrameReceived(Mat image, long time) {
+         preview.nextFrame(matToImage(image), time);
+    }
+
+    @Override
+    public void nextFrame(BufferedImage image, long time) {
+        pipeline.getFirst().onFrameReceived(imageToMat(image), time);
     }
 }

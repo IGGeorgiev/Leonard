@@ -1,8 +1,8 @@
-package vision.calibration;
+package vision.objectRecognition.calibration;
 
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
-import vision.detection.ImageManipulator;
+import vision.objectRecognition.detection.ImageManipulator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -27,7 +27,7 @@ public class CalibrateEmptyPitchButton extends JButton implements ActionListener
     @Override
     public void actionPerformed(ActionEvent ae) {
         Mat img = manipulator.catchMat();
-        Imgcodecs.imwrite("Leonard/vision/calibration/pre_saved_values/empty_pitch_norm.png",
+        Imgcodecs.imwrite("src/vision/objectRecognition/calibration/pre_saved_values/empty_pitch_norm.png",
                 img);
     }
 }
