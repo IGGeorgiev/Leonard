@@ -6,6 +6,7 @@ import strategy.actions.ActionException;
 import strategy.navigation.Obstacle;
 import strategy.points.basicPoints.BallPoint;
 import strategy.points.basicPoints.ConstantPoint;
+import strategy.points.basicPoints.EnemyGoal;
 import strategy.robots.Fred;
 import strategy.robots.RobotBase;
 import vision.Ball;
@@ -28,10 +29,11 @@ public class GoalKick extends ActionBase {
 
         Robot us = Strategy.world.getRobot(RobotType.FRIEND_2);
         Ball ball = Strategy.world.getBall();
+        EnemyGoal enemyGoal = new EnemyGoal();
         if (us == null || ball == null) return;
 
         VectorGeometry ballVec = new VectorGeometry(ball.location.x, ball.location.y);
-        VectorGeometry emgoal = new VectorGeometry(250, 0);
+        VectorGeometry emgoal = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY());
         VectorGeometry kickingPoint = VectorGeometry.kickBallLocation(emgoal, ballVec, 20);
 
         this.robot.MOTION_CONTROLLER.addObstacle(new Obstacle((int) ball.location.x, (int) ball.location.y, 30));
