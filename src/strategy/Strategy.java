@@ -258,6 +258,14 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
 
                     fred.MOTION_CONTROLLER.setHeading(new BallPoint());
                     break;
+
+                case "vector":
+                    VectorGeometry ball = new VectorGeometry(10, 10);
+                    VectorGeometry emgoal = new VectorGeometry(250, 0);
+                    VectorGeometry kickingPoint = VectorGeometry.kickBallLocation(emgoal, ball, 20);
+                    System.out.println(kickingPoint.x);
+                    System.out.println(kickingPoint.y);
+                    break;
             }
         }
 
