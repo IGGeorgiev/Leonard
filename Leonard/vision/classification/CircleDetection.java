@@ -16,7 +16,10 @@ public class CircleDetection extends ImageManipulator {
         Imgproc.cvtColor(input, gray, Imgproc.COLOR_BGR2GRAY);
         Mat circles = new Mat();
         Imgproc.HoughCircles(gray, circles, Imgproc.HOUGH_GRADIENT, 1, 10);
-
-        return circles;
+        if (circles.height() != 0 && circles.width() != 0) {
+            System.out.println("Found cicrcles");
+            return circles;
+        }
+        return input;
     }
 }

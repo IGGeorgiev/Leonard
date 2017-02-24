@@ -2,7 +2,6 @@ package vision.detection;
 
 import org.opencv.core.Mat;
 import vision.capture.MatFrameListener;
-import vision.classification.PatternMatcher;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
