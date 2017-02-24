@@ -17,7 +17,7 @@ public class DetectionPropertiesManager {
 
     public static void loadValues() {
         File saveFile =
-                new File("Leonard/vision/calibration/pre_saved_values/calibrationOptions.properties");
+                new File("src/vision/objectRecognition/calibration/pre_saved_values/calibrationOptions.properties");
         Properties prop = new Properties();
         FileInputStream fis = null;
         try {
@@ -47,7 +47,7 @@ public class DetectionPropertiesManager {
 
     public static void saveValues() {
         File saveFile =
-                new File("Leonard/vision/calibration/pre_saved_values/calibrationOptions.properties");
+                new File("src/vision/objectRecognition/calibration/pre_saved_values/calibrationOptions.properties");
         Properties prop = new Properties();
         FileOutputStream fos = null;
 
