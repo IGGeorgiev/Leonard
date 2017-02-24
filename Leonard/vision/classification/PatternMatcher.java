@@ -64,7 +64,7 @@ public class PatternMatcher extends ImageManipulator {
         Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
 
 
-        double thresh = 0.97f;
+        double thresh = 0.95f;
         Imgproc.threshold(result, result, thresh, 1, Imgproc.THRESH_BINARY);
 
 

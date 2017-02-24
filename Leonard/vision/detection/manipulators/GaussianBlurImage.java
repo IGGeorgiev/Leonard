@@ -88,8 +88,7 @@ public class GaussianBlurImage extends ImageManipulatorWithOptions implements Ch
             if (nextManipulator != null) {
                 Mat out = new Mat();
                 manipulatedImage.copyTo(out);
-//                new Thread(() -> nextManipulator.onFrameReceived(out)).run();
-                nextManipulator.onFrameReceived(out);
+                new Thread(() -> nextManipulator.onFrameReceived(out)).run();
             }
         }
     }

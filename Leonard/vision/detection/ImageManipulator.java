@@ -63,8 +63,7 @@ public abstract class ImageManipulator implements MatFrameListener {
                     manipulatorDisplay.getGraphics().drawImage(frame, 0, 0, null);
             }
             if (nextManipulator != null)
-//                new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage)).run();
-                nextManipulator.onFrameReceived(manipulatedImage);
+                new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage)).run();
         }
     }
 

@@ -3,6 +3,7 @@ package vision;
 import org.opencv.core.Mat;
 import vision.capture.MatFrameListener;
 import vision.capture.VideoCapture;
+import vision.classification.CircleDetection;
 import vision.classification.PatternMatcher;
 import vision.classification.SURFClassifier;
 import vision.detection.ImageManipulator;
@@ -40,6 +41,7 @@ public class ImageManipulationPipeline implements MatFrameListener {
     private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(undistortImage);
     public PatternMatcher                  classifier     = new PatternMatcher(gaussianBlur);
 //    public SURFClassifier                  surfclassifier = new SURFClassifier();
+    public CircleDetection                  circleDetector= new CircleDetection();
 
     // Failures
 
@@ -66,8 +68,9 @@ public class ImageManipulationPipeline implements MatFrameListener {
         add(erodeImage);
         add(dilateImage);
         add(applyBinaryMask);
+        add(circleDetector);
 //        add(surfclassifier);
-        add(classifier);
+//        add(classifier);
     }};
 
     @Override
