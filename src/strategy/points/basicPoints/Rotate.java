@@ -20,8 +20,8 @@ public class Rotate extends DynamicPointBase {
         Robot us = Strategy.world.getRobot(RobotType.FRIEND_2);
         if(us != null){
             VectorGeometry location = us.location.clone();
-            location.setLengthRot(50);
-            location.rotate(0.3);
+            location.setLength(50);
+            location.rotate(0.3); // this rotates the vector of the rotate from the centre by 0.3
             this.x = (int)location.x;
             this.y = (int)location.y;
         }

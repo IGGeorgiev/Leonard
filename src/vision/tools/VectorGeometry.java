@@ -96,19 +96,8 @@ VectorGeometry {
         return this;
     }
 
-    public VectorGeometry setLengthRot(double len){
-        double length = this.length();
-        System.out.println(length);
-        if(length == 0) return this;
-        double factor = len / length;
-        this.x = this.x * factor;
-        this.y = this.y * factor;
-        return this;
-    }
-    public VectorGeometry setLength(double len, double ballX, double ballY) {
-        double length = squareDistance(ballX, ballY, this.x, this.y);
-        System.out.println(length);
-//        System.out.println("this.x = " +this.x+" this.y = "+this.y);
+    public VectorGeometry setLength(double len, double pointX, double pointY) {
+        double length = squareDistance(pointX, pointY, this.x, this.y);
         if(length == 0) return this;
         double factor = len / length;
         this.x = this.x * factor;
@@ -147,8 +136,12 @@ VectorGeometry {
     }
 
     public VectorGeometry rotateAroundPoint(double d, VectorGeometry point) {
-        this.x = Math.cos(d)*point.x - Math.sin(d)*point.y;
-        this.y = Math.sin(d)*point.x + Math.cos(d)*point.y;
+        double xx = this.x - point.x;
+        double yy = this.y - point.y;
+        xx = Math.cos(d)*xx - Math.sin(d)*xx;
+        yy = Math.sin(d)*yy + Math.cos(d)*yy;
+        this.x = xx + point.x;
+        this.y = yy + point.y;
         return this;
     }
 

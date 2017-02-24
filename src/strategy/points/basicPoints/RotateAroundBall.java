@@ -21,7 +21,8 @@ public class RotateAroundBall extends DynamicPointBase {
         Ball ball = Strategy.world.getBall();
         if(us != null){
             VectorGeometry location = us.location.clone();
-            location.rotateAroundPoint(30, new VectorGeometry(ball.location.x, ball.location.y));
+            location.setLength(50, ball.location.x, ball.location.y); // adjust distance between ball and robot
+            location.rotateAroundPoint(0.3, new VectorGeometry(ball.location.x, ball.location.y));
             this.x = (int)location.x;
             this.y = (int)location.y;
         }
