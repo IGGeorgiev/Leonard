@@ -1,9 +1,9 @@
-package vision.detection.manipulators;
+package vision.objectRecognition.detection.manipulators;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import vision.detection.ImageManipulatorWithOptions;
+import vision.objectRecognition.detection.ImageManipulatorWithOptions;
 import vision.gui.TitledComponent;
 
 import javax.swing.*;

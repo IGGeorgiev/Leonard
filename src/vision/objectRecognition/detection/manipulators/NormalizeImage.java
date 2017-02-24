@@ -1,7 +1,7 @@
-package vision.detection.manipulators;
+package vision.objectRecognition.detection.manipulators;
 
 import org.opencv.core.Mat;
-import vision.detection.ImageManipulator;
+import vision.objectRecognition.detection.ImageManipulator;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 01/02/17.

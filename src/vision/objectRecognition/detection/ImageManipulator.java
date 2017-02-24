@@ -1,12 +1,12 @@
-package vision.detection;
+package vision.objectRecognition.detection;
 
 import org.opencv.core.Mat;
-import vision.capture.MatFrameListener;
+import vision.rawInput.MatFrameListener;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
-import static vision.utils.Converter.matToBufferedImage;
+import static vision.objectRecognition.utils.Converter.matToBufferedImage;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 01/02/17.
@@ -38,9 +38,13 @@ public abstract class ImageManipulator implements MatFrameListener {
     }
 
     public BufferedImage catchFrame() {
-        Mat out = new Mat();
-        manipulatedImage.copyTo(out);
-        return matToBufferedImage(out, null);
+        if (manipulatedImage.height() != 0 || manipulatedImage.width() != 0) {
+            Mat out = new Mat();
+            manipulatedImage.copyTo(out);
+            return matToBufferedImage(out, null);
+        } else {
+            return new BufferedImage(1,1,BufferedImage.TYPE_3BYTE_BGR);
+        }
     }
 
     public Mat catchMat() {
@@ -53,7 +57,7 @@ public abstract class ImageManipulator implements MatFrameListener {
         nextManipulator = listener;
     }
 
-    public void onFrameReceived(Mat image) {
+    public void onFrameReceived(Mat image, long time) {
         manipulatedImage = run(image);
         if (manipulatedImage != null) {
             if (isDisplayed) {
@@ -62,7 +66,7 @@ public abstract class ImageManipulator implements MatFrameListener {
                     manipulatorDisplay.getGraphics().drawImage(frame, 0, 0, null);
             }
             if (nextManipulator != null)
-                new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage)).run();
+                new Thread(() -> nextManipulator.onFrameReceived(manipulatedImage, time)).run();
         }
     }
 

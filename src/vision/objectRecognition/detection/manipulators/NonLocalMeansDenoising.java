@@ -1,14 +1,10 @@
-package vision.detection.manipulators;
+package vision.objectRecognition.detection.manipulators;
 
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 import org.opencv.photo.Photo;
-import vision.detection.ImageManipulator;
+import vision.objectRecognition.detection.ImageManipulator;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 23/02/17.

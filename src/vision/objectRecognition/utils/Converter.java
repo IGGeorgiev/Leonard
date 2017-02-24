@@ -1,4 +1,4 @@
-package vision.utils;
+package vision.objectRecognition.utils;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -6,7 +6,6 @@ import org.opencv.core.Size;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 30/01/17.

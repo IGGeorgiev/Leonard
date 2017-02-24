@@ -1,4 +1,4 @@
-package vision.detection;
+package vision.objectRecognition.detection;
 
 import java.awt.*;
 import java.util.Properties;

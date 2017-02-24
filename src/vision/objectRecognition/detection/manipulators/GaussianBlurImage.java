@@ -1,9 +1,9 @@
-package vision.detection.manipulators;
+package vision.objectRecognition.detection.manipulators;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import vision.detection.ImageManipulatorWithOptions;
+import vision.objectRecognition.detection.ImageManipulatorWithOptions;
 import vision.gui.TitledComponent;
 
 import javax.swing.*;
@@ -76,7 +76,7 @@ public class GaussianBlurImage extends ImageManipulatorWithOptions implements Ch
     }
 
     @Override
-    public void onFrameReceived(Mat image) {
+    public void onFrameReceived(Mat image, long time) {
         manipulatedImage = run(image);
         if (manipulatedImage != null) {
             if (isDisplayed) {
@@ -88,7 +88,7 @@ public class GaussianBlurImage extends ImageManipulatorWithOptions implements Ch
             if (nextManipulator != null) {
                 Mat out = new Mat();
                 manipulatedImage.copyTo(out);
-                new Thread(() -> nextManipulator.onFrameReceived(out)).run();
+                new Thread(() -> nextManipulator.onFrameReceived(out, time)).run();
             }
         }
     }

@@ -1,11 +1,11 @@
-package vision.calibration;
+package vision.objectRecognition.calibration;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import vision.detection.ImageManipulator;
+import vision.objectRecognition.detection.ImageManipulator;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -43,7 +43,7 @@ public class SnapshotObjects extends JButton implements ChangeListener {
             for (MatOfPoint mop : contours) {
                 Rect boundingBox = Imgproc.boundingRect(mop);
                 Mat out = new Mat(img, boundingBox);
-                Imgcodecs.imwrite("Leonard/vision/calibration/pre_saved_values/templates/img" + count + ".png", out);
+                Imgcodecs.imwrite("src/vision/objectRecognition/calibration/pre_saved_values/templates/img" + count + ".png", out);
                 count++;
             }
         }
