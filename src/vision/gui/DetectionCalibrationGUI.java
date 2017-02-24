@@ -49,25 +49,25 @@ public class DetectionCalibrationGUI extends JPanel {
         // Choose what to display here
         for (ImageManipulator i : pipeline) {
 //            if (i instanceof VideoCapture)
-//                displayQueue.add(i.getDisplay());
+//                displayQueue.add(i.getDisplay(false));
             if (i instanceof GaussianBlurImage) {
-                displayQueue.add(i.getDisplay());
+                displayQueue.add(i.getDisplay(false));
                 displayedManipulators.add(i);
             }
 //            if (i instanceof NormalizeImage)
-//                displayQueue.add(i.getDisplay());
+//                displayQueue.add(i.getDisplay(false));
 //            if (i instanceof BackgroundSubtractionThreshold)
-//                displayQueue.add(i.getDisplay());
+//                displayQueue.add(i.getDisplay(false));
 //            if (i instanceof GaussianBlurImage)
-//                displayQueue.add(i.getDisplay());
+//                displayQueue.add(i.getDisplay(false));
 //            if (i instanceof ErodeImage)
 //                displayQueue.add(i.getDis
             if (i instanceof DilateImage) {
-                displayQueue.add(i.getDisplay());
+                displayQueue.add(i.getDisplay(false));
                 displayedManipulators.add(i);
             }
             if (i instanceof ApplyBinaryMask) {
-                displayQueue.add(i.getDisplay());
+                displayQueue.add(i.getDisplay(false));
                 displayedManipulators.add(i);
             }
             if (i instanceof ImageManipulatorWithOptions)

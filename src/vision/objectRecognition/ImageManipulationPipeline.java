@@ -39,7 +39,7 @@ public class ImageManipulationPipeline implements MatFrameListener, RawInputList
     public GaussianBlurImage               gaussianBlur   = new GaussianBlurImage();
     public DilateImage                     dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
-    private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(undistortImage);
+    private ApplyBinaryMask                applyBinaryMask= new ApplyBinaryMask(gaussianBlur);
 
     // Failures
 
@@ -58,7 +58,7 @@ public class ImageManipulationPipeline implements MatFrameListener, RawInputList
      * video.
      */
     public LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
-        add(undistortImage);
+//        add(undistortImage);
         add(gaussianBlur);
         add(hsvImage);
         add(threshold);
