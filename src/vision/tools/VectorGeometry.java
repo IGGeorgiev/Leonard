@@ -138,8 +138,8 @@ VectorGeometry {
     public VectorGeometry rotateAroundPoint(double d, VectorGeometry point) {
         double xx = this.x - point.x;
         double yy = this.y - point.y;
-        xx = Math.cos(d)*xx - Math.sin(d)*xx;
-        yy = Math.sin(d)*yy + Math.cos(d)*yy;
+        xx = Math.cos(d)*xx - Math.sin(d)*yy;
+        yy = Math.sin(d)*xx + Math.cos(d)*yy;
         this.x = xx + point.x;
         this.y = yy + point.y;
         return this;
@@ -225,6 +225,12 @@ VectorGeometry {
         double res = angle(1,0,x,y);
         if(y < 0) return -res;
         return res;
+    }
+
+    public static VectorGeometry kickBallLocation(VectorGeometry goal, VectorGeometry ball, double unit){
+        double length = VectorGeometry.distance(goal, ball);
+        VectorGeometry v2 = new VectorGeometry((ball.x-goal.x)/length, (ball.y-goal.y)/length);
+        return new VectorGeometry(ball.x+v2.x*unit, ball.y+v2.y*unit);
     }
 
 
