@@ -25,18 +25,12 @@ public class PatternMatcher extends ImageManipulator {
 
     public PatternMatcher(ImageManipulator undistortionFeed) {
         undistortImage = undistortionFeed;
-        Size resize = new Size(35,35);
-        Size resizeDot = new Size(25,25);
 
         System.out.println("Loading template images...");
 
         redBall = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/ball_red.png");
         pinkDot = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/pink_dot.png");
         blueDot = Imgcodecs.imread("Leonard/vision/calibration/pre_saved_values/templates/blue_dot.png");
-
-        Imgproc.resize(redBall, redBall, resize);
-        Imgproc.resize(pinkDot, pinkDot, resizeDot);
-        Imgproc.resize(blueDot, blueDot, resizeDot);
 
         Imgproc.cvtColor(redBall, redBall, Imgproc.COLOR_BGR2HSV);
         Imgproc.cvtColor(pinkDot, pinkDot, Imgproc.COLOR_BGR2HSV);
@@ -45,12 +39,8 @@ public class PatternMatcher extends ImageManipulator {
 
     @Override
     protected Mat run(Mat image) {
-        Size resize = new Size(1280,800);
-        Imgproc.resize(image, image, resize);
-
         Mat outputMat = new Mat();
         undistortImage.catchMat().copyTo(outputMat);
-        Imgproc.resize(outputMat, outputMat, resize);
         Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2HSV);
         findMatches(image, pinkDot, outputMat, new Scalar(203,192,255));
         findMatches(image, blueDot, outputMat, new Scalar(255,0,0));
