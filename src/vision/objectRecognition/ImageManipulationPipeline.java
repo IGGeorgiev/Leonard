@@ -5,10 +5,13 @@ import vision.objectRecognition.detection.ImageManipulator;
 import vision.objectRecognition.detection.manipulators.*;
 import vision.rawInput.MatFrameListener;
 import vision.rawInput.RawInputListener;
+import vision.spotAnalysis.SpotAnalysisBase;
+import vision.spotAnalysis.recursiveSpotAnalysis.RecursiveSpotAnalysis;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
+import static vision.Vision.recursiveSpotAnalysis;
 import static vision.gui.Preview.preview;
 import static vision.objectRecognition.utils.Converter.imageToMat;
 import static vision.objectRecognition.utils.Converter.matToImage;
@@ -69,7 +72,9 @@ public class ImageManipulationPipeline implements MatFrameListener, RawInputList
 
     @Override
     public void onFrameReceived(Mat image, long time) {
-         preview.nextFrame(matToImage(image), time);
+        BufferedImage out = matToImage(image);
+        preview.nextFrame(out, time);
+        recursiveSpotAnalysis.nextFrame(out, time);
     }
 
     @Override
