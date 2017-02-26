@@ -39,6 +39,7 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 
 	private LinkedList<VisionListener> visionListeners;
 	private DetectionCalibrationGUI detectionGUI;
+	public static SpotAnalysisBase recursiveSpotAnalysis   = new RecursiveSpotAnalysis();
 	
 	/**
 	 * Add a vision listener. The Listener will be notified whenever the
@@ -59,7 +60,6 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addChangeListener(this);
 
-		SpotAnalysisBase recursiveSpotAnalysis   = new RecursiveSpotAnalysis();
 		SpotAnalysisBase approximateSpotAnalysis = new ApproximatedSpotAnalysis();
 
 		detectionGUI = new DetectionCalibrationGUI();
@@ -67,7 +67,7 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 
 		// SDP2017NOTE
 		// This part builds the vision system pipeline
-		RawInput.addRawInputListener(recursiveSpotAnalysis);
+//		RawInput.addRawInputListener(recursiveSpotAnalysis);
 //		RawInput.addRawInputListener(Preview.preview);
 		RawInput.addRawInputListener(Distortion.distortion);
 		RawInput.addRawInputListener(ImageManipulationPipeline.getInstance());
