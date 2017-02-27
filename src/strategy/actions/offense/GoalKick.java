@@ -39,9 +39,12 @@ public class GoalKick extends ActionBase {
         this.robot.MOTION_CONTROLLER.addObstacle(new Obstacle((int) ball.location.x, (int) ball.location.y, 10));
         this.robot.MOTION_CONTROLLER.setHeading(new EnemyGoal());
         this.robot.MOTION_CONTROLLER.setDestination(new ConstantPoint((int) kickingPoint.x, (int) kickingPoint.y));
-        this.robot.MOTION_CONTROLLER.setTolerance(10);
+        this.robot.MOTION_CONTROLLER.setTolerance(-1);
         ((Fred) this.robot).GRABBER_CONTROLLER.setActive(false);
         this.state = 0;
+
+
+
     }
 
     @Override

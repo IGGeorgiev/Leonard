@@ -1,6 +1,8 @@
 package strategy.controllers.essentials;
 
+import communication.ports.robotPorts.FredRobotPort;
 import strategy.Strategy;
+import strategy.actions.offense.OffensiveKick;
 import strategy.controllers.ControllerBase;
 import strategy.navigation.NavigationInterface;
 import strategy.navigation.Obstacle;
@@ -12,7 +14,17 @@ import strategy.GUI;
 import vision.Robot;
 import vision.RobotType;
 import vision.tools.VectorGeometry;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
 
@@ -141,17 +153,30 @@ public class MotionController extends ControllerBase {
             factor = 1.0;
         }
         if(this.destination != null && us.location.distance(destination) < tolerance){
-            this.robot.port.stop();
+//            this.robot.port.stop();
+
             double constant;
-            while (Math.abs(rotation) >= 0.2) {
-                us = Strategy.world.getRobot(RobotType.FRIEND_2);
-                robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
-                robotToPoint = VectorGeometry.fromTo(us.location, heading);
-                rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-                constant = 100 * rotation;
-                System.out.println("rotation: " + rotation + " constant: " + constant);
-                ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
-            }
+//            while (Math.abs(rotation) >= 0.2) {
+//                us = Strategy.world.getRobot(RobotType.FRIEND_2);
+//                robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
+//                robotToPoint = VectorGeometry.fromTo(us.location, heading);
+//                rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
+//                constant = 100 * rotation;
+//                System.out.println("rotation: " + rotation + " constant: " + constant);
+//                ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
+//            }
+//            this.robot.port.stop();
+            this.robot.MOTION_CONTROLLER.clearObstacles();
+            ActionListener task2 = new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+                    robot.MOTION_CONTROLLER.clearObstacles();
+                    robot.ACTION_CONTROLLER.setAction(new OffensiveKick(robot));
+                }
+            };
+            Timer tm2 = new Timer(3000, task2);
+            tm2.setRepeats(false);
+            tm2.start();
+
             return;
         }
 

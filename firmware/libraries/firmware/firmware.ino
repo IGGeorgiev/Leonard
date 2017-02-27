@@ -90,17 +90,12 @@ void kicker(){
   if(type == 0){
     motorStop(KICKERS);
   } else if (type == 1){
-    if(kickerStatus != 1){
+
         Serial.print("Starting From: ");
         Serial.println(positions[0] % 40);
         motorForward(KICKERS, 255);
-        kickerStatus = 1;
-    }
   } else {
-    if(kickerStatus != 2){
         motorBackward(KICKERS, 255);
-        kickerStatus = 2;
-    }
   }
 }
 
