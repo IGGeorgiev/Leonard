@@ -270,6 +270,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     System.out.println(kickingPoint.x);
                     System.out.println(kickingPoint.y);
                     break;
+
+                case "spin":
+                    fred.drive.move(fred.port, world.getRobot(RobotType.FRIEND_2).location, new VectorGeometry(0, 0), 1,1);
             }
         }
 
