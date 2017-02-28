@@ -134,6 +134,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     port.grabber(0);
                     port.grabber(0);
                     port.grabber(0);
+                    port.kicker(0);
+                    port.kicker(0);
+                    port.kicker(0);
                     break;
                 case "reset":
                     fred.ACTION_CONTROLLER.setAction(new Goto(fred, new ConstantPoint(0, 0)));
@@ -258,6 +261,15 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
 //                    tm2.setRepeats(false);
 //                    tm2.start();
                     break;
+
+                case "kicka":
+                    ((FredRobotPort) fred.port).kicker(1);
+                    break;
+
+                case "stopk":
+                    ((FredRobotPort) fred.port).kicker(0);
+                    break;
+
                 case "rotate": // point to ball
 
                     fred.MOTION_CONTROLLER.setHeading(new BallPoint());
