@@ -155,10 +155,11 @@ public class MotionController extends ControllerBase {
         if(destination.distance(us.location) < 30){
             factor = 1.0;
         }
+
         if(this.destination != null && us.location.distance(destination) < tolerance && rotation<0.1){
             this.robot.port.stop();
 
-            double constant;
+//            double constant;
 //            while (Math.abs(rotation) >= 0.2) {
 //                us = Strategy.world.getRobot(RobotType.FRIEND_2);
 //                robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
@@ -170,14 +171,12 @@ public class MotionController extends ControllerBase {
 //            }
 //            this.robot.port.stop();
             this.robot.MOTION_CONTROLLER.clearObstacles();
-            ActionListener task2 = new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    robot.MOTION_CONTROLLER.clearObstacles();
-                    robot.ACTION_CONTROLLER.setAction(new OffensiveKick(robot));
-                }
+            ActionListener task2 = evt -> {
+                robot.MOTION_CONTROLLER.clearObstacles();
+                robot.ACTION_CONTROLLER.setAction(new OffensiveKick(robot));
             };
             System.out.println("Should be heading the ball now and stopped");
-            Timer tm2 = new Timer(3000, task2);
+            Timer tm2 = new Timer(1000, task2);
             tm2.setRepeats(false);
             tm2.start();
 

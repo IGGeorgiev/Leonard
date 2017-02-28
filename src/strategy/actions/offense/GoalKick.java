@@ -43,8 +43,6 @@ public class GoalKick extends ActionBase {
         ((Fred) this.robot).GRABBER_CONTROLLER.setActive(false);
         this.state = 0;
 
-
-
     }
 
     @Override

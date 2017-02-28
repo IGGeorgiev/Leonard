@@ -22,6 +22,7 @@ public class DefendGoal extends ActionBase {
         if(newState == 0){
             if(this.robot instanceof Fred){
                 ((Fred)this.robot).GRABBER_CONTROLLER.setActive(false);
+                ((Fred)this.robot).KICKER_CONTROLLER.setActive(false);
             }
         }
         this.state = newState;

@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Created by group 15 2017
 public class KickerController extends ControllerBase {
 
     private boolean grabberIsDown;
