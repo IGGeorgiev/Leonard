@@ -5,7 +5,7 @@ package vision;
  */
 public enum RobotAlias {
     UNKNOWN,
-    FRED,
+    LEONARD,
     JEFFREY,
     VENUS,
     FELIX

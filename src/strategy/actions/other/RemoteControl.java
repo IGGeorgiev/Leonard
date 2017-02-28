@@ -32,23 +32,23 @@ public class RemoteControl extends ActionBase implements KeyListener {
     @Override
     public void tok() throws ActionException {
 //        if(w && !a && !s && !d){
-//            Fred.FRED.differentialDrive(-100,100);
+//            Fred.LEONARD.differentialDrive(-100,100);
 //        } else if(w && a && !s && !d){
-//            Fred.FRED.differentialDrive(0,100);
+//            Fred.LEONARD.differentialDrive(0,100);
 //        } else if(w && !a && !s && d){
-//            Fred.FRED.differentialDrive(-100,0);
+//            Fred.LEONARD.differentialDrive(-100,0);
 //        } else if(!w && !a && s && !d){
-//            Fred.FRED.differentialDrive(100,-100);
+//            Fred.LEONARD.differentialDrive(100,-100);
 //        } else if(!w && a && s && !d){
-//            Fred.FRED.differentialDrive(0,-100);
+//            Fred.LEONARD.differentialDrive(0,-100);
 //        } else if(!w && !a && s && d){
-//            Fred.FRED.differentialDrive(100,0);
+//            Fred.LEONARD.differentialDrive(100,0);
 //        } else if(!w && !a && !s && d){
-//            Fred.FRED.differentialDrive(-100,-100);
+//            Fred.LEONARD.differentialDrive(-100,-100);
 //        } else if(!w && a && !s && !d){
-//            Fred.FRED.differentialDrive(100,100);
+//            Fred.LEONARD.differentialDrive(100,100);
 //        } else {
-//            Fred.FRED.stop();
+//            Fred.LEONARD.stop();
 //        }
     }
 
@@ -65,12 +65,12 @@ public class RemoteControl extends ActionBase implements KeyListener {
 //        this.d = e.getKeyChar() == 'd' || this.d;
 //
 //        if(e.getKeyChar() == 'l'){
-//            Fred.FRED.grab();
+//            Fred.LEONARD.grab();
 //            grabbed = true;
 //            this.delay(500);
 //        }
 //        if(e.getKeyChar() == 'p' && grabbed){
-//            Fred.FRED.ungrab();
+//            Fred.LEONARD.ungrab();
 //            grabbed = false;
 //            this.delay(500);
 //        }

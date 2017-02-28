@@ -12,6 +12,7 @@ import javax.swing.event.ChangeListener;
 import org.opencv.core.Core;
 import vision.colorAnalysis.ColorCalibration;
 import vision.gui.DetectionCalibrationGUI;
+import vision.kalmanFilter.DynamicWorldFilter;
 import vision.objectRecognition.ImageManipulationPipeline;
 import vision.tools.CommandLineParser;
 import vision.distortion.Distortion;
@@ -40,6 +41,7 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 	private LinkedList<VisionListener> visionListeners;
 	private DetectionCalibrationGUI detectionGUI;
 	public static SpotAnalysisBase recursiveSpotAnalysis   = new RecursiveSpotAnalysis();
+	private DynamicWorldFilter kalmanFilters = new DynamicWorldFilter();
 	
 	/**
 	 * Add a vision listener. The Listener will be notified whenever the
@@ -77,8 +79,9 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 
 		RobotAnalysisBase robotAnalysis = new NewRobotAnalysis();
 		Distortion.addDistortionListener(robotAnalysis);
-		robotAnalysis.addDynamicWorldListener(RobotPreview.preview);
-		robotAnalysis.addDynamicWorldListener(this);
+		robotAnalysis.addDynamicWorldListener(kalmanFilters);
+		kalmanFilters.addFilterListener(RobotPreview.preview);
+		kalmanFilters.addFilterListener(this);
 		
 		
 		tabbedPane.addTab("Input Selection", null, RawInput.rawInputMultiplexer, null);
