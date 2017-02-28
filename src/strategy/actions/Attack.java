@@ -39,7 +39,7 @@ public class Attack extends StatefulActionBase<Status.BallState> {
                 this.enterAction(new Goto(this.robot, new BallPoint()), 0, 0);
                 break;
             case ME:
-//                    if(Fred.FRED.hasBall()){
+//                    if(Fred.LEONARD.hasBall()){
                 this.enterAction(new Goto(this.robot, new BallPoint()), 0, 0);
                 break;
             case FRIEND:
