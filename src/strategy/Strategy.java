@@ -1,6 +1,7 @@
 package strategy;
 
 import strategy.actions.Behave;
+import strategy.actions.offense.GoalKick;
 import strategy.actions.other.*;
 import strategy.actions.offense.OffensiveKick;
 import strategy.actions.offense.ShuntKick;
@@ -118,6 +119,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     break;
                 case "kick":
                     fred.ACTION_CONTROLLER.setAction(new OffensiveKick(fred));
+                    break;
+                case "gkick":
+                    fred.ACTION_CONTROLLER.setAction(new GoalKick(fred));
                     break;
                 case "h":
                     fred.ACTION_CONTROLLER.setAction(new Waiting(fred));
@@ -239,9 +243,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                             ((FredRobotPort) fred.port).grabber(0);
                         }
                     };
-                    Timer tm = new Timer(280, taskPerformer);
-                    tm.setRepeats(false);
-                    tm.start();
+//                    Timer tm = new Timer(280, taskPerformer);
+//                    tm.setRepeats(false);
+//                    tm.start();
                     break;
                 case "lift":
                     ((FredRobotPort) fred.port).grabber(2);
@@ -251,13 +255,21 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                             ((FredRobotPort) fred.port).grabber(0);
                         }
                     };
-                    Timer tm2 = new Timer(300, task2);
-                    tm2.setRepeats(false);
-                    tm2.start();
+//                    Timer tm2 = new Timer(300, task2);
+//                    tm2.setRepeats(false);
+//                    tm2.start();
                     break;
                 case "rotate": // point to ball
 
                     fred.MOTION_CONTROLLER.setHeading(new BallPoint());
+                    break;
+
+                case "vector":
+                    VectorGeometry ball = new VectorGeometry(10, 10);
+                    VectorGeometry emgoal = new VectorGeometry(250, 0);
+                    VectorGeometry kickingPoint = VectorGeometry.kickBallLocation(emgoal, ball, 20);
+                    System.out.println(kickingPoint.x);
+                    System.out.println(kickingPoint.y);
                     break;
             }
         }

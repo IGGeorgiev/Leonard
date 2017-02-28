@@ -61,52 +61,53 @@ public class GrabberController extends ControllerBase {
         Ball ball = Strategy.world.getBall();
         if (us != null) {
             if (this.isActive()) {
-                boolean ballIsGrabbable = false;
-                double xDiff = Math.abs(ball.location.x - us.location.x);
-                double yDiff = Math.abs(ball.location.y - us.location.y);
-                double distFromBall = xDiff * yDiff;
-                //experiment with the constant 10 to see what works best
-                if (distFromBall < 15) {
-                    ballIsGrabbable = true;
-                }
-
-                if (grabberIsDown && ballIsGrabbable) {
-                    System.out.println("we are close to the ball");
-                    grab(2);
-                    grabberIsDown = false;
-                } else if (grabberIsDown && this.robot.robotType == Strategy.world.getProbableBallHolder()) {
-                    EnemyGoal enemyGoal = new EnemyGoal();
-                    this.robot.ACTION_CONTROLLER.setAction(new Stop(this.robot));
-                    this.robot.MOTION_CONTROLLER.setHeading(enemyGoal);
-                    System.out.println("we have the ball");
-
-//                    boolean openGoal = true;
-//                    for (Robot r : Strategy.world.getRobots()) {
-//                        if (r != null && r.type != RobotType.FRIEND_2){
-//                            VectorGeometry potentialKick = new VectorGeometry(x, y)
-//                        }
-//                            openGoal = openGoal && r.location.distance(ball.location) > 10;
+                ((FredRobotPort) this.robot.port).grabber(1);
+//                boolean ballIsGrabbable = false;
+//                double xDiff = Math.abs(ball.location.x - us.location.x);
+//                double yDiff = Math.abs(ball.location.y - us.location.y);
+//                double distFromBall = xDiff * yDiff;
+//                //experiment with the constant 10 to see what works best
+//                if (distFromBall < 15) {
+//                    ballIsGrabbable = true;
+//                }
+//
+//                if (grabberIsDown && ballIsGrabbable) {
+//                    System.out.println("we are close to the ball");
+//                    grab(2);
+//                    grabberIsDown = false;
+//                } else if (grabberIsDown && this.robot.robotType == Strategy.world.getProbableBallHolder()) {
+//                    EnemyGoal enemyGoal = new EnemyGoal();
+//                    this.robot.ACTION_CONTROLLER.setAction(new Stop(this.robot));
+//                    this.robot.MOTION_CONTROLLER.setHeading(enemyGoal);
+//                    System.out.println("we have the ball");
+//
+////                    boolean openGoal = true;
+////                    for (Robot r : Strategy.world.getRobots()) {
+////                        if (r != null && r.type != RobotType.FRIEND_2){
+////                            VectorGeometry potentialKick = new VectorGeometry(x, y)
+////                        }
+////                            openGoal = openGoal && r.location.distance(ball.location) > 10;
+////                    }
+//                    VectorGeometry lower = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() - 20);
+//                    VectorGeometry upper = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() + 20);
+//                    VectorGeometry kickDirection = VectorGeometry.intersectionWithFiniteLine(us.location, VectorGeometry.fromAngular(us.location.direction, 10, null), lower, upper);
+//                    System.out.println("We are aiming in the direction: " + Math.abs(kickDirection.y));
+//                    boolean facingGoal = Math.abs(kickDirection.y) <= 20;
+//                    if (facingGoal) {
+//                        System.out.println("we are facing the goal");
+//                        grab(2);
+//                        grabberIsDown = false;
 //                    }
-                    VectorGeometry lower = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() - 20);
-                    VectorGeometry upper = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY() + 20);
-                    VectorGeometry kickDirection = VectorGeometry.intersectionWithFiniteLine(us.location, VectorGeometry.fromAngular(us.location.direction, 10, null), lower, upper);
-                    System.out.println("We are aiming in the direction: " + Math.abs(kickDirection.y));
-                    boolean facingGoal = Math.abs(kickDirection.y) <= 20;
-                    if (facingGoal) {
-                        System.out.println("we are facing the goal");
-                        grab(2);
-                        grabberIsDown = false;
-                    }
-                } else {
-                    /** the commented code below is a possible strategy to work the grabber
-                     *  right now it just lowers the grabber if the grabber was up
-                     *  robotPort.grabber(1); lowers the grabber
-                     *  robotPort.grabber(2); raises the grabber**/
-                    if (distFromBall < 4) {
-                        grab(1);
-                        grabberIsDown = true;
-                    }
-                }
+//                } else {
+//                    /** the commented code below is a possible strategy to work the grabber
+//                     *  right now it just lowers the grabber if the grabber was up
+//                     *  robotPort.grabber(1); lowers the grabber
+//                     *  robotPort.grabber(2); raises the grabber**/
+//                    if (distFromBall < 4) {
+//                        grab(1);
+//                        grabberIsDown = true;
+//                    }
+//                }
             }
         }
     }

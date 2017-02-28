@@ -227,6 +227,18 @@ VectorGeometry {
         return res;
     }
 
+    public static VectorGeometry kickBallLocation(VectorGeometry goal, VectorGeometry ball, double unit){
+        double length = VectorGeometry.distance(goal, ball);
+        System.out.println(length);
+        System.out.println();
+        VectorGeometry v2 = new VectorGeometry((ball.x-goal.x)/length, (ball.y-goal.y)/length);
+        System.out.println(v2.x);
+        System.out.println(v2.y);
+        System.out.println();
+
+        return new VectorGeometry(ball.x+v2.x*unit, ball.y+v2.y*unit);
+    }
+
 
     /**
      * If we had a line crossing through point 'base' and having the direction 'dir', this function returns the

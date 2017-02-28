@@ -1,11 +1,9 @@
 package strategy.actions;
 
-import strategy.GUI;
 import strategy.Strategy;
-import strategy.WorldTools;
+import strategy.actions.offense.GoalKick;
 import strategy.actions.other.DefendGoal;
 import strategy.actions.other.GoToSafeLocation;
-import strategy.actions.offense.OffensiveKick;
 import strategy.actions.offense.ShuntKick;
 import strategy.robots.Fred;
 import strategy.robots.RobotBase;
@@ -19,7 +17,7 @@ import vision.tools.VectorGeometry;
  * Created by Simon Rovder
  */
 enum BehaviourEnum {
-    DEFEND, SHUNT, KICK, SAFE, EMPTY
+    DEFEND, SHUNT, GOAL, SAFE, EMPTY
 }
 
 /**
@@ -54,8 +52,8 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
             case DEFEND:
                 this.enterAction(new DefendGoal(this.robot), 0, 0);
                 break;
-            case KICK:
-                this.enterAction(new OffensiveKick(this.robot), 0, 0);
+            case GOAL:
+                this.enterAction(new GoalKick(this.robot), 0, 0);
                 break;
             case SHUNT:
                 this.enterAction(new ShuntKick(this.robot), 0, 0);
@@ -90,7 +88,7 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
                     }
                     if (canKick && (this.lastState != BehaviourEnum.DEFEND ||
                             VectorGeometry.angle(ball.velocity, VectorGeometry.fromTo(ball.location, ourGoal)) > 2)) {
-                        this.nextState = BehaviourEnum.KICK;
+                        this.nextState = BehaviourEnum.GOAL;
                     } else {
                         this.nextState = BehaviourEnum.DEFEND;
                     }
