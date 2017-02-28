@@ -138,8 +138,8 @@ VectorGeometry {
     public VectorGeometry rotateAroundPoint(double d, VectorGeometry point) {
         double xx = this.x - point.x;
         double yy = this.y - point.y;
-        xx = Math.cos(d)*xx - Math.sin(d)*xx;
-        yy = Math.sin(d)*yy + Math.cos(d)*yy;
+        xx = Math.cos(d)*xx - Math.sin(d)*yy;
+        yy = Math.sin(d)*xx + Math.cos(d)*yy;
         this.x = xx + point.x;
         this.y = yy + point.y;
         return this;

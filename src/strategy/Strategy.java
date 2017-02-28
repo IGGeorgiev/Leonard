@@ -220,7 +220,8 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     break;
                 case "test":
                     fred.MOTION_CONTROLLER.setHeading(new EnemyGoal());
-                    fred.MOTION_CONTROLLER.setDestination(new EnemyGoal());
+                    fred.MOTION_CONTROLLER.setDestination(new BallPoint());
+                    fred.MOTION_CONTROLLER.setTolerance(20);
                     break;
                 case "leonard":
                     Robot www = Strategy.world.getRobot(RobotType.FRIEND_2);
