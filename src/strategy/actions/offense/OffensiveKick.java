@@ -30,11 +30,7 @@ public class OffensiveKick extends ActionBase {
         this.robot.MOTION_CONTROLLER.setHeading(new EnemyGoal());
         this.robot.MOTION_CONTROLLER.setDestination(new BallPoint());
         this.robot.MOTION_CONTROLLER.setTolerance(-1);
-        if(newState == 0){
-            if(this.robot instanceof Fred){
-                ((Fred)this.robot).KICKER_CONTROLLER.setActive(true);
-            }
-        }
+        ((Fred)this.robot).KICKER_CONTROLLER.setActive(true);
         this.state = 0;
     }
 

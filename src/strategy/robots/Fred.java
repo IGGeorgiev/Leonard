@@ -20,6 +20,7 @@ public class Fred extends RobotBase {
     public Fred(RobotType robotType){
         super(robotType, new FredRobotPort(), new FourWheelHolonomicDrive());
         this.controllers.add(this.GRABBER_CONTROLLER);
+        this.controllers.add(this.KICKER_CONTROLLER);
     }
 
 

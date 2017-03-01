@@ -156,7 +156,7 @@ public class MotionController extends ControllerBase {
             factor = 1.0;
         }
 
-        if(this.destination != null && us.location.distance(destination) < tolerance && rotation<0.1){
+        if(this.destination != null && us.location.distance(destination) < tolerance && Math.abs(rotation)<0.1){
             this.robot.port.stop();
 
 //            double constant;
