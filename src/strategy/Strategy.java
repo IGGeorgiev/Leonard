@@ -1,5 +1,6 @@
 package strategy;
 
+import communication.ports.interfaces.FourWheelHolonomicRobotPort;
 import strategy.actions.Behave;
 import strategy.actions.offense.GoalKick;
 import strategy.actions.other.*;
@@ -120,6 +121,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                 case "kick":
                     fred.ACTION_CONTROLLER.setAction(new OffensiveKick(fred));
                     break;
+                case "kick1":
+                    fred.ACTION_CONTROLLER.setAction(new Goto(fred, new BallPoint()));
+                    break;
                 case "gkick":
                     fred.ACTION_CONTROLLER.setAction(new GoalKick(fred));
                     break;
@@ -159,7 +163,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     fred.ACTION_CONTROLLER.setAction(new ShuntKick(fred));
                     break;
                 case "demo":
-                    fred.ACTION_CONTROLLER.setAction(new Demo(fred));
+                    fred.ACTION_CONTROLLER.setAction(new Demo(fred, 255,255,255,255));
                     break;
                 case "def":
                     fred.ACTION_CONTROLLER.setAction(new DefendGoal(fred));
@@ -286,6 +290,12 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
 
                 case "spin":
                     fred.drive.move(fred.port, world.getRobot(RobotType.FRIEND_2).location, new VectorGeometry(0, 0), 1,1);
+                    break;
+
+                case "forward":
+                    ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(-255,255,255,-255);
+                    break;
+
             }
         }
 

@@ -3,6 +3,7 @@ package strategy.controllers.essentials;
 import communication.ports.robotPorts.FredRobotPort;
 import strategy.Strategy;
 import strategy.actions.offense.OffensiveKick;
+import strategy.actions.other.Demo;
 import strategy.controllers.ControllerBase;
 import strategy.navigation.NavigationInterface;
 import strategy.navigation.Obstacle;
@@ -156,10 +157,11 @@ public class MotionController extends ControllerBase {
             factor = 1.0;
         }
 
-        if(this.destination != null && us.location.distance(destination) < tolerance && Math.abs(rotation)<0.1){
+        if(this.destination != null && us.location.distance(destination) < tolerance){
+//            && Math.abs(rotation)<0.1
             this.robot.port.stop();
 
-//            double constant;
+            double constant;
 //            while (Math.abs(rotation) >= 0.2) {
 //                us = Strategy.world.getRobot(RobotType.FRIEND_2);
 //                robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
@@ -170,10 +172,9 @@ public class MotionController extends ControllerBase {
 //                ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
 //            }
 //            this.robot.port.stop();
-            this.robot.MOTION_CONTROLLER.clearObstacles();
+
             ActionListener task2 = evt -> {
-                robot.MOTION_CONTROLLER.clearObstacles();
-                robot.ACTION_CONTROLLER.setAction(new OffensiveKick(robot));
+                robot.ACTION_CONTROLLER.setAction(new Demo(robot, 255,255,255,255));
             };
             System.out.println("Should be heading the ball now and stopped");
             Timer tm2 = new Timer(1000, task2);
