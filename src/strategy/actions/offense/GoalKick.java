@@ -36,14 +36,13 @@ public class GoalKick extends ActionBase {
         VectorGeometry emgoal = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY());
         VectorGeometry kickingPoint = VectorGeometry.kickBallLocation(emgoal, ballVec, 20);
 
-        this.robot.MOTION_CONTROLLER.addObstacle(new Obstacle((int) ball.location.x, (int) ball.location.y, 10));
+//        this.robot.MOTION_CONTROLLER.addObstacle(new Obstacle((int) ball.location.x, (int) ball.location.y, 10));
         this.robot.MOTION_CONTROLLER.setHeading(new EnemyGoal());
         this.robot.MOTION_CONTROLLER.setDestination(new ConstantPoint((int) kickingPoint.x, (int) kickingPoint.y));
-        this.robot.MOTION_CONTROLLER.setTolerance(-1);
+        this.robot.MOTION_CONTROLLER.setTolerance(5);
         ((Fred) this.robot).GRABBER_CONTROLLER.setActive(false);
+        ((Fred) this.robot).KICKER_CONTROLLER.setActive(false);
         this.state = 0;
-
-
 
     }
 

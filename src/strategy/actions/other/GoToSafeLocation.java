@@ -32,6 +32,9 @@ public class GoToSafeLocation extends ActionBase {
                 ((FredRobotPort)this.robot.port).grabber(0);
                 ((FredRobotPort)this.robot.port).grabber(0);
                 ((FredRobotPort)this.robot.port).grabber(0);
+                ((FredRobotPort)this.robot.port).kicker(0);
+                ((FredRobotPort)this.robot.port).kicker(0);
+                ((FredRobotPort)this.robot.port).kicker(0);
             }
 
 

@@ -1,9 +1,11 @@
 package strategy.actions.offense;
 
+import communication.ports.robotPorts.FredRobotPort;
 import strategy.actions.ActionException;
 import strategy.actions.ActionBase;
 import strategy.points.basicPoints.BallPoint;
 import strategy.points.basicPoints.ReverseBallDirection;
+import strategy.robots.Fred;
 import strategy.robots.RobotBase;
 import vision.tools.VectorGeometry;
 
@@ -26,6 +28,8 @@ public class ShuntKick extends ActionBase {
             this.robot.MOTION_CONTROLLER.setDestination(new BallPoint());
             this.robot.MOTION_CONTROLLER.setHeading(new ReverseBallDirection());
             this.robot.MOTION_CONTROLLER.setTolerance(-1);
+            ((Fred)this.robot).KICKER_CONTROLLER.setActive(false);
+            ((FredRobotPort)this.robot.port).kicker(0);
         }
         this.state = newState;
     }

@@ -46,7 +46,7 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
     public void tok() throws ActionException {
 
         this.robot.MOTION_CONTROLLER.clearObstacles();
-        if (this.robot instanceof Fred) ((Fred) this.robot).GRABBER_CONTROLLER.setActive(true);
+        if (this.robot instanceof Fred) ((Fred) this.robot).GRABBER_CONTROLLER.setActive(false);
         this.lastState = this.nextState;
         switch (this.nextState) {
             case DEFEND:
@@ -82,12 +82,15 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
 //                        this.nextState = BehaviourEnum.SHUNT;
 //                    } else {
                     boolean canKick = true;
+                    boolean closer = true;
                     for (Robot r : Strategy.world.getRobots()) {
                         if (r != null && r.type != RobotType.FRIEND_2 && r.velocity.length() < 1)
-                            canKick = canKick && r.location.distance(ball.location) > 10;
+                            canKick = canKick && r.location.distance(ball.location) > 5;
+                            closer = closer && us.location.distance(ball.location)< r.location.distance(ball.location);
                     }
                     if (canKick && (this.lastState != BehaviourEnum.DEFEND ||
-                            VectorGeometry.angle(ball.velocity, VectorGeometry.fromTo(ball.location, ourGoal)) > 2)) {
+                            VectorGeometry.angle(ball.velocity, VectorGeometry.fromTo(ball.location, ourGoal)) > 2)
+                            || closer) {
                         this.nextState = BehaviourEnum.GOAL;
                     } else {
                         this.nextState = BehaviourEnum.DEFEND;

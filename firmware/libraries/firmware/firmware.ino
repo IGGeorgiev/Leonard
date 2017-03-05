@@ -17,8 +17,8 @@
 #define BACK 1
 #define LEFT 2
 
-#define KICKERS 4
-#define SPEAKER 5
+#define KICKERS 5
+#define GRABBERS 4
 
 #define KICKERDELAY 10
 
@@ -87,15 +87,10 @@ void grabberStatus() {
 
 void kicker(){
   int type = atoi(sCmd.next());
-  if(type == 0){
-    motorStop(KICKERS);
-  } else if (type == 1){
-
-        Serial.print("Starting From: ");
-        Serial.println(positions[0] % 40);
-        motorForward(KICKERS, 255);
+  if (type == 1){
+      motorForward(KICKERS, 255);
   } else {
-        motorBackward(KICKERS, 255);
+      motorStop(KICKERS);
   }
 }
 
@@ -107,6 +102,17 @@ void completeHalt(){
   motorControl(RIGHT, 0);
 }
 
+void grabber(){
+  int type = atoi(sCmd.next());
+  if(type == 0){
+    motorStop(KICKERS);
+  } else if (type == 1){
+    motorBackward(GRABBERS, 255);
+  } else {
+    motorForward(GRABBERS, 255);
+  }
+}
+
 void setup(){
   Wire.begin();
   sCmd.addCommand("f", dontMove); 
@@ -115,6 +121,7 @@ void setup(){
   sCmd.addCommand("r", rationalMotors);
   sCmd.addCommand("ping", pingMethod); 
   sCmd.addCommand("kick", kicker);
+  sCmd.addCommand("grab", grabber);
   sCmd.addCommand("grabberStatus", grabberStatus);
 
   SDPsetup();

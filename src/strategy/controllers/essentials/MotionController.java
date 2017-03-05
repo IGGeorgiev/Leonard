@@ -144,18 +144,22 @@ public class MotionController extends ControllerBase {
             return;
         }
 
-        VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
+
+        double angle = VectorGeometry.angle(0,1,-1,1); // 45 degrees
+        VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
         VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, heading);
         double factor = 1;
         double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
+
         // Can throw null without check because null check takes SourceGroup into consideration.
         if(destination.distance(us.location) < 30){
             factor = 1.0;
         }
-        if(this.destination != null && us.location.distance(destination) < tolerance){
-//            this.robot.port.stop();
 
-            double constant;
+        if(this.destination != null && us.location.distance(destination) < tolerance && Math.abs(rotation)<0.1){
+            this.robot.port.stop();
+
+//            double constant;
 //            while (Math.abs(rotation) >= 0.2) {
 //                us = Strategy.world.getRobot(RobotType.FRIEND_2);
 //                robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
@@ -167,13 +171,12 @@ public class MotionController extends ControllerBase {
 //            }
 //            this.robot.port.stop();
             this.robot.MOTION_CONTROLLER.clearObstacles();
-            ActionListener task2 = new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    robot.MOTION_CONTROLLER.clearObstacles();
-                    robot.ACTION_CONTROLLER.setAction(new OffensiveKick(robot));
-                }
+            ActionListener task2 = evt -> {
+                robot.MOTION_CONTROLLER.clearObstacles();
+                robot.ACTION_CONTROLLER.setAction(new OffensiveKick(robot));
             };
-            Timer tm2 = new Timer(3000, task2);
+            System.out.println("Should be heading the ball now and stopped");
+            Timer tm2 = new Timer(1000, task2);
             tm2.setRepeats(false);
             tm2.start();
 
