@@ -8,6 +8,7 @@ import vision.objectRecognition.detection.ImageManipulatorWithOptions;
 import vision.objectRecognition.detection.manipulators.ApplyBinaryMask;
 import vision.objectRecognition.detection.manipulators.DilateImage;
 import vision.objectRecognition.detection.manipulators.GaussianBlurImage;
+import vision.objectRecognition.detection.manipulators.UndistortImage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import static vision.objectRecognition.detection.DetectionPropertiesManager.loadValues;
+import static vision.objectRecognition.detection.DetectionPropertiesManager.saveValues;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 29/01/17.
@@ -48,12 +50,16 @@ public class DetectionCalibrationGUI extends JPanel {
 
         // Choose what to display here
         for (ImageManipulator i : pipeline) {
-//            if (i instanceof VideoCapture)
-//                displayQueue.add(i.getDisplay(false));
-            if (i instanceof GaussianBlurImage) {
+            if (i instanceof UndistortImage) {
                 displayQueue.add(i.getDisplay(false));
                 displayedManipulators.add(i);
             }
+//            if (i instanceof VideoCapture)
+//                displayQueue.add(i.getDisplay(false));
+//            if (i instanceof GaussianBlurImage) {
+//                displayQueue.add(i.getDisplay(false));
+//                displayedManipulators.add(i);
+//            }
 //            if (i instanceof NormalizeImage)
 //                displayQueue.add(i.getDisplay(false));
 //            if (i instanceof BackgroundSubtractionThreshold)
@@ -82,7 +88,7 @@ public class DetectionCalibrationGUI extends JPanel {
         optionsPanelDisplay.forEach((x) -> optionsPane.add(x));
 
         optionsPane.add(new CalibrateEmptyPitchButton(controller.hsvImage));
-        optionsPane.add(new SnapshotObjects(controller.gaussianBlur, controller.dilateImage));
+//        optionsPane.add(new SnapshotObjects(controller.gaussianBlur, controller.dilateImage));
     }
 
     public void hideAll() {

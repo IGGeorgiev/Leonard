@@ -38,7 +38,8 @@ public class ImageManipulationPipeline implements MatFrameListener, RawInputList
 //    VideoFileCapture                       videoFileCap   = new VideoFileCapture("vision/calibration/pre_saved_values/capture.mkv");
     public UndistortImage                  undistortImage = new UndistortImage();
     public HSVConverter                    hsvImage       = new HSVConverter();
-    private BackgroundSubtractionThreshold threshold      = new BackgroundSubtractionThreshold();
+//    private BackgroundSubtractionThreshold threshold      = new BackgroundSubtractionThreshold();
+    private BackgroundSubtractionMOG       bgSubMOG       = new BackgroundSubtractionMOG();
     public GaussianBlurImage               gaussianBlur   = new GaussianBlurImage();
     public DilateImage                     dilateImage    = new DilateImage();
     private ErodeImage                     erodeImage     = new ErodeImage();
@@ -62,9 +63,10 @@ public class ImageManipulationPipeline implements MatFrameListener, RawInputList
      */
     public LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
         add(undistortImage);
-        add(gaussianBlur);
+//        add(gaussianBlur);
         add(hsvImage);
-        add(threshold);
+//        add(threshold);
+        add(bgSubMOG);
         add(erodeImage);
         add(dilateImage);
         add(applyBinaryMask);
