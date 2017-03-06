@@ -33,7 +33,7 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
         buttonHolder.add(staticLearn);
         buttonHolder.add(dynamicLearn);
         buttonHolder.add(calibrating);
-        subtractor = Video.createBackgroundSubtractorMOG2(history, 200, true);
+        subtractor = Video.createBackgroundSubtractorMOG2(history, 64, true);
         staticLearn();
     }
 
@@ -41,7 +41,7 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
         Mat img = Imgcodecs.imread("src/vision/objectRecognition/calibration/pre_saved_values/empty_pitch_norm.png");
         Mat fgmask = new Mat();
         for(int i = 0; i < history; i++) {
-            subtractor.apply(img,fgmask, 0.01);
+            subtractor.apply(img,fgmask, 0.3);
         }
     }
 
@@ -69,7 +69,7 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
         } else {
             calibrating.setText("Calibrating...");
             dynamicLearnCount++;
-            subtractor.apply(input, out, 0.8);
+            subtractor.apply(input, out, 0.5);
         }
         return out;
     }

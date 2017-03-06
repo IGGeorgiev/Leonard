@@ -6,8 +6,8 @@ import vision.colorAnalysis.SDPColors;
 import vision.constants.Constants;
 import vision.gui.Preview;
 import vision.spotAnalysis.SpotAnalysisBase;
-import vision.spotAnalysis.approximatedSpotAnalysis.RegionFinder;
 import vision.spotAnalysis.approximatedSpotAnalysis.Spot;
+import vision.tools.VectorGeometry;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static vision.gui.MiscellaneousSettings.ROTATE_PITCH;
 import static vision.tools.ImageTools.rgbToHsv;
 
 /**
@@ -27,9 +28,20 @@ public class RecursiveSpotAnalysis extends SpotAnalysisBase{
     private float[] hsv;
     private SDPColor[] found;
 
+    private vision.tools.Point topLeftPoint;
+    private vision.tools.Point bottomRightPoint;
+
+    private void normalizePoint(VectorGeometry pg){
+        pg.x = (pg.x - this.topLeftPoint.x) * Constants.PITCH_WIDTH  / (this.bottomRightPoint.x - this.topLeftPoint.x) - Constants.PITCH_WIDTH/2;
+        pg.y = -((pg.y - this.topLeftPoint.y) * Constants.PITCH_HEIGHT / (this.bottomRightPoint.y - this.topLeftPoint.y) - Constants.PITCH_HEIGHT/2);
+    }
+
 
     public RecursiveSpotAnalysis(){
         super();
+
+        this.topLeftPoint     = new vision.tools.Point(10, 10);
+        this.bottomRightPoint = new vision.tools.Point(Constants.INPUT_WIDTH - 10, Constants.INPUT_HEIGHT - 10);
         // Have arrays of 4 times the size for the inputs\
         // (for red, green, blue, alpha OR hue, saturation, value, alpha)
         this.rgb   = new int[4* Constants.INPUT_WIDTH*Constants.INPUT_HEIGHT];
@@ -101,6 +113,19 @@ public class RecursiveSpotAnalysis extends SpotAnalysisBase{
             }
             Collections.sort(spots.get(color));
         }
+
+
+        for(SDPColor color : spots.keySet()){
+            for(Spot spot : spots.get(color)){
+                spot.transpose(-Constants.INPUT_WIDTH/2, -Constants.INPUT_HEIGHT/2);
+                spot.transpose(Constants.INPUT_WIDTH/2, Constants.INPUT_HEIGHT/2);
+                normalizePoint(spot);
+                if(ROTATE_PITCH){
+                    spot.multiply(-1);
+                }
+            }
+        }
+
         this.informListeners(spots, time);
         Preview.flushToLabel();
 

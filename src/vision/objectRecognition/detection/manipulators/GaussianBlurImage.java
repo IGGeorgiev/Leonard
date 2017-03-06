@@ -25,7 +25,7 @@ public class GaussianBlurImage extends ImageManipulatorWithOptions implements Ch
 
     private static int GAUSSIAN_BLUR_SIZE = 3;
 
-    private JSlider gaussianBlur = new JSlider(0, 11, 1);
+    private JSlider gaussianBlur = new JSlider(0, 21, 1);
     private TitledComponent gui = new TitledComponent("Gaussian Blur " + filterCount + " :", gaussianBlur);
 
     public GaussianBlurImage() {

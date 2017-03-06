@@ -1,33 +1,27 @@
 package vision;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.LinkedList;
+import org.opencv.core.Core;
+import vision.colorAnalysis.ColorCalibration;
+import vision.gui.DetectionCalibrationGUI;
+import vision.gui.MiscellaneousSettings;
+import vision.gui.SDPConsole;
+import vision.kalmanFilter.DynamicWorldFilter;
+import vision.objectRecognition.ImageManipulationPipeline;
+import vision.rawInput.RawInput;
+import vision.robotAnalysis.DynamicWorldListener;
+import vision.robotAnalysis.RobotAnalysisBase;
+import vision.robotAnalysis.RobotPreview;
+import vision.robotAnalysis.newRobotAnalysis.NewRobotAnalysis;
+import vision.spotAnalysis.SpotAnalysisBase;
+import vision.spotAnalysis.approximatedSpotAnalysis.ApproximatedSpotAnalysis;
+import vision.spotAnalysis.recursiveSpotAnalysis.RecursiveSpotAnalysis;
+import vision.tools.CommandLineParser;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import org.opencv.core.Core;
-import vision.colorAnalysis.ColorCalibration;
-import vision.gui.DetectionCalibrationGUI;
-import vision.kalmanFilter.DynamicWorldFilter;
-import vision.objectRecognition.ImageManipulationPipeline;
-import vision.tools.CommandLineParser;
-import vision.distortion.Distortion;
-import vision.distortion.DistortionPreview;
-import vision.gui.MiscellaneousSettings;
-import vision.gui.Preview;
-import vision.gui.SDPConsole;
-import vision.rawInput.RawInput;
-import vision.robotAnalysis.newRobotAnalysis.NewRobotAnalysis;
-import vision.robotAnalysis.RobotPreview;
-import vision.robotAnalysis.DynamicWorldListener;
-import vision.robotAnalysis.RobotAnalysisBase;
-import vision.spotAnalysis.SpotAnalysisBase;
-import vision.spotAnalysis.approximatedSpotAnalysis.ApproximatedSpotAnalysis;
-import vision.spotAnalysis.recursiveSpotAnalysis.RecursiveSpotAnalysis;
+import java.awt.*;
+import java.util.LinkedList;
 
 import static vision.objectRecognition.detection.DetectionPropertiesManager.saveValues;
 
@@ -69,11 +63,13 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 		detectionGUI = new DetectionCalibrationGUI();
 		detectionGUI.hideAll();
 
+		// NOTICE: ORDER IS IMPORTANT FOR FUNCTIONALITY... Sadly...
 		// SDP2017NOTE
 		// This part builds the vision system pipeline
 //		RawInput.addRawInputListener(recursiveSpotAnalysis);
 //		RawInput.addRawInputListener(Preview.preview);
 		RawInput.addRawInputListener(ImageManipulationPipeline.getInstance());
+		recursiveSpotAnalysis.addSpotListener(RobotPreview.preview);
 //		RawInput.addRawInputListener(Distortion.distortion);
 //		recursiveSpotAnalysis.addSpotListener(Distortion.distortion);
 //		DistortionPreview.addDistortionPreviewClickListener(Distortion.distortion);
@@ -81,7 +77,6 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 
 		RobotAnalysisBase robotAnalysis = new NewRobotAnalysis();
 		recursiveSpotAnalysis.addSpotListener(robotAnalysis);
-		recursiveSpotAnalysis.addSpotListener(RobotPreview.preview);
 //		Distortion.addDistortionListener(robotAnalysis);
 		robotAnalysis.addDynamicWorldListener(kalmanFilters);
 		kalmanFilters.addFilterListener(RobotPreview.preview);
@@ -93,7 +88,7 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 		tabbedPane.addTab("BackgroundSubtraction", null, new DetectionCalibrationGUI(), null);
 
 		tabbedPane.addTab("Color Calibration", null, ColorCalibration.colorCalibration, null);
-		tabbedPane.addTab("Distortion", null, Distortion.distortion, null);
+//		tabbedPane.addTab("Distortion", null, Distortion.distortion, null);
 //		tabbedPane.addTab("Robots", null, RobotAnalysis.strategy.robots, null);
 		tabbedPane.addTab("Misc Settings", null,  MiscellaneousSettings.miscSettings, null);
 		
