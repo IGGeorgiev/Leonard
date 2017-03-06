@@ -22,6 +22,7 @@ import javax.swing.event.ChangeListener;
 
 import vision.colorAnalysis.SDPColor;
 import vision.constants.Constants;
+import vision.gui.MiscellaneousSettings;
 import vision.rawInput.RawInputListener;
 import vision.settings.SaveLoadCapable;
 import vision.spotAnalysis.NextSpotsListener;
@@ -66,8 +67,6 @@ public class Distortion extends JPanel implements SaveLoadCapable, RawInputListe
 	private double xTilt;
 	private double yTilt;
 	private double zoom;
-	
-	public static boolean ROTATE_PITCH = true;
 
 	private void updateDistortion(){
 		if(this.savedImage != null){
@@ -294,7 +293,7 @@ public class Distortion extends JPanel implements SaveLoadCapable, RawInputListe
 				this.undistortPoint(spot);
 				spot.transpose(Constants.INPUT_WIDTH/2, Constants.INPUT_HEIGHT/2);
 				this.normalizePoint(spot);
-				if(ROTATE_PITCH){
+				if(MiscellaneousSettings.ROTATE_PITCH){
 					spot.multiply(-1);
 				}
 			}

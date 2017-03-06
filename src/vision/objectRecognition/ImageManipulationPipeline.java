@@ -63,7 +63,7 @@ public class ImageManipulationPipeline implements MatFrameListener, RawInputList
      */
     public LinkedList<ImageManipulator> pipeline = new LinkedList<ImageManipulator>() {{
         add(undistortImage);
-//        add(gaussianBlur);
+        add(gaussianBlur);
         add(hsvImage);
 //        add(threshold);
         add(bgSubMOG);

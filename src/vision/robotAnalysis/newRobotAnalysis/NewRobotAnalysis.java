@@ -3,9 +3,9 @@ package vision.robotAnalysis.newRobotAnalysis;
 import vision.Ball;
 import vision.DynamicWorld;
 import vision.Robot;
+import vision.RobotType;
 import vision.colorAnalysis.SDPColor;
 import vision.robotAnalysis.RobotAnalysisBase;
-import vision.RobotType;
 import vision.robotAnalysis.RobotColorSettings;
 import vision.spotAnalysis.approximatedSpotAnalysis.Spot;
 import vision.tools.DirectedPoint;
@@ -22,7 +22,6 @@ public class NewRobotAnalysis extends RobotAnalysisBase {
 
 //    private SDPColor[] teamColor = {SDPColor.YELLOW, SDPColor.BLUE};
 //    private SDPColor[] spotColor = {SDPColor.GREEN, SDPColor.PINK};
-
 
     public NewRobotAnalysis(){
         super();

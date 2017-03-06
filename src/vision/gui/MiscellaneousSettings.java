@@ -10,7 +10,6 @@ import javax.swing.*;
 import vision.RobotAlias;
 import vision.RobotType;
 import vision.colorAnalysis.SDPColor;
-import vision.distortion.Distortion;
 import vision.robotAnalysis.RobotColorSettings;
 import vision.settings.SaveLoadCapable;
 import vision.settings.SettingsManager;
@@ -26,7 +25,9 @@ public class MiscellaneousSettings extends JPanel implements ActionListener, Sav
 	public static final HashMap<RobotType, JComboBox<RobotAlias>> aliases = new HashMap<>();
 
 	public static final MiscellaneousSettings miscSettings = new MiscellaneousSettings();
-	
+
+	public static boolean ROTATE_PITCH = true;
+
 	private JButton saveSettings;
 	private JButton loadSettings;
 	private JCheckBox flipPitch;
@@ -97,7 +98,7 @@ public class MiscellaneousSettings extends JPanel implements ActionListener, Sav
 	}
 
 	private void checkBoxesToValues(){
-		Distortion.ROTATE_PITCH = this.flipPitch.isSelected();
+		ROTATE_PITCH = this.flipPitch.isSelected();
 		RobotColorSettings.FRIEND_COLOR = this.friendsAreYellow.isSelected() ? SDPColor.YELLOW : SDPColor.BLUE;
 		RobotColorSettings.FOE_COLOR = this.friendsAreYellow.isSelected() ? SDPColor.BLUE : SDPColor.YELLOW;
 		RobotColorSettings.FRIEND_1_IS_GREEN = this.friendOneIsGreen.isSelected();

@@ -1,15 +1,14 @@
 package vision.settings;
 
+import vision.colorAnalysis.SDPColor;
+import vision.colorAnalysis.SDPColors;
+import vision.gui.MiscellaneousSettings;
+import vision.gui.SDPConsole;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
-
-import vision.colorAnalysis.SDPColor;
-import vision.colorAnalysis.SDPColors;
-import vision.distortion.Distortion;
-import vision.gui.MiscellaneousSettings;
-import vision.gui.SDPConsole;
 /**
  * Created by Simon Rovder
  *
@@ -33,7 +32,7 @@ public class SettingsManager {
 			writer.write(MiscellaneousSettings.miscSettings.saveSettings() + "\r\n");
 
 			writer.write("^DISTORTION\r\n");
-			writer.write(Distortion.distortion.saveSettings() + "\r\n");
+//			writer.write(Distortion.distortion.saveSettings() + "\r\n");
 			writer.write("^END");
 			writer.close();
 		}
@@ -57,7 +56,7 @@ public class SettingsManager {
 				next = r.readLine();
 			}
 			next = r.readLine();
-			Distortion.distortion.loadSettings(next);
+//			Distortion.distortion.loadSettings(next);
 			while(!next.equals("^END")) next = r.readLine();
 			r.close();
 		}
