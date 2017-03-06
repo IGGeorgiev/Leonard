@@ -10,6 +10,8 @@ import vision.objectRecognition.detection.ImageManipulator;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ import java.util.List;
  * Created by Ivan Georgiev (s1410984) on 16/02/17.
  * Segment objects from image
  */
-public class SnapshotObjects extends JButton implements ChangeListener {
+public class SnapshotObjects extends JButton implements ActionListener {
 
     private ImageManipulator catcher;
     private ImageManipulator masker;
@@ -25,12 +27,12 @@ public class SnapshotObjects extends JButton implements ChangeListener {
     public SnapshotObjects(ImageManipulator imgToSegment, ImageManipulator mask) {
         catcher = imgToSegment;
         masker = mask;
-        this.addChangeListener(this);
+        this.addActionListener(this);
         this.setText("Snapshot Objects");
     }
 
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public void actionPerformed(ActionEvent e) {
         Mat img = catcher.catchMat();
         Mat mask = masker.catchMat();
 

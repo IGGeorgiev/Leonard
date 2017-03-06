@@ -29,6 +29,8 @@ import vision.spotAnalysis.SpotAnalysisBase;
 import vision.spotAnalysis.approximatedSpotAnalysis.ApproximatedSpotAnalysis;
 import vision.spotAnalysis.recursiveSpotAnalysis.RecursiveSpotAnalysis;
 
+import static vision.objectRecognition.detection.DetectionPropertiesManager.saveValues;
+
 /**
  * Created by Simon Rovder
  *
@@ -111,6 +113,7 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 	 * Call this function to safely turn off all the Vision stuff.
 	 */
 	public void terminateVision(){
+		saveValues();
 		RawInput.rawInputMultiplexer.stopAllInputs();
 	}
 
