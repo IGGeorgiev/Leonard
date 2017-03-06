@@ -250,9 +250,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                             ((FredRobotPort) fred.port).grabber(0);
                         }
                     };
-//                    Timer tm = new Timer(280, taskPerformer);
-//                    tm.setRepeats(false);
-//                    tm.start();
+                    Timer tm = new Timer(340, taskPerformer);
+                    tm.setRepeats(false);
+                    tm.start();
                     break;
                 case "lift":
                     ((FredRobotPort) fred.port).grabber(2);
@@ -262,9 +262,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                             ((FredRobotPort) fred.port).grabber(0);
                         }
                     };
-//                    Timer tm2 = new Timer(300, task2);
-//                    tm2.setRepeats(false);
-//                    tm2.start();
+                    Timer tm2 = new Timer(300, task2);
+                    tm2.setRepeats(false);
+                    tm2.start();
                     break;
 
                 case "kicka":

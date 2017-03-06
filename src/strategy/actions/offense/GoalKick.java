@@ -17,8 +17,8 @@ import vision.tools.VectorGeometry;
 
 public class GoalKick extends ActionBase {
 
-    private BallPoint point = new BallPoint();
-
+    private Ball ball;
+    private VectorGeometry emgoal;
     public GoalKick(RobotBase robot) {
         super(robot);
         this.rawDescription = "GoalKick";

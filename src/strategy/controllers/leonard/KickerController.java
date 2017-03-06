@@ -39,18 +39,22 @@ public class KickerController extends ControllerBase {
 
     @Override
     public void perform() {
-        assert (this.robot.port instanceof KickerEquipedRobotPort);
         Robot us = Strategy.world.getRobot(this.robot.robotType);
-        Ball ball = Strategy.world.getBall();
-        EnemyGoal emgal = new EnemyGoal();
-        double angle = VectorGeometry.angle(0,1,-1,1); // 45 degrees
-        VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
-        VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, new VectorGeometry(emgal.getX(), emgal.getY()));
-        double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-        if (us != null && Math.abs(rotation)<0.2 && us.location.distance(ball.location)<30) {
-            this.setActive(true);
-            if (this.isActive()) {
-                ((FredRobotPort) this.robot.port).kicker(1);
+        if(us != null) {
+            assert (this.robot.port instanceof KickerEquipedRobotPort);
+            Ball ball = Strategy.world.getBall();
+            EnemyGoal emgal = new EnemyGoal();
+            double angle = VectorGeometry.angle(0, 1, -1, 1); // 45 degrees
+            VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
+            VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, new VectorGeometry(emgal.getX(), emgal.getY()));
+            double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
+            if (Math.abs(rotation) < 0.2 && us.location.distance(ball.location) < 30) {
+                this.setActive(true);
+                if (this.isActive()) {
+                    ((FredRobotPort) this.robot.port).kicker(1);
+                }
+            } else {
+                this.setActive(false);
             }
         }
     }
