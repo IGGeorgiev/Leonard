@@ -56,7 +56,7 @@ public class RobotAnalysis extends RobotAnalysisBase {
 	}
 
 	@Override
-	public void nextUndistortedSpots(HashMap<SDPColor, ArrayList<Spot>> spots, long time) {
+	public void nextSpots(HashMap<SDPColor, ArrayList<Spot>> spots, long time) {
 		LinkedList<ProbabilisticRobot> pRobots = new LinkedList<ProbabilisticRobot>();
 
 

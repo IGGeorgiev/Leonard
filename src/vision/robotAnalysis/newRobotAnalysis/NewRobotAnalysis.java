@@ -28,9 +28,8 @@ public class NewRobotAnalysis extends RobotAnalysisBase {
         super();
     }
 
-
     @Override
-    public void nextUndistortedSpots(HashMap<SDPColor, ArrayList<Spot>> spots, long time) {
+    public void nextSpots(HashMap<SDPColor, ArrayList<Spot>> spots, long time) {
         ArrayList<Spot> spotList;
         ArrayList<RobotPlate> plates = new ArrayList<RobotPlate>();
 

@@ -2,6 +2,7 @@ package vision.robotAnalysis;
 
 import vision.DynamicWorld;
 import vision.distortion.DistortionListener;
+import vision.spotAnalysis.NextSpotsListener;
 import vision.spotAnalysis.SpotAnalysisBase;
 
 import java.util.LinkedList;
@@ -9,7 +10,7 @@ import java.util.LinkedList;
 /**
  * Created by Simon Rovder
  */
-public abstract class RobotAnalysisBase implements DistortionListener {
+public abstract class RobotAnalysisBase implements NextSpotsListener {
 
     private LinkedList<DynamicWorldListener> listeners;
 
