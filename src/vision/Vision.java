@@ -73,14 +73,16 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 		// This part builds the vision system pipeline
 //		RawInput.addRawInputListener(recursiveSpotAnalysis);
 //		RawInput.addRawInputListener(Preview.preview);
-		RawInput.addRawInputListener(Distortion.distortion);
 		RawInput.addRawInputListener(ImageManipulationPipeline.getInstance());
-		recursiveSpotAnalysis.addSpotListener(Distortion.distortion);
-		DistortionPreview.addDistortionPreviewClickListener(Distortion.distortion);
-		Distortion.addDistortionListener(RobotPreview.preview);
+//		RawInput.addRawInputListener(Distortion.distortion);
+//		recursiveSpotAnalysis.addSpotListener(Distortion.distortion);
+//		DistortionPreview.addDistortionPreviewClickListener(Distortion.distortion);
+//		Distortion.addDistortionListener(RobotPreview.preview);
 
 		RobotAnalysisBase robotAnalysis = new NewRobotAnalysis();
-		Distortion.addDistortionListener(robotAnalysis);
+		recursiveSpotAnalysis.addSpotListener(robotAnalysis);
+		recursiveSpotAnalysis.addSpotListener(RobotPreview.preview);
+//		Distortion.addDistortionListener(robotAnalysis);
 		robotAnalysis.addDynamicWorldListener(kalmanFilters);
 		kalmanFilters.addFilterListener(RobotPreview.preview);
 		kalmanFilters.addFilterListener(this);

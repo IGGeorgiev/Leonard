@@ -9,16 +9,18 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import com.sun.scenario.effect.light.SpotLight;
 import vision.*;
 import vision.colorAnalysis.SDPColor;
 import vision.colorAnalysis.SDPColors;
 import vision.constants.Constants;
 import vision.distortion.DistortionListener;
+import vision.spotAnalysis.NextSpotsListener;
 import vision.spotAnalysis.approximatedSpotAnalysis.Spot;
 /**
  * Created by Simon Rovder
  */
-public class RobotPreview extends JFrame implements DistortionListener, DynamicWorldListener {
+public class RobotPreview extends JFrame implements NextSpotsListener, DynamicWorldListener {
 	
 	public final JLabel previewLabel;
 	
@@ -50,7 +52,7 @@ public class RobotPreview extends JFrame implements DistortionListener, DynamicW
 	}
 
 	@Override
-	public void nextUndistortedSpots(HashMap<SDPColor, ArrayList<Spot>> spots, long time) {
+	public void nextSpots(HashMap<SDPColor, ArrayList<Spot>> spots, long time) {
 		this.resetImage();
 		Graphics g = this.image.getGraphics();
 		for(SDPColor color : spots.keySet()){
