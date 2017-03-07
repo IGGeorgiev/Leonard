@@ -78,15 +78,13 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
                 if (us.location.distance(ourGoal) > ball.location.distance(ourGoal)) {
                     this.nextState = BehaviourEnum.SAFE;
                 } else {
-//                    if(Math.abs(ball.location.x) > Constants.PITCH_WIDTH/2 - 20 && Math.abs(ball.location.y) > Constants.PITCH_HEIGHT/2 - 20){
-//                        this.nextState = BehaviourEnum.SHUNT;
-//                    } else {
                     boolean canKick = true;
                     boolean closer = true;
                     for (Robot r : Strategy.world.getRobots()) {
-                        if (r != null && r.type != RobotType.FRIEND_2 && r.velocity.length() < 1)
+                        if (r != null && r.type != RobotType.FRIEND_2 && r.velocity.length() < 1) {
                             canKick = canKick && r.location.distance(ball.location) > 5;
-                            closer = closer && us.location.distance(ball.location)< r.location.distance(ball.location);
+                            closer = closer && us.location.distance(ball.location) < r.location.distance(ball.location);
+                        }
                     }
                     if (canKick && (this.lastState != BehaviourEnum.DEFEND ||
                             VectorGeometry.angle(ball.velocity, VectorGeometry.fromTo(ball.location, ourGoal)) > 2)
@@ -95,7 +93,6 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
                     } else {
                         this.nextState = BehaviourEnum.DEFEND;
                     }
-//                    }
                 }
             }
         }
