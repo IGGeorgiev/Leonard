@@ -105,11 +105,11 @@ void completeHalt(){
 void grabber(){
   int type = atoi(sCmd.next());
   if(type == 0){
-    motorStop(KICKERS);
+    motorStop(GRABBERS);
   } else if (type == 1){
-    motorBackward(GRABBERS, 255);
+    motorBackward(GRABBERS, 70);
   } else {
-    motorForward(GRABBERS, 255);
+    motorForward(GRABBERS, 70);
   }
 }
 

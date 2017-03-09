@@ -28,4 +28,5 @@ public class FredRobotPort extends RobotPort implements KickerEquipedRobotPort, 
     public void kicker(int spin) {
         this.sdpPort.commandSender("kick", spin);
     }
+
 }

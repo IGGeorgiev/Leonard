@@ -1,5 +1,6 @@
 package strategy;
 
+import communication.ports.interfaces.FourWheelHolonomicRobotPort;
 import strategy.actions.Behave;
 import strategy.actions.offense.GoalKick;
 import strategy.actions.other.*;
@@ -120,6 +121,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                 case "kick":
                     fred.ACTION_CONTROLLER.setAction(new OffensiveKick(fred));
                     break;
+                case "kick1":
+                    fred.ACTION_CONTROLLER.setAction(new Goto(fred, new BallPoint()));
+                    break;
                 case "gkick":
                     fred.ACTION_CONTROLLER.setAction(new GoalKick(fred));
                     break;
@@ -159,7 +163,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     fred.ACTION_CONTROLLER.setAction(new ShuntKick(fred));
                     break;
                 case "demo":
-                    fred.ACTION_CONTROLLER.setAction(new Demo(fred));
+                    fred.ACTION_CONTROLLER.setAction(new Demo(fred, 255,255,255,255));
                     break;
                 case "def":
                     fred.ACTION_CONTROLLER.setAction(new DefendGoal(fred));
@@ -227,7 +231,8 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     break;
                 case "test":
                     fred.MOTION_CONTROLLER.setHeading(new EnemyGoal());
-                    fred.MOTION_CONTROLLER.setDestination(new EnemyGoal());
+                    fred.MOTION_CONTROLLER.setDestination(new BallPoint());
+                    fred.MOTION_CONTROLLER.setTolerance(20);
                     break;
                 case "leonard":
                     Robot www = Strategy.world.getRobot(RobotType.FRIEND_2);
@@ -245,9 +250,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                             ((FredRobotPort) fred.port).grabber(0);
                         }
                     };
-//                    Timer tm = new Timer(280, taskPerformer);
-//                    tm.setRepeats(false);
-//                    tm.start();
+                    Timer tm = new Timer(340, taskPerformer);
+                    tm.setRepeats(false);
+                    tm.start();
                     break;
                 case "lift":
                     ((FredRobotPort) fred.port).grabber(2);
@@ -257,9 +262,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                             ((FredRobotPort) fred.port).grabber(0);
                         }
                     };
-//                    Timer tm2 = new Timer(300, task2);
-//                    tm2.setRepeats(false);
-//                    tm2.start();
+                    Timer tm2 = new Timer(300, task2);
+                    tm2.setRepeats(false);
+                    tm2.start();
                     break;
 
                 case "kicka":
@@ -285,6 +290,12 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
 
                 case "spin":
                     fred.drive.move(fred.port, world.getRobot(RobotType.FRIEND_2).location, new VectorGeometry(0, 0), 1,1);
+                    break;
+
+                case "forward":
+                    ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(-255,255,255,-255);
+                    break;
+
             }
         }
 
