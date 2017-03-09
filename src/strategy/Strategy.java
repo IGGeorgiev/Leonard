@@ -142,6 +142,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     port.kicker(0);
                     port.kicker(0);
                     break;
+                case "for":
+
+                    break;
                 case "reset":
                     fred.ACTION_CONTROLLER.setAction(new Goto(fred, new ConstantPoint(0, 0)));
                     break;

@@ -84,7 +84,7 @@ public class RobotAnalysis extends RobotAnalysisBase {
 		double nextProb;
 		ProbabilisticRobot probable;
 
-		Robot robot;
+		Robot robot = null;
 		ArrayList<Robot> robotsList = new ArrayList<Robot>();
 
 
@@ -146,8 +146,25 @@ public class RobotAnalysis extends RobotAnalysisBase {
 					if(lastBallLocation != null){
 						for(RobotType type : RobotType.values()){
 							Robot p = lastKnownWorld.getRobot(type);
+							double angle = VectorGeometry.angle(0,1,-1,1); // 45 degrees
+
+							VectorGeometry heading = new VectorGeometry(lastBallLocation.location.x, lastBallLocation.location.y);
+							VectorGeometry robotHeading = VectorGeometry.fromAngular(p.location.direction + angle, 10, null);
+							VectorGeometry robotToPoint = VectorGeometry.fromTo(p.location, heading);
+							double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
 							if(p != null){
-								if(VectorGeometry.distance(p.location.x,p.location.y,lastBallLocation.location.x, lastBallLocation.location.y) < 30){
+								if (type == RobotType.FRIEND_2) {
+									if(VectorGeometry.distance(p.location.x,
+											p.location.y,lastBallLocation.location.x,
+											lastBallLocation.location.y) < 30
+										&& Math.abs(rotation)<0.8){
+										System.out.println("setting probable holder to Frend2");
+										world.setProbableBallHolder(type);
+//									SDPConsole.writeln("Setting probable: " + type.toString());
+										break;
+									}
+								}
+								else if(VectorGeometry.distance(p.location.x,p.location.y,lastBallLocation.location.x, lastBallLocation.location.y) < 30){
 									world.setProbableBallHolder(type);
 //									SDPConsole.writeln("Setting probable: " + type.toString());
 									break;
