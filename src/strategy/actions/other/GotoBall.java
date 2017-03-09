@@ -17,9 +17,9 @@ import vision.tools.VectorGeometry;
 /**
  * Created by Simon Rovder
  */
-public class Goto extends ActionBase {
+public class GotoBall extends ActionBase {
     private double rotation;
-    public Goto(RobotBase robot, DynamicPoint point) {
+    public GotoBall(RobotBase robot, DynamicPoint point) {
         super(robot, point);
         this.rawDescription = " GOTO";
     }
@@ -94,3 +94,7 @@ public class Goto extends ActionBase {
         }
     }
 }
+
+
+
+
