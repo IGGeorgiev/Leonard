@@ -2,12 +2,10 @@ package vision.gui;
 
 import vision.objectRecognition.ImageManipulationPipeline;
 import vision.objectRecognition.calibration.CalibrateEmptyPitchButton;
-import vision.objectRecognition.calibration.SnapshotObjects;
 import vision.objectRecognition.detection.ImageManipulator;
 import vision.objectRecognition.detection.ImageManipulatorWithOptions;
 import vision.objectRecognition.detection.manipulators.ApplyBinaryMask;
 import vision.objectRecognition.detection.manipulators.DilateImage;
-import vision.objectRecognition.detection.manipulators.GaussianBlurImage;
 import vision.objectRecognition.detection.manipulators.UndistortImage;
 
 import javax.swing.*;
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import static vision.objectRecognition.detection.DetectionPropertiesManager.loadValues;
-import static vision.objectRecognition.detection.DetectionPropertiesManager.saveValues;
 
 /**
  * Created by Ivan Georgiev (s1410984) on 29/01/17.

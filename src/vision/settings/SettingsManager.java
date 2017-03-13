@@ -18,7 +18,6 @@ import java.io.PrintWriter;
  */
 public class SettingsManager {
 
-
 	public static void saveSettings() throws Exception{
 		String fileName = SDPConsole.chooseFile();
 		if(fileName != null){

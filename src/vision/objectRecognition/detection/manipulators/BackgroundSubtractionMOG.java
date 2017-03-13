@@ -26,6 +26,8 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
     private JButton dynamicLearn = new JButton("Dynamic Learn");
     private JLabel calibrating = new JLabel("Calibrated");
     private int dynamicLearnCount = history;
+    static String BACKGROUND_PATH = "src/vision/objectRecognition/calibration/pre_saved_values/empty_pitch_norm.png";
+    final static String BACKGROUND_PATH_PREF = "BackgroundPath";
 
     public BackgroundSubtractionMOG() {
         staticLearn.addActionListener(this);
@@ -38,10 +40,10 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
     }
 
     private void staticLearn() {
-        Mat img = Imgcodecs.imread("src/vision/objectRecognition/calibration/pre_saved_values/empty_pitch_norm.png");
+        Mat img = Imgcodecs.imread(BACKGROUND_PATH);
         Mat fgmask = new Mat();
         for(int i = 0; i < history; i++) {
-            subtractor.apply(img,fgmask, 0.3);
+            subtractor.apply(img,fgmask, 1);
         }
     }
 
@@ -69,7 +71,7 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
         } else {
             calibrating.setText("Calibrating...");
             dynamicLearnCount++;
-            subtractor.apply(input, out, 0.5);
+            subtractor.apply(input, out, 0.02);
         }
         return out;
     }
@@ -79,11 +81,15 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
         return buttonHolder;
     }
 
-    // NOTHING TO SAVE/LOAD
     @Override
-    public void saveModificationSettings(Properties prop) {}
+    public void saveModificationSettings(Properties prop) {
+        prop.setProperty(BACKGROUND_PATH_PREF, BACKGROUND_PATH);
+    }
 
     @Override
-    public void loadModificationSettings(Properties prop) {}
+    public void loadModificationSettings(Properties prop) {
+        BACKGROUND_PATH = prop.getProperty(BACKGROUND_PATH_PREF, BACKGROUND_PATH);
+        staticLearn();
+    }
 
 }

@@ -1,11 +1,11 @@
 #!/bin/sh
-v4lctl bright 10%
-v4lctl hue 20%
-v4lctl contrast 30%
-v4lctl color 40%
-v4lctl setattr 'whitecrush lower' 50%
-v4lctl setattr 'whitecrush upper' 60%
-v4lctl setattr 'uv ratio' 70%
+v4lctl bright 50%
+v4lctl hue 60%
+v4lctl contrast 50%
+v4lctl color 90%
+v4lctl setattr 'whitecrush lower' 10%
+v4lctl setattr 'whitecrush upper' 40%
+v4lctl setattr 'uv ratio' 50%
 v4lctl setattr 'coring' 80%
 v4lctl setattr 'chroma agc' off
 v4lctl setattr 'color killer' on
