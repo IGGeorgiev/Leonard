@@ -168,3 +168,4 @@ fabric.properties
 /settings
 /src/vision/objectRecognition/calibration/pre_saved_values/*
 !/src/vision/objectRecognition/calibration/pre_saved_values/.gitkeep
+/settings/*

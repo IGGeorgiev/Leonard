@@ -1,12 +1,14 @@
 package vision;
 
 import org.opencv.core.Core;
+import strategy.Strategy;
 import vision.colorAnalysis.ColorCalibration;
 import vision.gui.DetectionCalibrationGUI;
 import vision.gui.MiscellaneousSettings;
 import vision.gui.SDPConsole;
 import vision.kalmanFilter.DynamicWorldFilter;
 import vision.objectRecognition.ImageManipulationPipeline;
+import vision.objectRecognition.detection.DetectionPropertiesManager;
 import vision.rawInput.RawInput;
 import vision.robotAnalysis.DynamicWorldListener;
 import vision.robotAnalysis.RobotAnalysisBase;
@@ -24,6 +26,7 @@ import java.awt.*;
 import java.util.LinkedList;
 
 import static vision.objectRecognition.detection.DetectionPropertiesManager.saveValues;
+import static vision.settings.SettingsManager.loadSettings;
 
 /**
  * Created by Simon Rovder
@@ -53,12 +56,13 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 	 */
 	public Vision(String[] args){
 		super("Vision");
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
 		this.visionListeners   = new LinkedList<VisionListener>();
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addChangeListener(this);
 
-		SpotAnalysisBase approximateSpotAnalysis = new ApproximatedSpotAnalysis();
+//		SpotAnalysisBase approximateSpotAnalysis = new ApproximatedSpotAnalysis();
 
 		detectionGUI = new DetectionCalibrationGUI();
 		detectionGUI.hideAll();
@@ -101,6 +105,8 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 				terminateVision();
 			}
 		});
+
+		args = filterArgs(args);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		CommandLineParser.parser.newParse(args, this);
 		this.setVisible(true);
@@ -115,7 +121,6 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 	}
 
 	public static void main(String[] args){
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		new Vision(args);
 	}
 
@@ -133,6 +138,35 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 			detectionGUI.showAll();
 		} else {
 			detectionGUI.hideAll();
+		}
+	}
+
+	private String[] filterArgs(String[] args) {
+		if (args.length != 0 && args[0].length() == 1 && Character.isDigit(args[0].charAt(0)) ) {
+
+			String[] aux_args = new String[args.length - 1];
+			System.arraycopy(args, 1, aux_args, 0, args.length - 1);
+
+			// Load detection
+			String path = "src/../settings/";
+			if (Integer.valueOf(args[0]) == 2) {
+				System.out.println("Loading pitch 2 settings");
+				DetectionPropertiesManager.loadValues(path + "pitch2.properties");
+
+				try {
+					loadSettings(path + "pitch2.conf");
+				} catch (Exception ignore) {}
+			} else {
+				System.out.println("Loading pitch 1 settings");
+				DetectionPropertiesManager.loadValues(path + "pitch1.properties");
+				try {
+					loadSettings(path + "pitch1.conf");
+				} catch (Exception ignore) {}
+			}
+			return aux_args;
+		} else {
+			System.out.println("No settings pre-loaded");
+			return args;
 		}
 	}
 }

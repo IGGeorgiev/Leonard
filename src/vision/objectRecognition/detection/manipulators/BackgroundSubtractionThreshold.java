@@ -5,8 +5,8 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
-import vision.objectRecognition.detection.ImageManipulatorWithOptions;
 import vision.gui.TitledComponent;
+import vision.objectRecognition.detection.ImageManipulatorWithOptions;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -14,6 +14,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.Properties;
 
+import static vision.objectRecognition.detection.manipulators.BackgroundSubtractionMOG.BACKGROUND_PATH;
+import static vision.objectRecognition.detection.manipulators.BackgroundSubtractionMOG.BACKGROUND_PATH_PREF;
 import static vision.objectRecognition.utils.Subtractor.subtract;
 
 /**
@@ -65,6 +67,7 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
         blueSlider.setValue(Integer.valueOf(
                 prop.getProperty(B_THRESH_PROP, String.valueOf(blueSlider.getValue()))
         ));
+//        BACKGROUND_PATH = prop.getProperty(BACKGROUND_PATH_PREF, BACKGROUND_PATH);
     }
 
     public BackgroundSubtractionThreshold() {
@@ -83,7 +86,7 @@ public class BackgroundSubtractionThreshold extends ImageManipulatorWithOptions 
     @Override
     protected Mat run(Mat input) {
         Mat backgroundImage =
-                Imgcodecs.imread("src/vision/objectRecognition/calibration/pre_saved_values/empty_pitch_norm.png");
+                Imgcodecs.imread(BACKGROUND_PATH);
 
         if (backgroundImage.height() != 0 || backgroundImage.width() != 0) {
             Mat subtractedImage = subtract(backgroundImage, input);

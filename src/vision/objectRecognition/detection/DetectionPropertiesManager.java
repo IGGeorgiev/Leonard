@@ -15,9 +15,12 @@ import java.util.Properties;
  */
 public class DetectionPropertiesManager {
 
-    public static void loadValues() {
-        File saveFile =
-                new File("src/vision/objectRecognition/calibration/pre_saved_values/calibrationOptions.properties");
+    private static String DEFAULT_PATH = "src/vision/objectRecognition/calibration/pre_saved_values/calibrationOptions.properties";
+
+    public static void loadValues(String path) {
+        if (!path.equals(DEFAULT_PATH))
+            DEFAULT_PATH = path;
+        File saveFile = new File(path);
         Properties prop = new Properties();
         FileInputStream fis = null;
         try {
@@ -45,9 +48,8 @@ public class DetectionPropertiesManager {
 
     }
 
-    public static void saveValues() {
-        File saveFile =
-                new File("src/vision/objectRecognition/calibration/pre_saved_values/calibrationOptions.properties");
+    public static void saveValues(String path) {
+        File saveFile = new File(path);
         Properties prop = new Properties();
         FileOutputStream fos = null;
 
@@ -77,5 +79,13 @@ public class DetectionPropertiesManager {
             }
 
         }
+    }
+
+    public static void saveValues() {
+        saveValues(DEFAULT_PATH);
+    }
+
+    public static void loadValues() {
+        loadValues(DEFAULT_PATH);
     }
 }
