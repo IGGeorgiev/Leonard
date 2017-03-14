@@ -114,20 +114,21 @@ public class NewRobotAnalysis extends RobotAnalysisBase {
                             Ball newBall = new Ball();
                             newBall.location = closest.location.clone();
                             world.setBall(newBall);
-                            VectorGeometry heading = new VectorGeometry(newBall.location.x, newBall.location.y);
-                            double angle = VectorGeometry.angle(0,1,-1,1); // 45 degrees
-                            VectorGeometry robotHeading = VectorGeometry.fromAngular(closest.location.direction + angle, 10, null);
-                            VectorGeometry robotToPoint = VectorGeometry.fromTo(closest.location, heading);
-                            double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-                            if (closest.type==RobotType.FRIEND_2) {
-                                if(VectorGeometry.distance(closest.location.x,
-                                        closest.location.y,newBall.location.x,
-                                        newBall.location.y) < 30
-                                        && Math.abs(rotation)<0.8){
-                                    System.out.println("setting probable holder to Frend2");
-                                    world.setProbableBallHolder(closest.type);
-                                }
-                            } else world.setProbableBallHolder(closest.type);
+//                            VectorGeometry heading = new VectorGeometry(newBall.location.x, newBall.location.y);
+//                            double angle = VectorGeometry.angle(0,1,-1,1); // 45 degrees
+//                            VectorGeometry robotHeading = VectorGeometry.fromAngular(closest.location.direction + angle, 10, null);
+//                            VectorGeometry robotToPoint = VectorGeometry.fromTo(closest.location, heading);
+//                            double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
+//                            if (closest.type==RobotType.FRIEND_2) {
+//                                if(VectorGeometry.distance(closest.location.x,
+//                                        closest.location.y,newBall.location.x,
+//                                        newBall.location.y) < 30
+//                                        && Math.abs(rotation)<0.8){
+//                                    System.out.println("setting probable holder to Frend2");
+//                                    world.setProbableBallHolder(closest.type);
+//                                }
+//                            } else
+                            world.setProbableBallHolder(closest.type);
                         } else {
                             world.setBall(lastKnownBall.clone());
                         }
