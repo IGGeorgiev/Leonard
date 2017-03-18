@@ -4,6 +4,7 @@ import communication.ports.interfaces.FourWheelHolonomicRobotPort;
 import communication.ports.robotPorts.FredRobotPort;
 import strategy.actions.ActionException;
 import strategy.actions.ActionBase;
+import strategy.actions.offense.GoalKick;
 import strategy.navigation.Obstacle;
 import strategy.points.DynamicPoint;
 import strategy.Strategy;
@@ -74,13 +75,14 @@ public class GotoBall extends ActionBase {
         } else if (this.state == 0) { // go to point
             this.enterState(1);
         } else if (this.state == 2) { // halt
+            this.enterAction(new GoalKick(this.robot), 0, 0);
             throw new ActionException(true, false);
         } else if (this.state == 3) { // move forward
 
         }
 
         if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 5) {
-            System.out.println("we are too close to that shit");
+            System.out.println("Starting GoalKick");
             this.enterState(2);
         }
 //        else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 5) {
