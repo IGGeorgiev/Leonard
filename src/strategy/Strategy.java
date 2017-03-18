@@ -3,6 +3,7 @@ package strategy;
 import communication.ports.interfaces.FourWheelHolonomicRobotPort;
 import strategy.actions.Behave;
 import strategy.actions.offense.GoalKick;
+import strategy.actions.offense.KickEnemy;
 import strategy.actions.other.*;
 import strategy.actions.offense.OffensiveKick;
 import strategy.actions.offense.ShuntKick;
@@ -299,6 +300,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(-255,255,255,-255);
                     break;
 
+                case "kick2":
+                    fred.ACTION_CONTROLLER.setAction(new KickEnemy(fred));
+                    break;
             }
         }
 

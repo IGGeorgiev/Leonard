@@ -108,7 +108,6 @@ public class GotoBall extends ActionBase {
             if (Math.abs(rotation) >= 0.1) {
                 this.rotation = rotation;
                 this.enterState(4);
-                return;
             } else {
                 this.enterState(3);
             }
