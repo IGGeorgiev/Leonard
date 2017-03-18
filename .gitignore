@@ -167,3 +167,4 @@ fabric.properties
 # Application Properties
 /Leonard/vision/calibration/pre_saved_values/*
 !/Leonard/vision/calibration/pre_saved_values/.gitkeep
+/settings
