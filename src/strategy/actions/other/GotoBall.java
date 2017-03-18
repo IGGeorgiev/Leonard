@@ -25,7 +25,7 @@ public class GotoBall extends ActionBase {
     private double rotation;
     public GotoBall(RobotBase robot, DynamicPoint point) {
         super(robot, point);
-        this.rawDescription = " GOTO";
+        this.rawDescription = "GOTO";
     }
 
     @Override
