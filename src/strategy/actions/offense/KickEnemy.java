@@ -4,7 +4,6 @@ import communication.ports.interfaces.FourWheelHolonomicRobotPort;
 import strategy.Strategy;
 import strategy.actions.ActionBase;
 import strategy.actions.ActionException;
-import strategy.points.basicPoints.BallPoint;
 import strategy.points.basicPoints.EnemyGoal;
 import strategy.robots.Fred;
 import strategy.robots.RobotBase;
@@ -13,30 +12,46 @@ import vision.RobotType;
 import vision.tools.VectorGeometry;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Simon Rovder
  */
 public class KickEnemy extends ActionBase {
-    private Timer timer = new Timer();
-    private double rotation;
     Fred fred = (Fred) this.robot;
+    private Timer timer = new Timer();
     private boolean fixed = false;
+
     public KickEnemy(RobotBase robot) {
         super(robot);
         this.rawDescription = "KickEnemy";
     }
+
     @Override
     public void enterState(int newState) {
         this.robot.MOTION_CONTROLLER.setActive(false);
         if (newState == 1) {
             this.fixed = false;
-            while (Math.abs(rotation) >= 0.2) {
-                double constant = 300 * rotation;
-                System.out.println("rotation: " + rotation + " constant: " + constant);
-                ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
+            Robot us = Strategy.world.getRobot(RobotType.FRIEND_2);
+            double rot = calculateRotate(us);
+            while (Math.abs(rot) >= 0.15) {
+                us = Strategy.world.getRobot(RobotType.FRIEND_2);
+                if (us != null) {
+                    rot = calculateRotate(us);
+                    double constant = 100 * rot;
+                    if (Math.abs(constant) >= 70) {
+                        constant = 70;
+                        if (rot < 0) constant = -70;
+                    }
+                    if (Math.abs(constant) <= 40) {
+                        constant = 40;
+                        if (rot < 0) constant = -40;
+                    }
+
+                    System.out.println("rotation: " + rot + " constant: " + constant);
+                    ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(constant, constant, constant, constant);
+                } else break;
             }
+
             this.robot.port.stop();
             this.fixed = true;
         }
@@ -66,6 +81,18 @@ public class KickEnemy extends ActionBase {
     }
 
 
+    private double calculateRotate(Robot us) {
+        EnemyGoal emGoal = new EnemyGoal();
+        double angle = VectorGeometry.angle(0, 1, -1, 1); // 45 degrees
+        double rotation = 0;
+        VectorGeometry heading = new VectorGeometry(emGoal.getX(), emGoal.getY());
+        VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
+        VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, heading);
+        rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
+        System.out.println("rotation = " + rotation);
+        return rotation;
+    }
+
     @Override
     public void tok() throws ActionException {
         Robot us = Strategy.world.getRobot(RobotType.FRIEND_2);
@@ -76,13 +103,7 @@ public class KickEnemy extends ActionBase {
             this.enterState(1);
         }
 
-            EnemyGoal emGoal = new EnemyGoal();
-            double angle = VectorGeometry.angle(0,1,-1,1); // 45 degrees
-            VectorGeometry heading = new VectorGeometry(emGoal.getX(), emGoal.getY());
-            VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
-            VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, heading);
-            this.rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-            System.out.println("rotation = "+rotation);
+
 //            if (Math.abs(this.rotation) <= 0.15) { // rotation is fixed
 //                System.out.println("rotation is fixed!! kick now");
 //                if (this.state != 2) this.enterState(2);

@@ -159,28 +159,7 @@ public class MotionController extends ControllerBase {
         }
 
         if(this.destination != null && us.location.distance(destination) < tolerance){
-//            && Math.abs(rotation)<0.1
-            this.robot.port.stop();
 
-            double constant;
-//            while (Math.abs(rotation) >= 0.2) {
-//                us = Strategy.world.getRobot(RobotType.FRIEND_2);
-//                robotHeading = VectorGeometry.fromAngular(us.location.direction, 10, null);
-//                robotToPoint = VectorGeometry.fromTo(us.location, heading);
-//                rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-//                constant = 100 * rotation;
-//                System.out.println("rotation: " + rotation + " constant: " + constant);
-//                ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
-//            }
-//            this.robot.port.stop();
-
-            ActionListener task2 = evt -> {
-                robot.ACTION_CONTROLLER.setAction(new Demo(robot, 255,255,255,255));
-            };
-            System.out.println("Should be heading the ball now and stopped");
-            Timer tm2 = new Timer(1000, task2);
-            tm2.setRepeats(false);
-            tm2.start();
 
             return;
         }

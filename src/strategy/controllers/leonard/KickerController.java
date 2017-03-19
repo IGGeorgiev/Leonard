@@ -48,7 +48,8 @@ public class KickerController extends ControllerBase {
             VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
             VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, new VectorGeometry(emgal.getX(), emgal.getY()));
             double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-            if (Math.abs(rotation) < 0.2 && us.location.distance(ball.location) < 30) {
+//            && us.location.distance(ball.location) < 30
+            if (Math.abs(rotation) < 0.2 ) {
                 this.setActive(true);
                 if (this.isActive()) {
                     ((FredRobotPort) this.robot.port).kicker(1);

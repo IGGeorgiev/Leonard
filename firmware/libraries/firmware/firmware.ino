@@ -102,7 +102,7 @@ void grabber(){
   } else if (type == 1){
     motorBackward(GRABBERS, 70);
   } else {
-    motorForward(GRABBERS, 70);
+    motorForward(GRABBERS, 40);
   }
 }
 

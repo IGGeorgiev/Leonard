@@ -17,6 +17,7 @@ import vision.constants.Constants;
 import vision.tools.VectorGeometry;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -41,6 +42,7 @@ public class GrabberController extends ControllerBase {
     }
 
     public void grab(int i, int time) {
+        System.out.println("using grabber" + i);
         FredRobotPort portie = (FredRobotPort) this.robot.port;
         portie.grabber(i);
         ActionListener taskPerformer = new ActionListener() {

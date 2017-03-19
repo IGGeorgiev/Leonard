@@ -1,15 +1,14 @@
 package strategy.actions.other;
 
 import communication.ports.interfaces.FourWheelHolonomicRobotPort;
-import communication.ports.robotPorts.FredRobotPort;
-import strategy.actions.ActionException;
+import strategy.Strategy;
 import strategy.actions.ActionBase;
+import strategy.actions.ActionException;
+import strategy.actions.offense.GoalKick;
 import strategy.navigation.Obstacle;
 import strategy.points.DynamicPoint;
-import strategy.Strategy;
 import strategy.robots.Fred;
 import strategy.robots.RobotBase;
-import vision.Ball;
 import vision.Robot;
 import vision.RobotType;
 import vision.tools.VectorGeometry;
@@ -23,6 +22,7 @@ import java.awt.event.ActionListener;
  */
 public class GotoBall extends ActionBase {
     private double rotation;
+
     public GotoBall(RobotBase robot, DynamicPoint point) {
         super(robot, point);
         this.rawDescription = "GOTO";
@@ -42,9 +42,9 @@ public class GotoBall extends ActionBase {
             // TODO: should move forward here
 //            ((FredRobotPort)this.robot.port).grabber(1);
 //            this.robot.ACTION_CONTROLLER.setAction(new Demo(robot, 150, 255, 255, 150));
-            ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(255,-255,-255,255);
+            ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(255, -255, -255, 255);
             System.out.println("moving forward now! ");
-            Fred fred = (Fred)this.robot;
+            Fred fred = (Fred) this.robot;
             ActionListener taskPerformer = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     //...Perform a task...
@@ -56,11 +56,12 @@ public class GotoBall extends ActionBase {
             tm.start();
         } else if (newState == 4) {
             System.out.println("yo fix rotation!");
-            double constant = 300*rotation; // constant has to be big enough or else the rotation will be too slow
-            ((FourWheelHolonomicRobotPort)this.robot.port).fourWheelHolonomicMotion(constant,constant,constant,constant);
+            double constant = 300 * rotation; // constant has to be big enough or else the rotation will be too slow
+            ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(constant, constant, constant, constant);
         } else { // state 2
-            this.robot.MOTION_CONTROLLER.setDestination(null);
-            this.robot.MOTION_CONTROLLER.setHeading(null);
+//            this.robot.MOTION_CONTROLLER.setDestination(null);
+//            this.robot.MOTION_CONTROLLER.setHeading(null);
+
         }
         this.state = newState;
     }
@@ -74,20 +75,24 @@ public class GotoBall extends ActionBase {
         } else if (this.state == 0) { // go to point
             this.enterState(1);
         } else if (this.state == 2) { // halt
-            throw new ActionException(true, false);
+            Fred fred = (Fred) this.robot;
+            fred.GRABBER_CONTROLLER.grab(2, 300);
+            this.enterAction(new GoalKick(this.robot), 0, 0);
+
+//            throw new ActionException(true, false);
         } else if (this.state == 3) { // move forward
 
         }
 
         if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 5) {
-            System.out.println("we are too close to that shit");
+            System.out.println("Starting GoalKick");
             this.enterState(2);
         }
 //        else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 5) {
 //            System.out.println("I am too close! ");
 //            this.enterState(2);
 //        }
-        double angle = VectorGeometry.angle(0,1,-1,1); // 45 degrees
+        double angle = VectorGeometry.angle(0, 1, -1, 1); // 45 degrees
         VectorGeometry heading = new VectorGeometry(this.point.getX(), this.point.getY());
         VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
         VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, heading);
@@ -95,19 +100,19 @@ public class GotoBall extends ActionBase {
 
         if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 10) {
             System.out.println("too close moving backwards!!!!");
-            if (Math.abs(rotation)>0.2) {
+            if (Math.abs(rotation) > 0.2) {
                 ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(-255, 255, 255, -255);
             }
-        }
-        else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 40) {
+        } else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 40) {
             System.out.println("================ hit tolerance!! ===========");
 
-            ((Fred)this.robot).GRABBER_CONTROLLER.grab(1, 2000);
+            ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, 2000);
 
 
             if (Math.abs(rotation) >= 0.1) {
                 this.rotation = rotation;
                 this.enterState(4);
+                return;
             } else {
                 this.enterState(3);
             }
