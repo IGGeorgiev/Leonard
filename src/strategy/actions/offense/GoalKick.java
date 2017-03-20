@@ -33,9 +33,10 @@ public class GoalKick extends ActionBase {
     @Override
     public void enterState(int newState) {
 
-        Robot us = Strategy.world.getRobot(RobotType.FRIEND_2);
-        Ball ball = Strategy.world.getBall();
-        EnemyGoal enemyGoal = new EnemyGoal();
+        Strategy.world.getRobot(RobotType.FRIEND_2);
+        Robot us;
+//        Ball ball = Strategy.world.getBall();
+//        EnemyGoal enemyGoal = new EnemyGoal();
 //        if (us == null || ball == null) return;
 
 //        VectorGeometry ballVec = new VectorGeometry(ball.location.x, ball.location.y);
