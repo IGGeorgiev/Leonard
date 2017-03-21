@@ -104,6 +104,12 @@ public class GotoBall extends ActionBase {
             // halt
             Fred fred = (Fred) this.robot;
             fred.GRABBER_CONTROLLER.grab(2, 300);
+            //TODO: HI!!!!!
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+            }
+
             this.enterAction(new GoalKick(this.robot), 0, 0);
         } else if (this.state == 3) {
             // move forward
@@ -123,7 +129,6 @@ public class GotoBall extends ActionBase {
             System.out.println("================ hit tolerance!! ===========");
 
             ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, 2000);
-
 
             if (Math.abs(rotation) >= 0.1) {
                 this.rotation = rotation;
