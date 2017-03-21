@@ -7,8 +7,11 @@ import strategy.actions.ActionException;
 import strategy.actions.offense.GoalKick;
 import strategy.navigation.Obstacle;
 import strategy.points.DynamicPoint;
+import strategy.points.basicPoints.ConstantPoint;
+import strategy.points.basicPoints.EnemyGoal;
 import strategy.robots.Fred;
 import strategy.robots.RobotBase;
+import vision.Ball;
 import vision.Robot;
 import vision.RobotType;
 import vision.tools.VectorGeometry;
@@ -36,6 +39,18 @@ public class GotoBall extends ActionBase {
             this.robot.MOTION_CONTROLLER.addObstacle(new Obstacle(this.point.getX(), this.point.getY(), 20));
             this.robot.MOTION_CONTROLLER.setDestination(this.point);
             this.robot.MOTION_CONTROLLER.setHeading(this.point);
+        } else if (newState == 5) {
+            //Adding this results in Leonard hesitating less when he goes to the ball.
+            //This state is onlt used when we are far enough away from the ball due to lack of rotation speed.
+            Ball ball = Strategy.world.getBall();
+            EnemyGoal enemyGoal = new EnemyGoal();
+            VectorGeometry ballVec = new VectorGeometry(ball.location.x, ball.location.y);
+            VectorGeometry emgoal = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY());
+            VectorGeometry kickingPoint = VectorGeometry.kickBallLocation(emgoal, ballVec, 20);
+
+            this.robot.MOTION_CONTROLLER.setHeading(new EnemyGoal());
+            this.robot.MOTION_CONTROLLER.setDestination(new ConstantPoint((int) kickingPoint.x, (int) kickingPoint.y));
+            this.robot.MOTION_CONTROLLER.setTolerance(5);
         } else if (newState == 3) {
             System.out.println("trying to move forward!!!");
             this.robot.MOTION_CONTROLLER.clearObstacles();
@@ -59,8 +74,6 @@ public class GotoBall extends ActionBase {
             double constant = 300 * rotation; // constant has to be big enough or else the rotation will be too slow
             ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(constant, constant, constant, constant);
         } else { // state 2
-//            this.robot.MOTION_CONTROLLER.setDestination(null);
-//            this.robot.MOTION_CONTROLLER.setHeading(null);
 
         }
         this.state = newState;
@@ -69,34 +82,37 @@ public class GotoBall extends ActionBase {
     @Override
     public void tok() throws ActionException {
         Robot us = Strategy.world.getRobot(RobotType.FRIEND_2);
-        if (us == null) {
-            this.enterState(0);
-            return;
-        } else if (this.state == 0) { // go to point
-            this.enterState(1);
-        } else if (this.state == 2) { // halt
-            Fred fred = (Fred) this.robot;
-            fred.GRABBER_CONTROLLER.grab(2, 300);
-            this.enterAction(new GoalKick(this.robot), 0, 0);
-
-//            throw new ActionException(true, false);
-        } else if (this.state == 3) { // move forward
-
-        }
-
-        if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 5) {
-            System.out.println("Starting GoalKick");
-            this.enterState(2);
-        }
-//        else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 5) {
-//            System.out.println("I am too close! ");
-//            this.enterState(2);
-//        }
+        double distFromUsToBall = VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y);
         double angle = VectorGeometry.angle(0, 1, -1, 1); // 45 degrees
         VectorGeometry heading = new VectorGeometry(this.point.getX(), this.point.getY());
         VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
         VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, heading);
         double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
+
+        if (us == null) {
+            this.enterState(0);
+            return;
+        } else if (this.state == 0) {
+            // Go to point
+            if (distFromUsToBall > 10) {
+                //Gets there quicker
+                this.enterState(5);
+            } else {
+                this.enterState(1);
+            }
+        } else if (this.state == 2) {
+            // halt
+            Fred fred = (Fred) this.robot;
+            fred.GRABBER_CONTROLLER.grab(2, 300);
+            this.enterAction(new GoalKick(this.robot), 0, 0);
+        } else if (this.state == 3) {
+            // move forward
+        }
+
+        if (distFromUsToBall < 5) {
+            System.out.println("Starting GoalKick");
+            this.enterState(2);
+        }
 
         if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 10) {
             System.out.println("too close moving backwards!!!!");
