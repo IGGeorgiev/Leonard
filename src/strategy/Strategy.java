@@ -1,17 +1,16 @@
 package strategy;
 
+import communication.PortListener;
 import communication.ports.interfaces.FourWheelHolonomicRobotPort;
+import communication.ports.robotPorts.FredRobotPort;
 import strategy.actions.Behave;
 import strategy.actions.offense.GoalKick;
 import strategy.actions.offense.KickEnemy;
-import strategy.actions.other.*;
 import strategy.actions.offense.OffensiveKick;
 import strategy.actions.offense.ShuntKick;
-import communication.ports.robotPorts.FredRobotPort;
-import strategy.points.DynamicPoint;
+import strategy.actions.other.*;
 import strategy.points.basicPoints.*;
 import strategy.robots.Fred;
-import communication.PortListener;
 import strategy.robots.RobotBase;
 import vision.*;
 import vision.Robot;
@@ -268,9 +267,36 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
     @Override
     public void nextWorld(DynamicWorld dynamicWorld) {
         world = dynamicWorld;
+        toWorldSender(world);
         status = new Status(world);
     }
 
+    public void toWorldSender(DynamicWorld world){
+        String[] msg = new String[4];
+        try {
+
+//            System.out.println("wtf 11111");
+            if (world.getBall() != null) {
+                msg[0] = "BALL";
+                msg[1] = String.format("%.3f", (world.getBall().location.x));
+                msg[2] = String.format("%.3f", (world.getBall().location.y));
+//                System.out.println(msg[0] + " " + msg[1] + " " + msg[2]);
+                WorldSender.main(msg);
+            }
+            for (RobotType t : RobotType.values()){
+                if (world.getRobot(t) != null){
+                    msg[0] = t.toString();
+                    msg[1] = String.format("%.3f", (world.getRobot(t).location.x));
+                    msg[2] = String.format("%.3f", (world.getRobot(t).location.y));
+                    msg[3] = String.format("%.3f", (world.getRobot(t).location.direction));
+                    WorldSender.main(msg);
+                }
+            }
+//            System.out.println("wtf 44444");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * SDP2017NOTE
