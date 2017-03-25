@@ -67,11 +67,10 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
         }
     }
 
-    /** returns true if foe (possibly) has the ball and is on our side of the pitch */
+    /** Returns true if foe (possibly) has the ball and is on our side of the pitch */
     public boolean foeATTACK(Robot foe, VectorGeometry ball, VectorGeometry ourGoal) {
-        if (foe.location.distance(ball) <= 10 && foe.location.distance(ourGoal) <= Constants.PITCH_WIDTH/2) {
+        if (foe.location.distance(ball) <= 10 && foe.location.distance(ourGoal) <= Constants.PITCH_WIDTH/2)
             return true;
-        }
         return false;
     }
 
@@ -93,14 +92,25 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
 
             VectorGeometry ourGoal = new VectorGeometry(-Constants.PITCH_WIDTH / 2, 0);
 
-            if (foeATTACK(foe1, ballVG, ourGoal) || foeATTACK(foe2, ballVG, ourGoal)) { // if enemy is close to ball, assuming they have the ball
+            if (foeATTACK(foe1, ballVG, ourGoal) || foeATTACK(foe2, ballVG, ourGoal)) { // if enemy is close to ball and on our side of the pitch
                 // TODO: with a friend - decide who to DEFEND or ATTACK and send packets
-                System.out.println("Enemy has the ball : calling SAFE");
+                System.out.println("Enemy has the ball : calling SAFE"); // currently: defend
                 this.nextState = BehaviourEnum.SAFE;
                 return this.nextState;
             }
 
-            if ()
+            if (foe1.location.distance(ballVG) <= 10) {
+                // intercept enemy
+                return this.nextState;
+            }
+
+            if (foe2.location.distance(ballVG) <= 10) {
+                // intercept enemy
+                return this.nextState;
+            }
+
+            this.nextState = BehaviourEnum.GOAL;
+            return this.nextState;
 
 
                 // us.location.distance(ourGoal) )
@@ -133,6 +143,6 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
 //                }
 //            }
         }
-        return this.nextState;
+//        return this.nextState;
     }
 }
