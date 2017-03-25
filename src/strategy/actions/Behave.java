@@ -17,7 +17,7 @@ import vision.tools.VectorGeometry;
  * Created by Simon Rovder
  */
 enum BehaviourEnum {
-    DEFEND, SHUNT, GOAL, SAFE, EMPTY
+    DEFEND, SHUNT, GOAL, SAFE, EMPTY, GETBALL
 }
 
 /**
