@@ -70,8 +70,8 @@ public class GotoBall extends ActionBase {
             tm.setRepeats(false);
             tm.start();
         } else if (newState == 4) {
-            System.out.println("yo fix rotation!");
-            double constant = 300 * rotation; // constant has to be big enough or else the rotation will be too slow
+            System.out.println("yo fix rotation!" + rotation);
+            double constant = 100 * rotation; // constant has to be big enough or else the rotation will be too slow
             ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(constant, constant, constant, constant);
         } else { // state 2
 
@@ -93,13 +93,13 @@ public class GotoBall extends ActionBase {
             this.enterState(0);
             return;
         } else if (this.state == 0) {
-            // Go to point
-            if (distFromUsToBall > 10) {
-                //Gets there quicker
-                this.enterState(5);
-            } else {
+//            // Go to point
+//            if (distFromUsToBall > 10) {
+//                //Gets there quicker
+//                this.enterState(5);
+//            } else {
                 this.enterState(1);
-            }
+//            }
         } else if (this.state == 2) {
             // halt
             Fred fred = (Fred) this.robot;
