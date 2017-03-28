@@ -103,16 +103,18 @@ public class GotoBall extends ActionBase {
         } else if (this.state == 2) {
             // halt
             Fred fred = (Fred) this.robot;
-            fred.GRABBER_CONTROLLER.grab(2, 300);
+            fred.GRABBER_CONTROLLER.grab(2, 500);
             //TODO: HI!!!!!
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-            }
-
-            this.enterAction(new GoalKick(this.robot), 0, 0);
-        } else if (this.state == 3) {
-            // move forward
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//            }
+            ((Fred) this.robot).GRABBER_CONTROLLER.setActive(false);
+            ((Fred) this.robot).KICKER_CONTROLLER.setActive(false);
+            this.robot.MOTION_CONTROLLER.setDestination(null);
+            this.robot.MOTION_CONTROLLER.setHeading(null);
+            throw new ActionException(true, false);
+//            this.enterAction(new GoalKick(this.robot), 0, 0);
         }
 
         if (distFromUsToBall < 5) {
@@ -122,8 +124,8 @@ public class GotoBall extends ActionBase {
 
         if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 10) {
             System.out.println("too close moving backwards!!!!");
-            if (Math.abs(rotation) > 0.2) {
-                ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(-255, 255, 255, -255);
+            if (Math.abs(rotation) > 0.4) {
+                ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(-255, 255, 0, -0);
             }
         } else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 40) {
             System.out.println("================ hit tolerance!! ===========");
