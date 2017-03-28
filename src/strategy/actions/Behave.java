@@ -1,6 +1,7 @@
 package strategy.actions;
 
 import com.sun.tools.internal.jxc.ap.Const;
+import com.sun.tools.javac.code.Attribute;
 import strategy.Strategy;
 import strategy.actions.offense.GoalKick;
 import strategy.actions.other.DefendGoal;
@@ -34,6 +35,7 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
 
     public Behave(RobotBase robot) {
         super(robot, null);
+        this.nextState = BehaviourEnum.GOAL; // So once Behave is called, the robot will call GotoBall????
     }
 
     @Override
@@ -67,13 +69,6 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
         }
     }
 
-    /** Returns true if foe (possibly) has the ball and is on our side of the pitch */
-    public boolean foeATTACK(Robot foe, VectorGeometry ball, VectorGeometry ourGoal) {
-        if (foe.location.distance(ball) <= 10 && foe.location.distance(ourGoal) <= Constants.PITCH_WIDTH/2)
-            return true;
-        return false;
-    }
-
     @Override
     protected BehaviourEnum getState() {
         Ball ball = Strategy.world.getBall();
@@ -84,31 +79,68 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
             if (us == null) {
                 // TODO: Angry yelling
                 // tell friend that we are lost
-                return;
+                return this.nextState;
             }
             VectorGeometry ballVG = new VectorGeometry(ball.location.x, ball.location.y);
+            Robot friend = Strategy.world.getRobot(RobotType.FRIEND_1);
             Robot foe1 = Strategy.world.getRobot(RobotType.FOE_1);
             Robot foe2 = Strategy.world.getRobot(RobotType.FOE_2);
-
             VectorGeometry ourGoal = new VectorGeometry(-Constants.PITCH_WIDTH / 2, 0);
 
-            if (foeATTACK(foe1, ballVG, ourGoal) || foeATTACK(foe2, ballVG, ourGoal)) { // if enemy is close to ball and on our side of the pitch
-                // TODO: with a friend - decide who to DEFEND or ATTACK and send packets
-                System.out.println("Enemy has the ball : calling SAFE"); // currently: defend
+            // if our friend has the ball
+            if (friend.location.distance(ballVG) < 5) {
+                // go to a certain point on the pitch and call goal.. or intercept enemy but idk
+                System.out.println("Our friend has the ball! nextState =  SAFE");
                 this.nextState = BehaviourEnum.SAFE;
                 return this.nextState;
             }
 
-            if (foe1.location.distance(ballVG) <= 10) {
-                // intercept enemy
+            // if enemy has the ball
+            if (foe1.location.distance(ballVG) <= 5) {
+                System.out.println("foe1 has the ball!");
+                if (foe1.location.distance(ourGoal) <= Constants.PITCH_WIDTH/2) {
+                    // if enemy is on our side of the pitch, defend
+                    System.out.println("foe1 is on our side of the pitch!! nextState = DEFEND");
+                    this.nextState = BehaviourEnum.DEFEND;
+                } else {
+                    // intercept enemy and/or defend goal
+                    System.out.println("foe1 is NOT on our side of the pitch! nextState = SAFE");
+                    this.nextState = BehaviourEnum.SAFE;
+                }
                 return this.nextState;
             }
 
-            if (foe2.location.distance(ballVG) <= 10) {
-                // intercept enemy
+            // if enemy has the ball
+            if (foe2.location.distance(ballVG) <= 5) {
+                System.out.println("foe2 has the ball!");
+                if (foe2.location.distance(ourGoal) <= Constants.PITCH_WIDTH/2) {
+                    // if enemy is on our side of the pitch, defend
+                    System.out.println("foe2 is on our side of the pitch!! nextState = DEFEND");
+                    this.nextState = BehaviourEnum.DEFEND;
+                } else {
+                    // intercept enemy and/or defend goal
+                    System.out.println("foe2 is NOT on our side of the pitch! nextState = SAFE");
+                    this.nextState = BehaviourEnum.SAFE;
+                }
                 return this.nextState;
             }
 
+            // if enemy doesn't have the ball and the ball is too close to the other robots
+            if (foe1.location.distance(ballVG) < 20 || foe2.location.distance(ballVG) < 20 || friend.location.distance(ballVG) < 20) {
+                this.nextState = BehaviourEnum.SHUNT;
+                System.out.println("The ball is too close to the wall! nextState = SHUNT");
+                return this.nextState;
+            }
+
+            // if enemy doesn't have the ball and the ball is too close to wall
+            if (Math.abs(ball.location.x) > Constants.PITCH_WIDTH / 2 - 20 && Math.abs(ball.location.y) > Constants.PITCH_HEIGHT / 2 - 20) {
+                this.nextState = BehaviourEnum.SHUNT;
+                System.out.println("The ball is too close to the robot! nextState = SHUNT");
+                return this.nextState;
+            }
+
+            // if the other robots are not too close to the ball
+            System.out.println("GOAL GOAL GOAL GOAL GOAL GOAL GOAL you can do this Leonard!!!!!!");
             this.nextState = BehaviourEnum.GOAL;
             return this.nextState;
 
