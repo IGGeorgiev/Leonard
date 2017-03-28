@@ -23,6 +23,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import static vision.objectRecognition.detection.DetectionPropertiesManager.saveValues;
@@ -124,8 +125,37 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 		new Vision(args);
 	}
 
+	// World Transmitter
+	private void toWorldSender(DynamicWorld world){
+		String[] msg = new String[4];
+		try {
+
+//            System.out.println("wtf 11111");
+			if (world.getBall() != null) {
+				msg[0] = "BALL";
+				msg[1] = String.format("%.3f", (world.getBall().location.x));
+				msg[2] = String.format("%.3f", (world.getBall().location.y));
+//                System.out.println(msg[0] + " " + msg[1] + " " + msg[2]);
+				WorldSender.main(msg);
+			}
+			for (RobotType t : RobotType.values()){
+				if (world.getRobot(t) != null){
+					msg[0] = t.toString();
+					msg[1] = String.format("%.3f", (world.getRobot(t).location.x));
+					msg[2] = String.format("%.3f", (world.getRobot(t).location.y));
+					msg[3] = String.format("%.3f", (world.getRobot(t).location.direction));
+					WorldSender.main(msg);
+				}
+			}
+//            System.out.println("wtf 44444");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void nextDynamicWorld(DynamicWorld state) {
+		new Thread(() -> toWorldSender(state)).start();
 		for(VisionListener visionListener : this.visionListeners){
 			visionListener.nextWorld(state);
 		}

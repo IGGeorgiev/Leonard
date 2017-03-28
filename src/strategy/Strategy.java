@@ -267,36 +267,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
     @Override
     public void nextWorld(DynamicWorld dynamicWorld) {
         world = dynamicWorld;
-        toWorldSender(world);
         status = new Status(world);
     }
 
-    public void toWorldSender(DynamicWorld world){
-        String[] msg = new String[4];
-        try {
-
-//            System.out.println("wtf 11111");
-            if (world.getBall() != null) {
-                msg[0] = "BALL";
-                msg[1] = String.format("%.3f", (world.getBall().location.x));
-                msg[2] = String.format("%.3f", (world.getBall().location.y));
-//                System.out.println(msg[0] + " " + msg[1] + " " + msg[2]);
-                WorldSender.main(msg);
-            }
-            for (RobotType t : RobotType.values()){
-                if (world.getRobot(t) != null){
-                    msg[0] = t.toString();
-                    msg[1] = String.format("%.3f", (world.getRobot(t).location.x));
-                    msg[2] = String.format("%.3f", (world.getRobot(t).location.y));
-                    msg[3] = String.format("%.3f", (world.getRobot(t).location.direction));
-                    WorldSender.main(msg);
-                }
-            }
-//            System.out.println("wtf 44444");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * SDP2017NOTE

@@ -1,4 +1,4 @@
-package strategy;
+package vision;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
