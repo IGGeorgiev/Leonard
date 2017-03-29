@@ -1,6 +1,7 @@
 package strategy.actions.offense;
 
 import communication.ports.interfaces.FourWheelHolonomicRobotPort;
+import communication.ports.robotPorts.FredRobotPort;
 import strategy.Strategy;
 import strategy.actions.ActionBase;
 import strategy.actions.ActionException;
@@ -29,6 +30,7 @@ public class GrabAndKick extends ActionBase {
     private Ball ball;
     private boolean fixed = false;
     private boolean kickingToGoal = false;
+    private boolean grabbingBall = true;
     private VectorGeometry emgoal;
     private double rotation;
     private java.util.Timer timer;
@@ -47,25 +49,12 @@ public class GrabAndKick extends ActionBase {
             this.robot.MOTION_CONTROLLER.addObstacle(new Obstacle(this.point.getX(), this.point.getY(), 20));
             this.robot.MOTION_CONTROLLER.setDestination(this.point);
             this.robot.MOTION_CONTROLLER.setHeading(this.point);
-        } else if (newState == 2) {
-            //Adding this results in Leonard hesitating less when he goes to the ball.
-            //This state is onlt used when we are far enough away from the ball due to lack of rotation speed.
-            Ball ball = Strategy.world.getBall();
-            EnemyGoal enemyGoal = new EnemyGoal();
-            VectorGeometry ballVec = new VectorGeometry(ball.location.x, ball.location.y);
-            VectorGeometry emgoal = new VectorGeometry(enemyGoal.getX(), enemyGoal.getY());
-            VectorGeometry kickingPoint = VectorGeometry.kickBallLocation(emgoal, ballVec, 20);
-
-            this.robot.MOTION_CONTROLLER.setHeading(new EnemyGoal());
-            this.robot.MOTION_CONTROLLER.setDestination(new ConstantPoint((int) kickingPoint.x, (int) kickingPoint.y));
-            this.robot.MOTION_CONTROLLER.setTolerance(5);
-
-        } else if (newState == 3) {
+        }  else if (newState == 2) {
             System.out.println("yo fix rotation!");
             double constant = 300 * rotation; // constant has to be big enough or else the rotation will be too slow
             ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(constant, constant, constant, constant);
 
-        } else if (newState == 4) {
+        } else if (newState == 3) {
             System.out.println("trying to move forward!!!");
             this.robot.MOTION_CONTROLLER.clearObstacles();
             // TODO: should move forward here
@@ -83,50 +72,41 @@ public class GrabAndKick extends ActionBase {
             Timer tm = new Timer(1000, taskPerformer);
             tm.setRepeats(false);
             tm.start();
-        } else if(newState == 5) {
+        } else if (newState == 4) {
             System.out.println("Rotating towards the goal.");
-            this.fixed = false;
             us = Strategy.world.getRobot(RobotType.FRIEND_2);
-            double rot = calculateRotate(us);
-            while (Math.abs(rot) >= 0.15) {
-                us = Strategy.world.getRobot(RobotType.FRIEND_2);
-                if (us != null) {
-                    rot = calculateRotate(us);
-                    double constant = 100 * rot;
-                    if (Math.abs(constant) >= 70) {
-                        constant = 70;
-                        if (rot < 0) constant = -70;
-                    }
-                    if (Math.abs(constant) <= 40) {
-                        constant = 40;
-                        if (rot < 0) constant = -40;
-                    }
-
-                    System.out.println("rotation: " + rot + " constant: " + constant);
-                    ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(constant, constant, constant, constant);
-                } else break;
-            }
-            this.robot.port.stop();
+            this.robot.MOTION_CONTROLLER.setHeading(new EnemyGoal());
+            this.robot.MOTION_CONTROLLER.setDestination(new ConstantPoint((int) us.location.x, (int) us.location.y));
             this.fixed = true;
+
+        } else if (newState == 5) {
+            System.out.println("Moving forward now and kicking now. ");
+
+            this.robot.MOTION_CONTROLLER.setActive(false);
+            ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, 2000);
+            Fred fred = (Fred) this.robot;
+
+            fred.KICKER_CONTROLLER.setActive(true);
+            ((FredRobotPort) fred.port).kicker(1);
+            ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(60, -60, -60, 60);
+            Fred leonard = (Fred) this.robot;
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    leonard.GRABBER_CONTROLLER.setActive(false);
+                    leonard.KICKER_CONTROLLER.setActive(false);
+                    leonard.MOTION_CONTROLLER.setDestination(null);
+                    leonard.MOTION_CONTROLLER.setHeading(null);
+//                    throw new ActionException(true, false)
+                }
+            };
+            timer.schedule(task, 2000);
 
         } else {// state 6
 
         }
         this.state = newState;
     }
-
-    private double calculateRotate(Robot us) {
-        EnemyGoal emGoal = new EnemyGoal();
-        double angle = VectorGeometry.angle(0, 1, -1, 1); // 45 degrees
-        double rotation = 0;
-        VectorGeometry heading = new VectorGeometry(emGoal.getX(), emGoal.getY());
-        VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
-        VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, heading);
-        rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-        System.out.println("rotation = " + rotation);
-        return rotation;
-    }
-
 
     @Override
     public void tok() throws ActionException {
@@ -143,53 +123,56 @@ public class GrabAndKick extends ActionBase {
             return;
         } else if (this.state == 0) {
             // Go to point
-            if (distFromUsToBall > 10) {
-                //Gets there quicker
-                this.enterState(2);
-            } else {
-                this.enterState(1);
-            }
+            this.enterState(1);
         } else if (this.state == 6) {
             // halt
             Fred fred = (Fred) this.robot;
             fred.GRABBER_CONTROLLER.grab(2, 300);
-            this.enterAction(new GoalKick(this.robot), 0, 0);
-        } else if (this.state == 3) {
-            // move forward
+            ((Fred) this.robot).GRABBER_CONTROLLER.setActive(false);
+            ((Fred) this.robot).KICKER_CONTROLLER.setActive(false);
+            this.robot.MOTION_CONTROLLER.setDestination(null);
+            this.robot.MOTION_CONTROLLER.setHeading(null);
+            throw new ActionException(true, false);
         }
 
         if (distFromUsToBall < 5) {
             System.out.println("Starting GoalKick");
             kickingToGoal = true;
-            this.enterState(5);
+            grabbingBall = false;
         }
 
-
-
-        if (fixed) {
-            this.rotation = rotation;
-            if (this.state != 3) this.enterState(3);
-            return;
-        } else {
-            this.enterState(2);
-        }
-
-        if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 10) {
-            System.out.println("too close moving backwards!!!!");
-            if (Math.abs(rotation) > 0.2) {
-                ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(-255, 255, 255, -255);
-            }
-        } else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 40) {
-            System.out.println("================ hit tolerance!! ===========");
-
-            ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, 2000);
-
-            if (Math.abs(rotation) >= 0.1) {
+        if (kickingToGoal) {
+            if (VectorGeometry.distance(ball.location.x, ball.location.y, us.location.x, us.location.y) > 20) {
+                kickingToGoal = false;
+                grabbingBall = true;
+                this.enterState(1);
+            } else if (Math.abs(rotation) >= 0.15) {
                 this.rotation = rotation;
-                this.enterState(3);
+                this.enterState(4);
                 return;
             } else {
-                this.enterState(4);
+                if (this.state != 5) this.enterState(5);
+            }
+        }
+
+        if (grabbingBall) {
+            if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 10) {
+                System.out.println("too close moving backwards!!!!");
+                if (Math.abs(rotation) > 0.2) {
+                    ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(-255, 255, 255, -255);
+                }
+            } else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 40) {
+                System.out.println("================ hit tolerance!! ===========");
+
+                ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, 2000);
+
+                if (Math.abs(rotation) >= 0.1) {
+                    this.rotation = rotation;
+                    this.enterState(2);
+                    return;
+                } else {
+                    this.enterState(3);
+                }
             }
         }
     }

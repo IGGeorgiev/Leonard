@@ -12,8 +12,11 @@ import strategy.robots.RobotBase;
 import vision.Ball;
 import vision.Robot;
 import vision.RobotType;
+import vision.WorldSender;
 import vision.constants.Constants;
 import vision.tools.VectorGeometry;
+
+import java.io.IOException;
 
 /**
  * Created by Simon Rovder
@@ -29,6 +32,7 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
 
 
     public static boolean RESET = true;
+    private String[] msg = new String[1];
 
 
     public Behave(RobotBase robot) {
@@ -68,7 +72,15 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
 
     @Override
     protected BehaviourEnum getState() {
+
+        msg[0] = "DEFEND";
+        try {
+            WorldSender.main(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Ball ball = Strategy.world.getBall();
+
         if (ball == null) {
             this.nextState = BehaviourEnum.DEFEND;
         } else {
