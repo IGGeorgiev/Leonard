@@ -33,7 +33,7 @@ public class GrabAndKick extends ActionBase {
     private boolean grabbingBall = true;
     private VectorGeometry emgoal;
     private double rotation;
-    private java.util.Timer timer;
+    private java.util.Timer timer = new java.util.Timer();
 
     public GrabAndKick(RobotBase robot, DynamicPoint point) {
         super(robot, point);
@@ -93,6 +93,7 @@ public class GrabAndKick extends ActionBase {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
+                    System.out.println("TIMEOUT");
                     leonard.GRABBER_CONTROLLER.setActive(false);
                     leonard.KICKER_CONTROLLER.setActive(false);
                     leonard.MOTION_CONTROLLER.setDestination(null);
@@ -100,7 +101,7 @@ public class GrabAndKick extends ActionBase {
 //                    throw new ActionException(true, false)
                 }
             };
-            timer.schedule(task, 2000);
+            timer.schedule(task, 3000);
 
         } else {// state 6
 
@@ -111,9 +112,12 @@ public class GrabAndKick extends ActionBase {
     @Override
     public void tok() throws ActionException {
         Robot us = Strategy.world.getRobot(RobotType.FRIEND_2);
-        double distFromUsToBall = VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y);
+        ball = Strategy.world.getBall();
+
+
+        double distFromUsToBall = VectorGeometry.distance(ball.location.x, ball.location.y, us.location.x, us.location.y);
         double angle = VectorGeometry.angle(0, 1, -1, 1); // 45 degrees
-        VectorGeometry heading = new VectorGeometry(this.point.getX(), this.point.getY());
+        VectorGeometry heading = new VectorGeometry(ball.location.x, ball.location.y);
         VectorGeometry robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
         VectorGeometry robotToPoint = VectorGeometry.fromTo(us.location, heading);
         double rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);

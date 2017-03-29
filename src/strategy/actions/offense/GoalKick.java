@@ -26,7 +26,7 @@ public class GoalKick extends ActionBase {
     private boolean fixed = false;
     private VectorGeometry emgoal;
     private double rotation;
-    private Timer timer;
+    private Timer timer= new Timer();
     private double previousConstant=0;
 
     public GoalKick(RobotBase robot) {
@@ -60,7 +60,6 @@ public class GoalKick extends ActionBase {
             this.robot.MOTION_CONTROLLER.setActive(false);
             ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, 2000);
             Fred fred = (Fred) this.robot;
-
             fred.KICKER_CONTROLLER.setActive(true);
             ((FredRobotPort) fred.port).kicker(1);
             ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(60, -60, -60, 60);
@@ -68,6 +67,7 @@ public class GoalKick extends ActionBase {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
+                    System.out.println("TIMEOUT");
                     leonard.GRABBER_CONTROLLER.setActive(false);
                     leonard.KICKER_CONTROLLER.setActive(false);
                     leonard.MOTION_CONTROLLER.setDestination(null);
@@ -75,7 +75,7 @@ public class GoalKick extends ActionBase {
 //                    throw new ActionException(true, false)
                 }
             };
-            timer.schedule(task, 2000);
+            timer.schedule(task, 3000);
 
             System.out.println("Moving forward now and kicking now. ");
 

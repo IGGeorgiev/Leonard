@@ -4,10 +4,7 @@ import communication.PortListener;
 import communication.ports.interfaces.FourWheelHolonomicRobotPort;
 import communication.ports.robotPorts.FredRobotPort;
 import strategy.actions.Behave;
-import strategy.actions.offense.GoalKick;
-import strategy.actions.offense.KickEnemy;
-import strategy.actions.offense.OffensiveKick;
-import strategy.actions.offense.ShuntKick;
+import strategy.actions.offense.*;
 import strategy.actions.other.*;
 import strategy.points.basicPoints.*;
 import strategy.robots.Fred;
@@ -123,6 +120,9 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     break;
                 case "kick1":
                     fred.ACTION_CONTROLLER.setAction(new GotoBall(fred, new BallPoint()));
+                    break;
+                case "kick2":
+                    fred.ACTION_CONTROLLER.setAction(new GrabAndKick(fred, new BallPoint()));
                     break;
                 case "gkick":
                     fred.ACTION_CONTROLLER.setAction(new GoalKick(fred));
@@ -253,9 +253,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(-255,255,255,-255);
                     break;
 
-                case "kick2":
-                    fred.ACTION_CONTROLLER.setAction(new KickEnemy(fred));
-                    break;
+
             }
         }
 

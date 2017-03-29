@@ -34,7 +34,6 @@ public class KickerController extends ControllerBase {
     public void setActive(boolean active) {
         super.setActive(active);
         this.grabberIsDown = true;
-        robotPort.kicker(0);
     }
 
     @Override
