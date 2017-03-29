@@ -1,17 +1,16 @@
 package strategy;
 
+import communication.PortListener;
 import communication.ports.interfaces.FourWheelHolonomicRobotPort;
+import communication.ports.robotPorts.FredRobotPort;
 import strategy.actions.Behave;
 import strategy.actions.offense.GoalKick;
 import strategy.actions.offense.KickEnemy;
-import strategy.actions.other.*;
 import strategy.actions.offense.OffensiveKick;
 import strategy.actions.offense.ShuntKick;
-import communication.ports.robotPorts.FredRobotPort;
-import strategy.points.DynamicPoint;
+import strategy.actions.other.*;
 import strategy.points.basicPoints.*;
 import strategy.robots.Fred;
-import communication.PortListener;
 import strategy.robots.RobotBase;
 import vision.*;
 import vision.Robot;

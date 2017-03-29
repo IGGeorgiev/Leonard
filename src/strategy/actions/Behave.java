@@ -5,6 +5,8 @@ import strategy.actions.offense.GoalKick;
 import strategy.actions.other.DefendGoal;
 import strategy.actions.other.GoToSafeLocation;
 import strategy.actions.offense.ShuntKick;
+import strategy.actions.other.GotoBall;
+import strategy.points.basicPoints.BallPoint;
 import strategy.robots.Fred;
 import strategy.robots.RobotBase;
 import vision.Ball;
@@ -53,7 +55,7 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
                 this.enterAction(new DefendGoal(this.robot), 0, 0);
                 break;
             case GOAL:
-                this.enterAction(new GoalKick(this.robot), 0, 0);
+                this.enterAction(new GotoBall(this.robot, new BallPoint()), 0, 0);
                 break;
             case SHUNT:
                 this.enterAction(new ShuntKick(this.robot), 0, 0);

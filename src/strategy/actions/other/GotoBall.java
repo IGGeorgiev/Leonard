@@ -70,8 +70,8 @@ public class GotoBall extends ActionBase {
             tm.setRepeats(false);
             tm.start();
         } else if (newState == 4) {
-            System.out.println("yo fix rotation!");
-            double constant = 300 * rotation; // constant has to be big enough or else the rotation will be too slow
+            System.out.println("yo fix rotation!" + rotation);
+            double constant = 100 * rotation; // constant has to be big enough or else the rotation will be too slow
             ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(constant, constant, constant, constant);
         } else { // state 2
 
@@ -93,20 +93,28 @@ public class GotoBall extends ActionBase {
             this.enterState(0);
             return;
         } else if (this.state == 0) {
-            // Go to point
-            if (distFromUsToBall > 10) {
-                //Gets there quicker
-                this.enterState(5);
-            } else {
+//            // Go to point
+//            if (distFromUsToBall > 10) {
+//                //Gets there quicker
+//                this.enterState(5);
+//            } else {
                 this.enterState(1);
-            }
+//            }
         } else if (this.state == 2) {
             // halt
             Fred fred = (Fred) this.robot;
-            fred.GRABBER_CONTROLLER.grab(2, 300);
-            this.enterAction(new GoalKick(this.robot), 0, 0);
-        } else if (this.state == 3) {
-            // move forward
+            fred.GRABBER_CONTROLLER.grab(2, 500);
+            //TODO: HI!!!!!
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//            }
+            ((Fred) this.robot).GRABBER_CONTROLLER.setActive(false);
+            ((Fred) this.robot).KICKER_CONTROLLER.setActive(false);
+            this.robot.MOTION_CONTROLLER.setDestination(null);
+            this.robot.MOTION_CONTROLLER.setHeading(null);
+            throw new ActionException(true, false);
+//            this.enterAction(new GoalKick(this.robot), 0, 0);
         }
 
         if (distFromUsToBall < 5) {
@@ -116,14 +124,13 @@ public class GotoBall extends ActionBase {
 
         if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 10) {
             System.out.println("too close moving backwards!!!!");
-            if (Math.abs(rotation) > 0.2) {
-                ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(-255, 255, 255, -255);
+            if (Math.abs(rotation) > 0.4) {
+                ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(-255, 255, 0, -0);
             }
         } else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 40) {
             System.out.println("================ hit tolerance!! ===========");
 
             ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, 2000);
-
 
             if (Math.abs(rotation) >= 0.1) {
                 this.rotation = rotation;

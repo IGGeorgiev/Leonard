@@ -56,7 +56,7 @@ public class Demo extends ActionBase {
 //                this.enterState(1);
 //            }
 //        }
-        if(count > 0) throw new ActionException(true, false);
+//        if(count > 0) throw new ActionException(true, false);
         count++;
         if(this.state == 0) this.enterState(1);
         else this.enterState(0);
