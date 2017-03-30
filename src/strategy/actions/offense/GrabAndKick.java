@@ -45,7 +45,9 @@ public class GrabAndKick extends ActionBase {
 
         Robot us;
         if (newState == 1) {
-            System.out.println("moving my ass to that bloody point");
+            System.out.println("Starting GoToBall");
+
+//            System.out.println("moving my ass to that bloody point");
             this.robot.MOTION_CONTROLLER.addObstacle(new Obstacle(this.point.getX(), this.point.getY(), 20));
             this.robot.MOTION_CONTROLLER.setDestination(this.point);
             this.robot.MOTION_CONTROLLER.setHeading(this.point);
@@ -57,7 +59,6 @@ public class GrabAndKick extends ActionBase {
         } else if (newState == 3) {
             System.out.println("trying to move forward!!!");
             this.robot.MOTION_CONTROLLER.clearObstacles();
-            // TODO: should move forward here
 //            ((FredRobotPort)this.robot.port).grabber(1);
 //            this.robot.ACTION_CONTROLLER.setAction(new Demo(robot, 150, 255, 255, 150));
             ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(255, -255, -255, 255);
@@ -88,7 +89,7 @@ public class GrabAndKick extends ActionBase {
 
             fred.KICKER_CONTROLLER.setActive(true);
             ((FredRobotPort) fred.port).kicker(1);
-            ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(60, -60, -60, 60);
+            ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(80, -80, -80, 80);
             Fred leonard = (Fred) this.robot;
             TimerTask task = new TimerTask() {
                 @Override
@@ -139,12 +140,6 @@ public class GrabAndKick extends ActionBase {
             throw new ActionException(true, false);
         }
 
-        if (distFromUsToBall < 5) {
-            System.out.println("Starting GoalKick");
-            kickingToGoal = true;
-            grabbingBall = false;
-        }
-
         if (kickingToGoal) {
             if (VectorGeometry.distance(ball.location.x, ball.location.y, us.location.x, us.location.y) > 20) {
                 kickingToGoal = false;
@@ -160,16 +155,21 @@ public class GrabAndKick extends ActionBase {
         }
 
         if (grabbingBall) {
+            if (distFromUsToBall < 5) {
+                System.out.println("Starting GoalKick");
+                kickingToGoal = true;
+                grabbingBall = false;
+            }
+
             if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 10) {
-                System.out.println("too close moving backwards!!!!");
+//                System.out.println("too close moving backwards!!!!");
                 if (Math.abs(rotation) > 0.2) {
                     ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(-255, 255, 255, -255);
                 }
             } else if (VectorGeometry.distance(this.point.getX(), this.point.getY(), us.location.x, us.location.y) < 40) {
-                System.out.println("================ hit tolerance!! ===========");
+//                System.out.println("================ hit tolerance!! ===========");
 
                 ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, 2000);
-
                 if (Math.abs(rotation) >= 0.1) {
                     this.rotation = rotation;
                     this.enterState(2);
