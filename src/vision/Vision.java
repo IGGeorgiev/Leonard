@@ -41,7 +41,6 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 	private LinkedList<VisionListener> visionListeners;
 	private DetectionCalibrationGUI detectionGUI;
 	public static SpotAnalysisBase recursiveSpotAnalysis   = new RecursiveSpotAnalysis();
-	private DynamicWorldFilter kalmanFilters = new DynamicWorldFilter();
 	
 	/**
 	 * Add a vision listener. The Listener will be notified whenever the
@@ -58,6 +57,8 @@ public class Vision extends JFrame implements DynamicWorldListener, ChangeListen
 	public Vision(String[] args){
 		super("Vision");
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+		DynamicWorldFilter kalmanFilters = new DynamicWorldFilter();
 		
 		this.visionListeners   = new LinkedList<VisionListener>();
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
