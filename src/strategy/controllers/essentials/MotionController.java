@@ -154,9 +154,9 @@ public class MotionController extends ControllerBase {
 
         // Can throw null without check because null check takes SourceGroup into consideration.
         // Moving too fast might push the ball away
-        if(destination.distance(us.location) < 40){
-            factor = 0.45;
-        }
+//        if(destination.distance(us.location) < 40){
+//            factor = 1;
+//        }
 
         if(this.destination != null && us.location.distance(destination) < tolerance){
 

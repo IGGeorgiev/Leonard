@@ -21,7 +21,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 /**
- * Created by Simon Rovder
+ * Created by Keqi, Tommy and Isabella
  */
 public class GrabAndKick extends ActionBase {
     private Ball ball;
@@ -106,16 +106,21 @@ public class GrabAndKick extends ActionBase {
                 public void actionPerformed(ActionEvent evt) {
                     //...Perform a task...
                     System.out.println("STOP TIMER");
-                    grabbed = true;
+                    TimerTask grabbedEvent = new TimerTask() {
+                        @Override
+                        public void run() {
+                            grabbed = true;
+                        }
+                    };
+                    java.util.Timer grabTimer = new java.util.Timer();
+                    grabTimer.schedule(grabbedEvent, (long)QUICK_STOP_TIMER);
                     fred.GRABBER_CONTROLLER.grab(2, QUICK_STOP_TIMER);
                     ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(0, 0, 0, 0);
                 }
             };
-            timer = new Timer(STOP_TIMER_1, taskPerformer);
+            timer = new Timer(1200, taskPerformer);
             timer.setRepeats(false);
-
-
-            double constant = 60;
+            double constant = 80;
             ((FourWheelHolonomicRobotPort) this.robot.port).fourWheelHolonomicMotion(constant, -constant, -constant, constant);
 //            }
             timer.start();
@@ -136,26 +141,20 @@ public class GrabAndKick extends ActionBase {
 
 //            System.out.println("Moving forward now and kicking now. ");
 
-            this.robot.MOTION_CONTROLLER.setActive(false);
+//            this.robot.MOTION_CONTROLLER.setActive(false);
 //            System.out.println("raise the grabber up");
             ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, STOP_TIMER_2);
             Fred fred = (Fred) this.robot;
 
             fred.KICKER_CONTROLLER.setActive(true);
-            ((FredRobotPort) fred.port).kicker(1);
+//            ((FredRobotPort) fred.port).kicker(1);
             ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(80, -80, -80, 80);
+
+            fred.MOTION_CONTROLLER.setActive(true);
+//            fred.MOTION_CONTROLLER.setDestination(emgoal);
+//            fred.MOTION_CONTROLLER.setHeading(emgoal);
             Fred leonard = (Fred) this.robot;
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    System.out.println("TIMEOUT");
-                    leonard.GRABBER_CONTROLLER.setActive(false);
-                    leonard.KICKER_CONTROLLER.setActive(false);
-                    leonard.MOTION_CONTROLLER.setDestination(null);
-                    leonard.MOTION_CONTROLLER.setHeading(null);
-//                    throw new ActionException(true, false)
-                }
-            };
+
             ActionListener taskPerformer = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     //...Perform a task...
@@ -166,7 +165,7 @@ public class GrabAndKick extends ActionBase {
                     leonard.MOTION_CONTROLLER.setHeading(null);
                 }
             };
-            if (timer != null && timer.isRunning()) timer.stop();
+//            if (timer != null && timer.isRunning()) timer.stop();
             timer = new Timer(STOP_TIMER_2, taskPerformer);
             timer.setRepeats(false);
             timer.start();
@@ -218,7 +217,10 @@ public class GrabAndKick extends ActionBase {
                     ((Fred) this.robot).GRABBER_CONTROLLER.grab(1, STOP_TIMER_2);
                 }
                 this.enterState(2);
-                return;
+                if (distFromUsToBall > TOLERANCE_VALUE) {
+                    this.enterState(1);
+                    return;
+                }
             } else {
                 this.enterState(3);
                 return;
@@ -235,8 +237,6 @@ public class GrabAndKick extends ActionBase {
                 grabbed = false;
                 this.enterState(4);
                 return;
-            } else {
-                this.enterState(3);
             }
         } else if (this.state == 4) {
             System.out.println("Goal kick");
@@ -244,20 +244,20 @@ public class GrabAndKick extends ActionBase {
             robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
             robotToPoint = VectorGeometry.fromTo(us.location, heading);
             rotation = VectorGeometry.signedAngle(robotToPoint, robotHeading);
-            if (distFromUsToBall > TOLERANCE_VALUE) {
-                this.enterState(1);
-                return;
-            } else if (Math.abs(rotation) >= FACING_ROBOT_ANGLE) {
-                this.enterState(4);
-                return;
-            } else {
+//            if (distFromUsToBall > TOLERANCE_VALUE) {
+//                this.enterState(1);
+//                return;
+//            } else
+            if (Math.abs(rotation) <= FACING_ROBOT_ANGLE) {
                 this.enterState(5);
                 return;
             }
+        } else if (this.state == 5) {
+            if (distFromUsToBall > 40) this.enterState(6);
         } else if (this.state == 6) {
             // halt
             Fred fred = (Fred) this.robot;
-            fred.GRABBER_CONTROLLER.grab(2, STOP_TIMER_2);
+            fred.GRABBER_CONTROLLER.grab(2, STOP_TIMER_1);
             ((Fred) this.robot).GRABBER_CONTROLLER.setActive(false);
             ((Fred) this.robot).KICKER_CONTROLLER.setActive(false);
             this.robot.MOTION_CONTROLLER.setDestination(null);

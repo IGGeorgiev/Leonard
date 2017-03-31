@@ -200,16 +200,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                     System.out.println("Ball.y = " + bbb.location.y);
                     break;
                 case "grab":
-                    ((FredRobotPort) fred.port).grabber(1);
-                    ActionListener taskPerformer = new ActionListener() {
-                        public void actionPerformed(ActionEvent evt) {
-                            //...Perform a task...
-                            ((FredRobotPort) fred.port).grabber(0);
-                        }
-                    };
-                    Timer tm = new Timer(200, taskPerformer);
-                    tm.setRepeats(false);
-                    tm.start();
+                    fred.GRABBER_CONTROLLER.grab(1, 1000);
                     break;
                 case "lift":
                     ((FredRobotPort) fred.port).grabber(2);

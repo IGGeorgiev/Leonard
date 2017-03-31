@@ -33,6 +33,7 @@ public class KickerController extends ControllerBase {
     @Override
     public void setActive(boolean active) {
         super.setActive(active);
+        if (active == false) robotPort.kicker(0);
         this.grabberIsDown = true;
     }
 
@@ -55,6 +56,7 @@ public class KickerController extends ControllerBase {
                 }
             } else {
                 this.setActive(false);
+                ((FredRobotPort) this.robot.port).kicker(0);
             }
         }
     }
