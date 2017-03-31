@@ -100,9 +100,9 @@ void grabber(){
   if(type == 0){
     motorStop(GRABBERS);
   } else if (type == 1){
-    motorBackward(GRABBERS, 70);
+    motorBackward(GRABBERS, 50);
   } else {
-    motorForward(GRABBERS, 40);
+    motorForward(GRABBERS, 30);
   }
 }
 

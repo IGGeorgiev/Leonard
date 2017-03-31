@@ -25,7 +25,7 @@ public class GrabberController extends ControllerBase {
 
     private boolean grabberIsDown;
     private FredRobotPort robotPort;
-
+    private Timer timer;
     public GrabberController(RobotBase robot) {
         super(robot);
         this.grabberIsDown = true;
@@ -45,15 +45,18 @@ public class GrabberController extends ControllerBase {
         System.out.println("using grabber" + i);
         FredRobotPort portie = (FredRobotPort) this.robot.port;
         portie.grabber(i);
+        if(timer != null && timer.isRunning()){
+            timer.stop();
+        }
         ActionListener taskPerformer = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 //...Perform a task...
                 portie.grabber(0);
             }
         };
-        Timer tm = new Timer(time, taskPerformer);
-        tm.setRepeats(false);
-        tm.start();
+        timer = new Timer(time, taskPerformer);
+        timer.setRepeats(false);
+        timer.start();
         if (i==1) {
             this.grabberIsDown = false;
         } else if(i!=0) {
