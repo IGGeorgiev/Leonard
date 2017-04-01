@@ -23,6 +23,7 @@ public class DynamicWorldFilter implements DynamicWorldListener {
     private List<DynamicWorldListener> listeners = new ArrayList<>();
     private KalmanFilter ballFilter = new KalmanFilter(4,2,4, CvType.CV_32F);
     private KalmanFilter usFilter = new KalmanFilter(6,3,6, CvType.CV_32F);
+    private KalmanFilter r2Filter = new KalmanFilter(6,3,6,CvType.CV_32F);
 
     private VectorGeometry ballPoint = new VectorGeometry(0,0);
     private VectorGeometry ballVelocity = new VectorGeometry(0,0);
@@ -31,16 +32,23 @@ public class DynamicWorldFilter implements DynamicWorldListener {
     private DirectedPoint r1Point = new DirectedPoint(-120, -80, 0);
     private DirectedPoint r1Velocity = new DirectedPoint(0, 0, 0);
     private DirectedPoint r1Acc = new DirectedPoint(0,0,0);
+    private RobotAlias r1Alias = RobotAlias.UNKNOWN;
+
+    private DirectedPoint r2Point = new DirectedPoint(-120, 80, 0);
+    private DirectedPoint r2Velocity = new DirectedPoint(0, 0, 0);
+    private DirectedPoint r2Acc = new DirectedPoint(0,0,0);
+    private RobotAlias r2Alias = RobotAlias.UNKNOWN;
 
     public DynamicWorldFilter() {
         initialize_ball_filter();
         initialize_robotFilter(usFilter);
+        initialize_robotFilter(r2Filter);
     }
 
     private void initialize_ball_filter() {
         double[] ball_transformation_data = {
-                1, 0, 1, 0,
-                0, 1, 0, 1,
+                1, 0, 0.1, 0,
+                0, 1, 0, 0.1,
                 0, 0, 1, 0,
                 0, 0, 0, 1
         };
@@ -51,24 +59,24 @@ public class DynamicWorldFilter implements DynamicWorldListener {
 
         Mat ball_measurement_matrix = new Mat(4,4, CvType.CV_32F);
         double[] measureCov = {
-                10, 0, 0, 0,
-                0, 10, 0, 0,
-                0, 0, 10, 0,
-                0, 0, 0, 10
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
         };
         ball_measurement_matrix.put(0,0, measureCov);
         ballFilter.set_measurementNoiseCov(ball_measurement_matrix);
         ballFilter.set_measurementMatrix(Mat.eye(4,4, CvType.CV_32F));
 
-        double[] ball_processNoise_data = {
-                0.01, 0, 0, 0,
-                0, 0.01, 0, 0,
-                0, 0, 0.01, 0,
-                0, 0, 0, 0.01
-        };
-        Mat ball_processNoise_matrix = new Mat(4,4, CvType.CV_32F);
-        ball_processNoise_matrix.put(0,0,ball_processNoise_data);
-        ballFilter.set_processNoiseCov(Mat.eye(4,4, CvType.CV_32F));
+//        double[] ball_processNoise_data = {
+//                0.01, 0, 0, 0,
+//                0, 0.01, 0, 0,
+//                0, 0, 0.01, 0,
+//                0, 0, 0, 0.01
+//        };
+//        Mat ball_processNoise_matrix = new Mat(4,4, CvType.CV_32F);
+//        ball_processNoise_matrix.put(0,0,ball_processNoise_data);
+//        ballFilter.set_processNoiseCov(Mat.eye(4,4, CvType.CV_32F));
 
         double[] ball_init_state_data = {
                 0,
@@ -83,9 +91,9 @@ public class DynamicWorldFilter implements DynamicWorldListener {
 
     private void initialize_robotFilter(KalmanFilter filter) {
         double[] transformation_data = {
-                1, 0, 0, 1, 0, 0,
-                0, 1, 0, 0, 1, 0,
-                0, 0, 1, 0, 0, 1,
+                1, 0, 0, 0.1, 0, 0,
+                0, 1, 0, 0, 0.1, 0,
+                0, 0, 1, 0, 0, 0.01,
                 0, 0, 0, 1, 0, 0,
                 0, 0, 0, 0, 1, 0,
                 0, 0, 0, 0, 0, 1
@@ -96,29 +104,29 @@ public class DynamicWorldFilter implements DynamicWorldListener {
 
 
         double[] measureCov = {
-                10, 0, 0, 0, 0, 0,
-                0, 10, 0, 0, 0, 0,
-                0, 0, 10, 0, 0, 0,
-                0, 0, 0, 10, 0, 0,
-                0, 0, 0, 0, 10, 0,
-                0, 0, 0 ,0 , 0, 10
+                1, 0, 0, 0, 0, 0,
+                0, 1, 0, 0, 0, 0,
+                0, 0, 1, 0, 0, 0,
+                0, 0, 0, 1, 0, 0,
+                0, 0, 0, 0, 1, 0,
+                0, 0, 0 ,0 , 0, 1
         };
         Mat measurement_matrix = new Mat(6,6, CvType.CV_32F);
         measurement_matrix.put(0,0, measureCov);
         filter.set_measurementNoiseCov(measurement_matrix);
         filter.set_measurementMatrix(Mat.eye(6,6, CvType.CV_32F));
 
-        double[] processNoise_data = {
-                0.01, 0, 0, 0, 0, 0,
-                0, 0.01, 0, 0, 0, 0,
-                0, 0, 0.01, 0, 0, 0,
-                0, 0, 0, 0.01, 0, 0,
-                0, 0, 0, 0, 0.01, 0,
-                0, 0, 0, 0, 0, 0.01
-        };
-        Mat processNoise_matrix = new Mat(6,6, CvType.CV_32F);
-        processNoise_matrix.put(0,0,processNoise_data);
-        filter.set_processNoiseCov(Mat.eye(6,6, CvType.CV_32F));
+//        double[] processNoise_data = {
+//                0.01, 0, 0, 0, 0, 0,
+//                0, 0.01, 0, 0, 0, 0,
+//                0, 0, 0.01, 0, 0, 0,
+//                0, 0, 0, 0.01, 0, 0,
+//                0, 0, 0, 0, 0.01, 0,
+//                0, 0, 0, 0, 0, 0.01
+//        };
+//        Mat processNoise_matrix = new Mat(6,6, CvType.CV_32F);
+//        processNoise_matrix.put(0,0,processNoise_data);
+//        filter.set_processNoiseCov(Mat.eye(6,6, CvType.CV_32F));
 
         double[] init_state_data = {
                 -120,
@@ -224,6 +232,7 @@ public class DynamicWorldFilter implements DynamicWorldListener {
             newRobot.velocity = this.r1Velocity.clone();
             newRobot.type = RobotType.FRIEND_2;
             newRobot.alias = r.alias;
+            r1Alias = r.alias;
 
             state.setRobot(newRobot);
 
@@ -276,7 +285,7 @@ public class DynamicWorldFilter implements DynamicWorldListener {
             newRobot.location = r1Point.clone();
             newRobot.velocity = this.r1Velocity.clone();
             newRobot.type = RobotType.FRIEND_2;
-            newRobot.alias = RobotAlias.LEONARD;
+            newRobot.alias = r1Alias;
             state.setRobot(newRobot);
 
             double[] controlMatData = {
@@ -309,6 +318,106 @@ public class DynamicWorldFilter implements DynamicWorldListener {
             this.r1Velocity.x = Vx;
             this.r1Velocity.y = Vy;
             this.r1Velocity.direction = Vh;
+        }
+
+        r = state.getRobot(RobotType.FRIEND_1);
+        if (r != null && r.velocity != null) {
+            DirectedPoint rCenter = r.location.clone();
+            DirectedPoint r1Velocity = r.velocity.clone();
+
+            // Set location to predicted location
+            Robot newRobot = new Robot();
+
+            newRobot.location = r1Point.clone();
+            newRobot.velocity = this.r1Velocity.clone();
+            newRobot.type = RobotType.FRIEND_2;
+            newRobot.alias = r.alias;
+            r2Alias = r.alias;
+
+            state.setRobot(newRobot);
+
+            double[] controlMatData = {
+                    r2Acc.x/2,
+                    r2Acc.y/2,
+                    r2Acc.direction/2,
+                    r2Acc.x,
+                    r2Acc.y,
+                    r2Acc.direction
+            };
+            Mat controlMat = new Mat(6,1,CvType.CV_32FC1);
+            controlMat.put(0,0,controlMatData);
+
+            Mat prediction = usFilter.predict(controlMat);
+            double x = prediction.get(0,0)[0];
+            double y = prediction.get(1,0)[0];
+            double h = prediction.get(2,0)[0];
+            double Vx = prediction.get(3,0)[0];
+            double Vy = prediction.get(4,0)[0];
+            double Vh = prediction.get(5,0)[0];
+
+            // Update
+            double[] r1_data = {
+                    rCenter.x,
+                    rCenter.y,
+                    rCenter.direction,
+                    r1Velocity.x,
+                    r1Velocity.y,
+                    r1Velocity.direction
+            };
+            Mat newState = new Mat(6,1, CvType.CV_32F);
+            newState.put(0,0, r1_data);
+            r2Filter.correct(newState);
+
+            r2Point.x = enforceMinMax(PITCH_WIDTH/2, -PITCH_WIDTH/2, x);
+            r2Point.y = enforceMinMax(PITCH_HEIGHT/2, -PITCH_HEIGHT/2, y);
+            r2Point.direction = h;
+            this.r2Acc = new DirectedPoint(r1Velocity.x - this.r2Velocity.x,
+                    r1Velocity.y - this.r2Velocity.y,
+                    r1Velocity.direction - this.r2Velocity.direction);
+            this.r2Velocity.x = Vx;
+            this.r2Velocity.y = Vy;
+            this.r2Velocity.direction = Vh;
+
+        } else {
+            // Set location to predicted location
+            Robot newRobot = new Robot();
+
+            newRobot.location = r1Point.clone();
+            newRobot.velocity = this.r1Velocity.clone();
+            newRobot.type = RobotType.FRIEND_2;
+            newRobot.alias = r2Alias;
+            state.setRobot(newRobot);
+
+            double[] controlMatData = {
+                    r2Acc.x/2,
+                    r2Acc.y/2,
+                    r2Acc.direction/2,
+                    r2Acc.x,
+                    r2Acc.y,
+                    r2Acc.direction
+            };
+            Mat controlMat = new Mat(6,1,CvType.CV_32FC1);
+            controlMat.put(0,0,controlMatData);
+
+            Mat prediction = usFilter.predict(controlMat);
+            double x = prediction.get(0,0)[0];
+            double y = prediction.get(1,0)[0];
+            double h = prediction.get(2,0)[0];
+            double Vx = prediction.get(3,0)[0];
+            double Vy = prediction.get(4,0)[0];
+            double Vh = prediction.get(5,0)[0];
+
+            DirectedPoint r1Velocity = new DirectedPoint(Vx, Vy, Vh);
+
+            r2Point.x = enforceMinMax(PITCH_WIDTH/2, -PITCH_WIDTH/2, x);
+            r2Point.y = enforceMinMax(PITCH_HEIGHT/2, -PITCH_HEIGHT/2, y);
+            r2Point.direction = h;
+            this.r2Acc = new DirectedPoint(r1Velocity.x - this.r2Velocity.x,
+                    r1Velocity.y - this.r2Velocity.y,
+                    r1Velocity.direction - this.r2Velocity.direction);
+            this.r2Velocity.x = Vx;
+            this.r2Velocity.y = Vy;
+            this.r2Velocity.direction = Vh;
         }
 
         informListeners(state);

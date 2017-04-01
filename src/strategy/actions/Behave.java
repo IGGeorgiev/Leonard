@@ -32,7 +32,7 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
 
 
     public static boolean RESET = true;
-    private String[] msg = new String[1];
+    private String[] msg = new String[2];
 
 
     public Behave(RobotBase robot) {
