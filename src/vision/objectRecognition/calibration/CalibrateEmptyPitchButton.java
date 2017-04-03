@@ -31,8 +31,7 @@ public class CalibrateEmptyPitchButton extends JButton implements ActionListener
         JFileChooser fileChooser = new JFileChooser(".");
         if (fileChooser.showSaveDialog(new JFrame()) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            Imgcodecs.imwrite(file.getAbsolutePath(),
-                    img);
+            Imgcodecs.imwrite(file.getAbsolutePath(), img);
         }
     }
 }
