@@ -55,17 +55,17 @@ public class RobotFilter {
         rFilter.set_measurementNoiseCov(measurement_matrix);
         rFilter.set_measurementMatrix(Mat.eye(6,6, CvType.CV_32F));
 
-//        double[] processNoise_data = {
-//                0.01, 0, 0, 0, 0, 0,
-//                0, 0.01, 0, 0, 0, 0,
-//                0, 0, 0.01, 0, 0, 0,
-//                0, 0, 0, 0.01, 0, 0,
-//                0, 0, 0, 0, 0.01, 0,
-//                0, 0, 0, 0, 0, 0.01
-//        };
-//        Mat processNoise_matrix = new Mat(6,6, CvType.CV_32F);
-//        processNoise_matrix.put(0,0,processNoise_data);
-//        filter.set_processNoiseCov(Mat.eye(6,6, CvType.CV_32F));
+        double[] processNoise_data = {
+                0.01, 0, 0, 0, 0, 0,
+                0, 0.01, 0, 0, 0, 0,
+                0, 0, 0.01, 0, 0, 0,
+                0, 0, 0, 0.01, 0, 0,
+                0, 0, 0, 0, 0.01, 0,
+                0, 0, 0, 0, 0, 0.01
+        };
+        Mat processNoise_matrix = new Mat(6,6, CvType.CV_32F);
+        processNoise_matrix.put(0,0,processNoise_data);
+        rFilter.set_processNoiseCov(Mat.eye(6,6, CvType.CV_32F));
 
         double[] init_state_data = {
                 -120,
