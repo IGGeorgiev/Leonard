@@ -12,6 +12,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Properties;
 
 /**
@@ -24,6 +25,7 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
     private JPanel buttonHolder = new JPanel();
     private JButton staticLearn = new JButton("Static Learn");
     private JButton dynamicLearn = new JButton("Dynamic Learn");
+    private JButton setBackgroundPath = new JButton("Set Background Path");
     private JLabel calibrating = new JLabel("Calibrated");
     private int dynamicLearnCount = history;
     static String BACKGROUND_PATH = "src/vision/objectRecognition/calibration/pre_saved_values/empty_pitch_norm.png";
@@ -35,6 +37,7 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
         buttonHolder.add(staticLearn);
         buttonHolder.add(dynamicLearn);
         buttonHolder.add(calibrating);
+        buttonHolder.add(setBackgroundPath);
         subtractor = Video.createBackgroundSubtractorMOG2(history, 64, true);
         staticLearn();
     }
@@ -59,6 +62,13 @@ public class BackgroundSubtractionMOG extends ImageManipulatorWithOptions implem
             staticLearn();
         } else if (button.equals(dynamicLearn)){
             dynamicLearn();
+        } else if (button.equals(setBackgroundPath)) {
+            JFileChooser backgroundSetter = new JFileChooser(".");
+            int retVal = backgroundSetter.showOpenDialog(new JFrame());
+            if (retVal != JFileChooser.APPROVE_OPTION) {
+                File file = backgroundSetter.getSelectedFile();
+                BACKGROUND_PATH = file.getPath();
+            }
         }
     }
 
