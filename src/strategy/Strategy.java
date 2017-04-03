@@ -168,7 +168,7 @@ public class Strategy implements VisionListener, PortListener, ActionListener {
                 case "demo":
                     fred.ACTION_CONTROLLER.setAction(new Demo(fred, 255,255,255,255));
                     break;
-                case "def":
+                case "defend":
                     fred.ACTION_CONTROLLER.setAction(new DefendGoal(fred));
                     break;
                 case "annoy":
