@@ -45,15 +45,15 @@ public class BallFilter {
         ballFilter.set_measurementNoiseCov(ball_measurement_matrix);
         ballFilter.set_measurementMatrix(Mat.eye(4,4, CvType.CV_32F));
 
-//        double[] ball_processNoise_data = {
-//                0.01, 0, 0, 0,
-//                0, 0.01, 0, 0,
-//                0, 0, 0.01, 0,
-//                0, 0, 0, 0.01
-//        };
-//        Mat ball_processNoise_matrix = new Mat(4,4, CvType.CV_32F);
-//        ball_processNoise_matrix.put(0,0,ball_processNoise_data);
-//        ballFilter.set_processNoiseCov(Mat.eye(4,4, CvType.CV_32F));
+        double[] ball_processNoise_data = {
+                0.01, 0, 0, 0,
+                0, 0.01, 0, 0,
+                0, 0, 0.01, 0,
+                0, 0, 0, 0.01
+        };
+        Mat ball_processNoise_matrix = new Mat(4,4, CvType.CV_32F);
+        ball_processNoise_matrix.put(0,0,ball_processNoise_data);
+        ballFilter.set_processNoiseCov(Mat.eye(4,4, CvType.CV_32F));
 
         double[] ball_init_state_data = {
                 0,
