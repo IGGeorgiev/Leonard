@@ -6,11 +6,11 @@
 
 //Kickers in front
 #define FRONT 3
-#define RIGHT 0
+#define RIGHT 5
 #define BACK 1
 #define LEFT 2
 
-#define KICKERS 5
+#define KICKERS 0
 #define GRABBERS 4
 
 #define KICKERDELAY 10

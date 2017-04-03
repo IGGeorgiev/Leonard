@@ -24,7 +24,7 @@ public class DynamicWorldFilter implements DynamicWorldListener {
 
     @Override
     public void nextDynamicWorld(DynamicWorld state) {
-        ballFilter.perform(state);
+//        ballFilter.perform(state);
         f1Filter.perform(state);
         f2Filter.perform(state);
 
