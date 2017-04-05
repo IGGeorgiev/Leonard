@@ -166,5 +166,4 @@ fabric.properties
 
 # Application Properties
 /src/vision/objectRecognition/calibration/pre_saved_values/*
-*.properties
 !/src/vision/objectRecognition/calibration/pre_saved_values/.gitkeep
