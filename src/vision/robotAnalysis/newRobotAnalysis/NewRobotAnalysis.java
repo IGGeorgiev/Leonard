@@ -110,7 +110,7 @@ public class NewRobotAnalysis extends RobotAnalysisBase {
                             }
                         }
 
-                        if(closest != null && closest.location.distance(lastKnownBall.location) < 30){
+                        if(closest != null && closest.location.distance(lastKnownBall.location) < 15){
                             Ball newBall = new Ball();
                             newBall.location = closest.location.clone();
                             world.setBall(newBall);

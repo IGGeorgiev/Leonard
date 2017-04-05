@@ -92,6 +92,7 @@ public class RobotFilter {
             Robot newRobot = new Robot();
 
             newRobot.location = rPoint.clone();
+            newRobot.location.direction = r.location.direction;
             newRobot.velocity = this.rVelocity.clone();
             newRobot.type = rType;
             newRobot.alias = r.alias;
