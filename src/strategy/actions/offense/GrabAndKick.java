@@ -176,7 +176,7 @@ public class GrabAndKick extends ActionBase {
             Fred fred = (Fred) this.robot;
             fred.MOTION_CONTROLLER.setActive(false);
 //            fred.KICKER_CONTROLLER.setActive(true);
-            ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(80, -80, -80, 80);
+            ((FourWheelHolonomicRobotPort) fred.port).fourWheelHolonomicMotion(85, -85, -90, 85);
             ActionListener startKicking = new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
                     //...Perform a task...
