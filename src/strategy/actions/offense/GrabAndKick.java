@@ -249,7 +249,6 @@ public class GrabAndKick extends ActionBase {
         VectorGeometry robotToPoint;
         if (us != null) {
             distFromUsToBall = VectorGeometry.distance(ball.location.x, ball.location.y, us.location.x, us.location.y);
-
             robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
             heading = new VectorGeometry(ball.location.x, ball.location.y);
             robotToPoint = VectorGeometry.fromTo(us.location, heading);
@@ -316,6 +315,7 @@ public class GrabAndKick extends ActionBase {
                 return;
             } else {
                 this.enterState(4);
+                return;
             }
         } else if (this.state == 5) {
 
@@ -331,7 +331,7 @@ public class GrabAndKick extends ActionBase {
             ((Fred) this.robot).KICKER_CONTROLLER.setActive(false);
             this.robot.MOTION_CONTROLLER.setDestination(null);
             this.robot.MOTION_CONTROLLER.setHeading(null);
-            throw new ActionException(true, false);
+            throw new ActionException(true, true);
         } else if (this.state == 7) {
             heading = new VectorGeometry(emgoal.getX(), emgoal.getY());
             robotHeading = VectorGeometry.fromAngular(us.location.direction + angle, 10, null);
