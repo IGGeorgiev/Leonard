@@ -74,18 +74,22 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
     @Override
     protected BehaviourEnum getState() {
 
-        msg[0] = "DEFEND";
-        try {
-            WorldSender.main(msg);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         Ball ball = Strategy.world.getBall();
 
         if (ball == null) {
             this.nextState = BehaviourEnum.DEFEND;
         } else {
             Robot us = Strategy.world.getRobot(this.robot.robotType);
+            Robot g16 = Strategy.world.getRobot(RobotType.FRIEND_1);
+            if (g16 == null) {
+                msg[0] = "DEFEND";
+                try {
+                    WorldSender.main(msg);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             if (us == null) {
                 // TODO: Angry yelling
             } else {
@@ -102,6 +106,21 @@ public class Behave extends StatefulActionBase<BehaviourEnum> {
                         if (r != null && r.type != RobotType.FRIEND_2 && r.velocity.length() < 1)
                             canKick = canKick && r.location.distance(ball.location) > 5;
                             closer = closer && us.location.distance(ball.location)< r.location.distance(ball.location);
+                    }
+                    if(g16.location.distance(ball.location)<us.location.distance(ball.location) && g16.location.distance(ball.location)<30){
+                        msg[0] = "GOAL";
+                        try {
+                            WorldSender.main(msg);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        msg[0] = "DEFEND";
+                        try {
+                            WorldSender.main(msg);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                     if (canKick && (this.lastState != BehaviourEnum.DEFEND ||
                             VectorGeometry.angle(ball.velocity, VectorGeometry.fromTo(ball.location, ourGoal)) > 2)

@@ -190,21 +190,6 @@ public class GrabAndKick extends ActionBase {
 
 //            fred.MOTION_CONTROLLER.setActive(true);
         } else if (newState == 6) {// state 6
-            Fred leonard = (Fred) this.robot;
-            ActionListener taskPerformer = new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    //...Perform a task...
-                    System.out.println("TIMEOUT");
-                    leonard.GRABBER_CONTROLLER.setActive(false);
-                    leonard.KICKER_CONTROLLER.setActive(false);
-                    leonard.MOTION_CONTROLLER.setDestination(null);
-                    leonard.MOTION_CONTROLLER.setHeading(null);
-                }
-            };
-//            if (timer != null && timer.isRunning()) timer.stop();
-            timer = new Timer(STOP_TIMER_2, taskPerformer);
-            timer.setRepeats(false);
-            timer.start();
         } else if (newState == 7) { // state 7
             Fred leonard = (Fred) this.robot;
             leonard.MOTION_CONTROLLER.setActive(false);
@@ -331,6 +316,7 @@ public class GrabAndKick extends ActionBase {
             ((Fred) this.robot).KICKER_CONTROLLER.setActive(false);
             this.robot.MOTION_CONTROLLER.setDestination(null);
             this.robot.MOTION_CONTROLLER.setHeading(null);
+            this.robot.MOTION_CONTROLLER.setActive(true);
             throw new ActionException(true, true);
         } else if (this.state == 7) {
             heading = new VectorGeometry(emgoal.getX(), emgoal.getY());

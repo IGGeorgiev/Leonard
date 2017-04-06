@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_sdp" default="compile.module.sdp">
+  <dirname property="module.sdp.basedir" file="${ant.file.module_sdp}"/>
+  
+  <property name="module.jdk.home.sdp" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.sdp" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.sdp" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.sdp" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="sdp.output.dir" value="${module.sdp.basedir}/out/production/SDP"/>
+  <property name="sdp.testoutput.dir" value="${module.sdp.basedir}/out/test/SDP"/>
+  
+  <path id="sdp.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="sdp.module.production.classpath">
+    <path refid="${module.jdk.classpath.sdp}"/>
+    <fileset dir="${basedir}/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="sdp.runtime.production.module.classpath">
+    <pathelement location="${sdp.output.dir}"/>
+    <fileset dir="${basedir}/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="sdp.module.classpath">
+    <path refid="${module.jdk.classpath.sdp}"/>
+    <pathelement location="${sdp.output.dir}"/>
+    <fileset dir="${basedir}/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="sdp.runtime.module.classpath">
+    <pathelement location="${sdp.testoutput.dir}"/>
+    <pathelement location="${sdp.output.dir}"/>
+    <fileset dir="${basedir}/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.sdp">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.sdp">
+    <patternset refid="excluded.from.module.sdp"/>
+  </patternset>
+  
+  <path id="sdp.module.sourcepath">
+    <dirset dir="${module.sdp.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.sdp" depends="compile.module.sdp.production,compile.module.sdp.tests" description="Compile module SDP"/>
+  
+  <target name="compile.module.sdp.production" depends="register.custom.compilers" description="Compile module SDP; production classes">
+    <mkdir dir="${sdp.output.dir}"/>
+    <javac2 destdir="${sdp.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.sdp}/javac">
+      <compilerarg line="${compiler.args.sdp}"/>
+      <bootclasspath refid="sdp.module.bootclasspath"/>
+      <classpath refid="sdp.module.production.classpath"/>
+      <src refid="sdp.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.sdp"/>
+    </javac2>
+    
+    <copy todir="${sdp.output.dir}">
+      <fileset dir="${module.sdp.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.sdp.tests" depends="register.custom.compilers,compile.module.sdp.production" description="compile module SDP; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.sdp" description="cleanup module">
+    <delete dir="${sdp.output.dir}"/>
+    <delete dir="${sdp.testoutput.dir}"/>
+  </target>
+</project>
