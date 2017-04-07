@@ -67,3 +67,7 @@ if __name__ == "__main__":
     time.sleep(.05)
     arduino_world_updater = command.update.ArduinoWorldUpdater(environment=environment)
     arduino_world_updater.start()
+
+    start = lambda: strategy_controller.run()
+    stop = lambda: strategy_controller.stop()
+

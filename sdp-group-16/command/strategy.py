@@ -14,7 +14,7 @@ logger = utils.get_logger(__name__, logging.INFO)
 
 class StrategyController(object):
     def __init__(self, planner):
-        self.strategy_mode = consts.StrategyMode.IDLE
+        self.strategy_mode = consts.StrategyMode.DEFEND
         self.planner = planner
         self.runner_thread = None
         self.running = False
@@ -23,9 +23,11 @@ class StrategyController(object):
         self.runner_thread = Thread(target=self.runner)
         self.runner_thread.daemon = True
         self.running = True
+        self.run_mode(self.strategy_mode)
         self.runner_thread.start()
 
     def stop(self):
+	self.planner.commander.reset()
         self.running = False
 
     def runner(self):
